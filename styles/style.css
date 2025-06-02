@@ -1,1 +1,159 @@
-/*holi*/
+
+/* === RESET BÁSICO === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  color: #fff;
+  background-color: #1b1b1b;
+}
+
+/* === NAVEGADOR === */
+header {
+  background-color: #111;
+  padding: 1rem 2rem;
+}
+
+.nav-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  width: 300px;
+  height: auto;
+}
+
+.nav-container nav ul {
+  list-style: none;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.nav-container nav ul li a {
+  text-decoration: none;
+  color: #eee;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.nav-container nav ul li a.activo,
+.nav-container nav ul li a:hover {
+  color: #d76385;
+}
+
+/* === CABECERA VISUAL === */
+.cabecera-visual {
+  position: relative;
+}
+
+.cabecera-visual .imagen-cabecera {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.texto-superpuesto {
+  position: absolute;
+  top: 20%;
+  left: 8%;
+  color: white;
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+/* === ZONA DE SUBIDA === */
+.zona-subida {
+  background-color: #a64863;
+  padding: 4rem 1rem;
+  text-align: center;
+}
+
+.caja-subida {
+  background: white;
+  border-radius: 20px;
+  padding: 3rem;
+  box-shadow: 0px 8px 16px rgba(0,0,0,0.3);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.caja-subida img {
+  width: 80px;
+  margin-bottom: 1rem;
+}
+
+.caja-subida p {
+  color: #888;
+  font-weight: bold;
+}
+
+.caja-subida span {
+  font-size: 0.9rem;
+}
+
+.mensaje-inferior {
+  margin-top: 2rem;
+  font-size: 1rem;
+  color: #ddd;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+}
+
+/* === FOOTER === */
+footer {
+  background-color: #1c1c1c;
+  padding: 3rem 2rem;
+}
+
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  color: #ccc;
+  gap: 2rem;
+}
+
+.footer-izquierda,
+.footer-centro,
+.footer-contacto,
+.footer-mapa {
+  flex: 1 1 200px;
+}
+
+.footer-logo {
+  width: 120px;
+  margin-bottom: 1rem;
+}
+
+.boton-contacto {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.5rem 1.5rem;
+  background-color: #b84e6d;
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  border: none;
+}
+
+footer h4 {
+  color: #e95b85;
+  margin-bottom: 1rem;
+}
+
+.footer-centro ul li {
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 2rem;
+  font-size: 0.85rem;
+  color: #999;
+}

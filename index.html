@@ -1,11 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ENNDE 3D Viewer</title>
+  <link rel="stylesheet" href="styles/style.css">
 </head>
 <body>
+  
+  <!-- Navegador principal de nuestra pestaña 3D Viewer -->
+
+  <header>
+    <div class="nav-container">
+      <img src="assets/img/logo-ennde3DV.png" alt="Logo ENNDE" class="logo">
+      <nav>
+        <ul>
+          <li><a href="#" class="activo">3D Viewer</a></li>
+          <li><a href="https://ennde3d.com/empresa/">Empresa</a></li>
+          <li><a href="https://ennde3d.com/ingenieria/">Ingeniería</a></li>
+          <li><a href="https://ennde3d.com/consultoria/">Consultoría</a></li>
+          <li><a href="https://ennde3d.com/formacion/">Formación</a></li>
+          <li><a href="https://ennde3d.com/blog/">Blog</a></li>
+          <li><a href="https://ennde3d.com/contacto/">Contacto</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Cabecera visual o 'hero' tras el navegador (imagen o vídeo con texto superpuesto) -->
+
+  <section class="cabecera-visual">
+    <div class="texto-superpuesto">
+      <h1>Ennde newest 3D viewer!</h1>
+    </div>
+    <img src="assets/img/hero.jpg" alt="Cabecera visual" class="imagen-cabecera">
+    <!-- Idea futura: <video autoplay muted loop src="assets/video/header.mp4"></video> -->
+  </section>
+
+  <!-- Zona desde donde se cargará el archivo 3D y visor -->
+
+  <main>
+    <section class="zona-subida">
+      <div class="caja-subida">
+        <img src="assets/img/nube-subida.png" alt="Sube tu archivo">
+        <p>Upload a file...<br><span>.glb o .gltf</span></p>
+      </div>
+      <p class="mensaje-inferior">Upload a file and visualize your 3D project</p>
+    </section>
+  </main>
+
+  <!-- El Footer o Pie de página (intentamos simular el original de Ennde)-->
+
+  <footer>
+  <div class="footer-container">
     
+    <div class="footer-izquierda">
+      <img src="assets/img/logo-ennde.png" alt="Logo ENNDE" class="footer-logo">
+      <p>
+        ENNDE nace como resultado de años de experiencia en la industria de un equipo multidisciplinar de talentos resolutivos y solventes.
+      </p>
+      <a href="https://ennde3d.com/contacto/" class="boton-contacto">CONTACTA</a>
+    </div>
+
+    <div class="footer-centro">
+      <h4>BLOG</h4>
+      <ul>
+        <li>&rsaquo; ENNDE SE POSICIONA TRAS SU CERTIFICACIÓN UNE EN ISO 9100 DE CALIDAD AEROESPACIAL</li>
+        <li>&rsaquo; Ennde ya es Paperless</li>
+        <li>&rsaquo; El 80% de los trabajadores prefieren la formación online a la presencial</li>
+        <li>&rsaquo; Publicado el «Informe de detección y análisis de necesidades formativas y planificación de la FPE en Andalucía»</li>
+      </ul>
+    </div>
+
+    <div class="footer-contacto">
+      <h4>INFO DE CONTACTO</h4>
+      <p>📍 Nuestras Oficinas:<br>
+         Avenida del Aljarafe 9, Nave 3, 41940 Tomares<br>
+         Calle Leonardo Da Vinci 18, Edificio Marie Curie, 41092 Sevilla</p>
+      <p>📞 601 30 61 92</p>
+      <p>📧 <a href="mailto:info@ennde3d.com">info@ennde3d.com</a></p>
+      <p>🕐 Lunes - Viernes: 9:00 AM – 8:30 PM</p>
+    </div>
+
+    <div class="footer-mapa">
+      <h4>ENCUÉNTRANOS</h4>
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3189.798279366279!2d-6.059558524334492!3d37.37101933653921!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0xd126cbf9fdcfc79%3A0x2a3745ae55d59394!2sEnnde%20-%20Ingenier%C3%ADa%2C%20dise%C3%B1o%2C%20fabricaci%C3%B3n%20y%20formaci%C3%B3n%203D!5e0!3m2!1ses!2ses!4v1717294326574!5m2!1ses!2ses"
+        width="250" height="180" style="border:0;" allowfullscreen="" loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
+    </div>
+    
+  </div>
+
+  <div class="footer-bottom">
+    <p>© Copyright 2015 – 2025 | ENNDE Corp · Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+    <!-- Scripts -->
+
+  <script src="js/script.js"></script>
 </body>
 </html>
