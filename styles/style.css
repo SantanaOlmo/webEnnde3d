@@ -1,5 +1,5 @@
-
-/* === RESET BÁSICO === */
+/* === REINICIO BÁSICO DE ESTILOS === */
+/* Quitamos los márgenes y rellenos que pone el navegador por defecto, así empezamos desde cero y con todo bajo control */
 * {
   margin: 0;
   padding: 0;
@@ -15,7 +15,7 @@ body {
 /* === NAVEGADOR === */
 header {
   background-color: #111;
-  padding: 1rem 2rem;
+  padding: 16px 32px;
 }
 
 .nav-container {
@@ -32,7 +32,7 @@ header {
 .nav-container nav ul {
   list-style: none;
   display: flex;
-  gap: 1.5rem;
+  gap: 24px;
 }
 
 .nav-container nav ul li a {
@@ -63,21 +63,21 @@ header {
   top: 20%;
   left: 8%;
   color: white;
-  font-size: 2.5rem;
+  font-size: 40px;
   font-weight: bold;
 }
 
 /* === ZONA DE SUBIDA === */
 .zona-subida {
   background-color: #a64863;
-  padding: 4rem 1rem;
+  padding: 64px 16px;
   text-align: center;
 }
 
 .caja-subida {
   background: white;
   border-radius: 20px;
-  padding: 3rem;
+  padding: 48px;
   box-shadow: 0px 8px 16px rgba(0,0,0,0.3);
   max-width: 500px;
   margin: 0 auto;
@@ -85,7 +85,7 @@ header {
 
 .caja-subida img {
   width: 80px;
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
 }
 
 .caja-subida p {
@@ -94,12 +94,12 @@ header {
 }
 
 .caja-subida span {
-  font-size: 0.9rem;
+  font-size: 14px;
 }
 
 .mensaje-inferior {
-  margin-top: 2rem;
-  font-size: 1rem;
+  margin-top: 32px;
+  font-size: 16px;
   color: #ddd;
   text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
 }
@@ -107,7 +107,7 @@ header {
 /* === FOOTER === */
 footer {
   background-color: #1c1c1c;
-  padding: 3rem 2rem;
+  padding: 48px 32px;
 }
 
 .footer-container {
@@ -115,7 +115,7 @@ footer {
   flex-wrap: wrap;
   justify-content: space-between;
   color: #ccc;
-  gap: 2rem;
+  gap: 32px;
 }
 
 .footer-izquierda,
@@ -127,13 +127,13 @@ footer {
 
 .footer-logo {
   width: 120px;
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
 }
 
 .boton-contacto {
   display: inline-block;
-  margin-top: 1rem;
-  padding: 0.5rem 1.5rem;
+  margin-top: 16px;
+  padding: 8px 24px;
   background-color: #b84e6d;
   color: white;
   text-decoration: none;
@@ -143,17 +143,17 @@ footer {
 
 footer h4 {
   color: #e95b85;
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
 }
 
 .footer-centro ul li {
-  margin-bottom: 0.5rem;
+  margin-bottom: 8px;
   line-height: 1.4;
 }
 
 .footer-bottom {
   text-align: center;
-  padding-top: 2rem;
-  font-size: 0.85rem;
+  padding-top: 32px;
+  font-size: 14px;
   color: #999;
 }
