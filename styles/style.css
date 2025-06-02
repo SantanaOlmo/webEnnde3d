@@ -1,5 +1,7 @@
-/* === REINICIO BÁSICO DE ESTILOS === */
+
+/* REINICIO BÁSICO DE ESTILOS */
 /* Quitamos los márgenes y rellenos que pone el navegador por defecto, así empezamos desde cero y con todo bajo control */
+
 * {
   margin: 0;
   padding: 0;
@@ -12,7 +14,9 @@ body {
   background-color: #1b1b1b;
 }
 
-/* === NAVEGADOR === */
+/* NAVEGADOR */
+/* Comenzamos con el navegador de la web */
+
 header {
   background-color: #111;
   padding: 16px 32px;
@@ -47,7 +51,9 @@ header {
   color: #d76385;
 }
 
-/* === CABECERA VISUAL === */
+/* CABECERA VISUAL */
+/* Indicamos ahora el estilo de todo lo relacionado con nuestra cabecera */
+
 .cabecera-visual {
   position: relative;
 }
@@ -67,7 +73,9 @@ header {
   font-weight: bold;
 }
 
-/* === ZONA DE SUBIDA === */
+/* ZONA DE SUBIDA 3D */
+/* Aquí tenemos el cuadro donde subiríamos los archivos en cuestión */
+
 .zona-subida {
   background-color: #a64863;
   padding: 64px 16px;
@@ -104,7 +112,9 @@ header {
   text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
 }
 
-/* === FOOTER === */
+/* FOOTER */
+/* Terminamos con el estilo del pie de página, intentando que se parezca al original */
+
 footer {
   background-color: #1c1c1c;
   padding: 48px 32px;
