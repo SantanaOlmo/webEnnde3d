@@ -1,6 +1,8 @@
 
-/* REINICIO BÁSICO DE ESTILOS */
-/* Quitamos los márgenes y rellenos que pone el navegador por defecto, así empezamos desde cero y con todo bajo control */
+:root{
+  --color-magenta:#d76385;
+}
+
 
 * {
   margin: 0;
@@ -15,8 +17,6 @@ body {
 }
 
 /* NAVEGADOR */
-/* Comenzamos con el navegador de la web */
-
 header {
   background-color: #111;
   padding: 16px 32px;
@@ -48,21 +48,22 @@ header {
 
 .nav-container nav ul li a.activo,
 .nav-container nav ul li a:hover {
-  color: #d76385;
+  color: var(--color-magenta);
 }
 
 /* CABECERA VISUAL */
-/* Indicamos ahora el estilo de todo lo relacionado con nuestra cabecera */
-
-.cabecera-visual {
-  position: relative;
+#cabeceraLoop {
+  display: flex;
+  height: 50vh;
+  h1{
+    color: var(--color-magenta);
+    align-content: center;
+    margin-left: 2em;
+    font-size: 5em;
+    width: 25vw;
+  }
 }
 
-.cabecera-visual .imagen-cabecera {
-  width: 100%;
-  height: auto;
-  display: block;
-}
 
 .texto-superpuesto {
   position: absolute;
@@ -74,36 +75,44 @@ header {
 }
 
 /* ZONA DE SUBIDA 3D */
-/* Aquí tenemos el cuadro donde subiríamos los archivos en cuestión */
-
-.zona-subida {
+#zona-subida {
   background-color: #a64863;
   padding: 64px 16px;
   text-align: center;
 }
 
-.caja-subida {
+#drop_zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   background: white;
   border-radius: 20px;
-  padding: 48px;
   box-shadow: 0px 8px 16px rgba(0,0,0,0.3);
-  max-width: 500px;
-  margin: 0 auto;
-}
-
-.caja-subida img {
-  width: 80px;
-  margin-bottom: 16px;
-}
-
-.caja-subida p {
-  color: #888;
+  width: 80vw;
+  aspect-ratio: 2/1;;
+  margin: auto;
+  color: #b9b9b9;
   font-weight: bold;
+  transition: width 0.3s ease-in-out;
+  #svgUpload{
+    transition: fill .7s ease-in-out;
+    width: 10em;
+  }
 }
 
-.caja-subida span {
-  font-size: 14px;
+#drop_zone.drag-over {
+  background-color: #ffffff;
+  transition: width 0.3s ease-in-out;
+  width: 85vw;
+  color:var(--color-magenta) ;
+  #svgUpload{
+    fill: var(--color-magenta);
+    transition: fill .7s ease-in-out;
+  }
 }
+
+
 
 .mensaje-inferior {
   margin-top: 32px;
@@ -113,8 +122,6 @@ header {
 }
 
 /* FOOTER */
-/* Terminamos con el estilo del pie de página, intentando que se parezca al original */
-
 footer {
   background-color: #1c1c1c;
   padding: 48px 32px;
