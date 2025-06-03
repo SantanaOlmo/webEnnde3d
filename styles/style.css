@@ -19,7 +19,8 @@ body {
 header {
   background-color: #111;
   padding: 16px 32px;
-  position: sticky;
+  position: static;
+  top:0px;
 }
 
 .nav-container {
@@ -28,9 +29,10 @@ header {
   align-items: center;
 }
 
-.logo {
+#logo {
   width: 300px;
   height: auto;
+  width: 13em;
 }
 
 .burguer {
@@ -70,8 +72,12 @@ header {
   position: relative;
 }
 
-.texto-superpuesto h1 {
-  font-size: 3em;
+.texto-superpuesto{
+  h1{
+    font-size: 3em;
+    padding-bottom: 1em;
+  }
+  line-height: 4em;
   color: var(--color-magenta);
   z-index: 2;
   position: relative;
