@@ -57,3 +57,4 @@ function dragEnterHandler(ev) {
 function dragLeaveHandler(ev) {
   ev.target.classList.remove("drag-over"); // Quita la clase cuando el archivo sale
 }
+
