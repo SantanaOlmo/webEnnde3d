@@ -1,26 +1,3 @@
-const imagenesFondo = [
-    "url('/assets/gif_360/Kaws_Bunny.gif')",
-    "url('/assets/gif_360/trompo.gif')",
-    "url('/assets/gif_360/car.gif')"
-  ];
-
-  let index = 0;
-
-  function cambiarFondo() {
-    const inicio = document.querySelector('main > #cabeceraLoop');
-    if (inicio) {
-      inicio.style.backgroundImage = imagenesFondo[index];
-      inicio.style.backgroundSize = "cover";
-      inicio.style.backgroundPosition = "60%";
-      inicio.style.transition = "background-image 1s ease-in-out";
-      index = (index + 1) % imagenesFondo.length;
-    }
-  }
-
-  setInterval(cambiarFondo, 8000); // cambia cada 8 segundos
-
-  cambiarFondo(); // llama una vez al principio para poner la primera imagen
-
 function dropHandler(ev) {
   console.log("File(s) dropped");
   ev.preventDefault();
@@ -63,3 +40,22 @@ const navLinks = document.getElementById('navlinks'); // sin #
 burguer.addEventListener('click', () => {
   navLinks.classList.toggle('show');
 });
+
+
+// === GIF CARRUSEL EN CABECERA ===
+
+const imagenesFondo = [
+  "assets/gif_360/Kaws_Bunny.gif",
+  "assets/gif_360/trompo.gif",
+  "assets/gif_360/car.gif"
+];
+
+let index = 0;
+
+setInterval(() => {
+  const gif = document.getElementById("gifCarrusel");
+  if (gif) {
+    gif.src = imagenesFondo[index];
+    index = (index + 1) % imagenesFondo.length;
+  }
+}, 8000);
