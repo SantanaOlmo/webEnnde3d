@@ -1,0 +1,28 @@
+ body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+    }
+    #three-container {
+      width: 100vw;
+      height: 100vh;
+      z-index: 0;
+    }
+    button{
+      z-index: 2;
+      position: fixed;
+      top: 1em;
+      left: 1em;
+      background:none;
+      border: none;
+      width: 5em;
+      transition: transform .1s ease-in-out;
+      
+    }
+    
+    button:hover{
+     cursor: pointer;
+     transform:scale(1.1);
+     transition: transform .1s ease-in-out;
+    }
