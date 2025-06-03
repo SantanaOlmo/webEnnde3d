@@ -58,3 +58,8 @@ function dragLeaveHandler(ev) {
   ev.target.classList.remove("drag-over"); // Quita la clase cuando el archivo sale
 }
 
+const burguer = document.querySelector('header > .nav-container > .burguer');
+const navLinks = document.getElementById('navlinks'); // sin #
+burguer.addEventListener('click', () => {
+  navLinks.classList.toggle('show');
+});
