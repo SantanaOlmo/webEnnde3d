@@ -28,6 +28,7 @@ Hemos elegido utilizar Three.js porque nos permite visualizar archivos `.glb` y 
    npx vite
    ```
    aparecerá algo así: 
+   
    ![imagen](/assets/readmeFiles/image1.png)
 
    y habrá que clicar en el link que aparece, el cual abrirá nuestro proyecto en el navegador
@@ -35,3 +36,4 @@ Hemos elegido utilizar Three.js porque nos permite visualizar archivos `.glb` y 
 
 
    Por cuestiones de seguridad deberemos crar un servidor local para poder utilizar las funcionalidades qeu nos ofrece three.js Y para crear este servidor local deberemos utilizar una herramienta que nos permita construir ese servidor (build tool), en este caso, hemos usado `vite`.
+

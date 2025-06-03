@@ -356,9 +356,7 @@ footer h4 {
     z-index: 0;
     position: relative;
   }
-  footer{
-    display: none;
-  }
+
   header{
     z-index: 999;
     position: relative;
@@ -462,4 +460,5 @@ footer h4 {
     fill: var(--color-magenta);
     transition: fill 0.7s ease-in-out;
   }
+}
 }
