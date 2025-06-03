@@ -3,12 +3,13 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
-let scene, camera, renderer, controls, loader;
+let scene, camera, renderer, controls, loader, gridHelper, currentModel;
 
 export function initScene(container) {
   scene = new THREE.Scene();
+  scene.background = new THREE.Color('grey');
 
-  camera = new THREE.PerspectiveCamera(30, container.clientWidth / container.clientHeight, 0.1, 1000);
+  camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 1000);
   camera.position.set(2, 2, 2);
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -18,8 +19,17 @@ export function initScene(container) {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
 
+  // Luz
   const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.5);
   scene.add(light);
+
+  // Cuadrícula
+  gridHelper = new THREE.GridHelper(20, 20);
+  scene.add(gridHelper);
+
+  // Ejes (opcional, puedes comentar si no los quieres)
+  const axesHelper = new THREE.AxesHelper(5);
+  scene.add(axesHelper);
 
   loader = new GLTFLoader();
 
@@ -31,7 +41,7 @@ export function initScene(container) {
 
   animate();
 
-  // Intentar cargar modelo automáticamente si está en sessionStorage
+  // Cargar modelo desde sessionStorage si existe
   autoLoadFromSession();
 }
 
@@ -45,12 +55,14 @@ export function loadModel(file) {
   loader.load(
     url,
     (gltf) => {
-      // Limpiar escena
-      while (scene.children.length > 0) {
-        scene.remove(scene.children[0]);
+      // Eliminar solo el modelo anterior, no la escena entera
+      if (currentModel) {
+        scene.remove(currentModel);
       }
-      scene.add(gltf.scene);
-      centerAndFitModel(gltf.scene);
+
+      currentModel = gltf.scene;
+      scene.add(currentModel);
+      centerAndFitModel(currentModel);
     },
     undefined,
     (error) => {
