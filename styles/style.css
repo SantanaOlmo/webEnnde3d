@@ -67,19 +67,33 @@ header {
   align-items: center;
   padding: 40px;
   background-color: white;
+  overflow: hidden; /* Recorta si el gif se sale */
+  position: relative;
 }
 
 .texto-superpuesto h1 {
   font-size: 3em;
   color: var(--color-magenta);
+  z-index: 2;
+  position: relative;
+}
+
+.gif-cabecera {
+  flex-shrink: 0;
+  overflow: visible;
 }
 
 .gif-cabecera img {
-  width: 300px;
-  max-width: 40vw;
-  height: auto;
-  border-radius: 10px;
+  width: 800px;
+  height: 600px;
+  object-fit: cover;
+  border-radius: 20px;
+  margin-top: -80px;     /* Se “sale” por arriba */
+  margin-bottom: -80px;  /* Se “sale” por abajo */
+  margin-right: -100px;  /* Se “sale” por la derecha */
+  z-index: 1;
 }
+
 
 /* ZONA DE SUBIDA 3D */
 #zona-subida {
@@ -243,22 +257,45 @@ footer h4 {
 }
 
   
- /* CABECERA */ 
-  #cabeceraLoop {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
+/* CABECERA RESPONSIVE */
+#cabeceraLoop {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px 16px;
+  gap: 24px;
+  overflow: hidden;
+}
 
-  #cabeceraLoop .texto-superpuesto h1 {
-    font-size: 2em;
-    width: 100%;
-  }
+#cabeceraLoop .texto-superpuesto {
+  position: static;
+}
 
-  .gif-cabecera img {
-    width: 200px;
-  }
+#cabeceraLoop .texto-superpuesto h1 {
+  font-size: 2em;
+  width: 100%;
+  color: var(--color-magenta);
+  margin: 0;
+}
 
+.gif-cabecera {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.gif-cabecera img {
+  width: 80%;
+  max-width: 300px;
+  height: auto;
+  object-fit: contain;
+  margin: 0;
+  border-radius: 12px;
+}
+/* ZONA DE SUBIDA 3D RESPONSIVE */
+#zona-subida {
   #drop_zone {
     aspect-ratio: 2/1.4;
   }
