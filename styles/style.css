@@ -1,6 +1,7 @@
 
 :root{
   --color-magenta:#d76385;
+  --color-grisOscuro:#111;
 }
 
 
@@ -20,6 +21,7 @@ body {
 header {
   background-color: #111;
   padding: 16px 32px;
+  position: sticky;
 }
 
 .nav-container {
@@ -31,6 +33,13 @@ header {
 .logo {
   width: 300px;
   height: auto;
+}
+.burguer {
+  display: none;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
 }
 
 .nav-container nav ul {
@@ -174,3 +183,77 @@ footer h4 {
   font-size: 14px;
   color: #999;
 }
+
+@media only screen and (max-width: 932px) {
+  /* Estilos para pantallas de hasta 768px */
+body {
+  background-color: lightblue;
+}
+
+   .burguer {
+    display: block;
+    color: #eee;
+  }
+
+  #navlinks {
+    display: none;
+    flex-direction: column;
+    background-color: #111;
+    position: absolute;
+    top: 72px; /* ajusta si tu header es más alto */
+    right: 0;
+    width: 100%;
+    padding: 16px;
+    gap: 16px;
+  }
+
+  #navlinks.show {
+    display: flex;
+  }
+
+  .nav-container {
+    position: relative;
+  }
+
+  .nav-container nav ul {
+    gap: 0; /* en móvil los enlaces van uno debajo del otro */
+  }
+
+
+  #cabeceraLoop {
+    position:relative;
+    height: 50vh;
+
+  
+
+  h1{
+    position: absolute;
+    text-align: center;
+    color:var(--color-magenta);
+    align-content: center;
+    margin: auto;
+    font-size: 2em;
+    width: 100vw;
+  }
+}
+
+#drop_zone {
+
+  aspect-ratio: 2/1.4;;
+
+}
+
+#drop_zone.drag-over {
+  background-color: #ffffff;
+  transition: width 0.3s ease-in-out;
+  width: 85vw;
+  color:var(--color-magenta) ;
+  #svgUpload{
+    fill: var(--color-magenta);
+    transition: fill .7s ease-in-out;
+  }
+}
+
+
+}
+
