@@ -48,6 +48,7 @@ header {
 }
 
 .nav-container nav ul li a {
+  font-family: 'Rajdhani', sans-serif;
   text-decoration: none;
   color: #eee;
   font-weight: bold;
