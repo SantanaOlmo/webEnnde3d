@@ -1,7 +1,6 @@
 :root {
   --color-magenta: #d76385;
   --color-grisOscuro: #111;
-  
 }
 
 * {
@@ -84,8 +83,8 @@ header {
 }
 
 .gif-cabecera img {
-  width: 800px;
-  height: 600px;
+  width: 900px;
+  height: 400px;
   object-fit: cover;
   border-radius: 20px;
   margin-top: -80px;     /* Se “sale” por arriba */
@@ -144,57 +143,210 @@ header {
 
 /* FOOTER */
 footer {
-  background-color: #1c1c1c;
-  padding: 48px 32px;
+  background: linear-gradient(to right, #171717 0%, #171717 100%);
+  padding: 60px 40px;
+  color: #ccc;
+  font-size: 15px;
 }
 
 .footer-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  color: #ccc;
-  gap: 32px;
+  gap: 40px;
 }
 
 .footer-izquierda,
 .footer-centro,
 .footer-contacto,
 .footer-mapa {
-  flex: 1 1 200px;
+  flex: 1 1 220px;
 }
 
 .footer-logo {
-  width: 120px;
+  width: 250px;
   margin-bottom: 16px;
+}
+
+.footer-izquierda {
+  flex: 1 1 200px;
+}
+
+.footer-izquierda p {
+  text-align: justify;
+  font-size: 14px;
+  line-height: 2;
+  color: #5c5c5c;
 }
 
 .boton-contacto {
   display: inline-block;
-  margin-top: 16px;
-  padding: 8px 24px;
-  background-color: #b84e6d;
+  margin-top: 20px;
+  padding: 10px 28px;
+  background-color: var(--color-magenta);
   color: white;
   text-decoration: none;
   font-weight: bold;
   border: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.boton-contacto:hover {
+  background-color: #c05675;
 }
 
 footer h4 {
-  color: #e95b85;
+  color: var(--color-magenta);
+  font-size: 16px;
   margin-bottom: 16px;
 }
 
+.footer-centro ul {
+  list-style: none;
+  padding-left: 0;
+}
+
 .footer-centro ul li {
-  margin-bottom: 8px;
-  line-height: 1.4;
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 12px;
+  line-height: 2;
+  font-size: 14px;
+  color: var(--color-magenta);
+  border-bottom: 1px solid #b84e6d;
+  padding-bottom: 8px;
+}
+
+.footer-centro ul li::before {
+  content: "›";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--color-magenta);
+  font-size: 16px;
+}
+
+.footer-contacto p,
+.footer-contacto a {
+  font-size: 14px;
+  color: #5c5c5c;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: flex-start;
+  line-height: 2;
+}
+
+.footer-contacto a {
+  color: var(--color-magenta);
+  text-decoration: none;
+}
+
+.footer-contacto a:hover {
+  color: #c05675;
+}
+
+.footer-contacto .oficinas::before {
+  content: "🌐";
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.footer-contacto .telefono::before {
+  content: "📞";
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.footer-contacto .correo a::before {
+  content: "✉️";
+  margin-right: 8px;
+  font-size: 14px;
+  display: inline-block;
+}
+
+.footer-contacto .horario::before {
+  content: "🕐";
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+/* Dirección: sin icono */
+.footer-contacto .direccion {
+  padding-left: 24px;
+  color: #5c5c5c;
+}
+
+.footer-mapa iframe {
+  width: 100%;
+  border-radius: 6px;
+  border: none;
 }
 
 .footer-bottom {
-  text-align: center;
-  padding-top: 32px;
+  background-color: #111; /* más oscuro */
+  padding: 32px 40px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
   font-size: 14px;
-  color: #999;
+  color: #ccc;
 }
+
+.footer-info {
+  flex: 2;
+}
+
+.footer-info p {
+  margin: 0 0 8px 0;
+  color: #ccc;
+}
+
+.footer-info span {
+  color: var(--color-magenta);
+}
+
+.footer-info .footer-links a {
+  color: var(--color-magenta);
+  margin-right: 8px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer-banners {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.footer-banners img {
+  height: 60px;
+  border-radius: 4px;
+}
+
+.footer-social {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+}
+
+.footer-social a {
+  background-color: white;
+  color: var(--color-magenta);
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  text-decoration: none;
+}
+
 
 @media only screen and (max-width: 932px) {
   body{
