@@ -41,23 +41,34 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // === GIF CARRUSEL EN CABECERA ===
 
-  const imagenesFondo = [
-    "assets/gif_360/Kaws_Bunny.gif",
-    "assets/gif_360/trompo.gif",
-    "assets/gif_360/car.gif"
-  ];
+  const videos = [
+  "assets/gif_video360/3DOB1.mp4",
+  "assets/gif_video360/3DOB9.mp4",
+  "assets/gif_video360/3DOB6.mp4",
+  "assets/gif_video360/3DOB11.mp4",
+  "assets/gif_video360/3DOB5.mp4",
+  "assets/gif_video360/3DOB2.mp4",
+];
 
-  let index = 0;
+let videoIndex = 0;
+const videoElement = document.getElementById("videoCarrusel");
 
-  setInterval(() => {
-    const gif = document.getElementById("gifCarrusel");
-    if (gif) {
-      gif.src = imagenesFondo[index];
-      index = (index + 1) % imagenesFondo.length;
-    }
-  }, 8000);
+function cambiarVideoConFade() {
+  videoElement.style.opacity = 0;
 
-  
+  setTimeout(() => {
+    videoElement.src = videos[videoIndex];
+    videoElement.load();
+    videoElement.play();
+    videoElement.style.opacity = 1;
+
+    videoIndex = (videoIndex + 1) % videos.length;
+  }, 1000); // 1 segundo para el fade-out
+}
+
+setInterval(cambiarVideoConFade, 5000);
+cambiarVideoConFade();
+
 
   // === MENÚ BURGUER ===
 const burguer = document.querySelector('.burguer');
