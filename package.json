@@ -1,0 +1,29 @@
+{
+  "name": "webennde3d",
+  "version": "1.0.0",
+  "description": "[drag and drop info](https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop)",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SantanaOlmo/webEnnde3d.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SantanaOlmo/webEnnde3d/issues"
+  },
+  "homepage": "https://github.com/SantanaOlmo/webEnnde3d#readme",
+  "dependencies": {
+    "three": "^0.177.0"
+  },
+  "devDependencies": {
+    "vite": "^6.3.5"
+  }
+}

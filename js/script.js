@@ -57,6 +57,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }, 8000);
 
+  
+
   // === MENÚ BURGUER ===
 const burguer = document.querySelector('.burguer');
 const navLinks = document.getElementById('navlinks');
