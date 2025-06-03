@@ -50,6 +50,7 @@ header {
 }
 
 .nav-container nav ul li a {
+  font-family: 'Rajdhani', sans-serif;
   text-decoration: none;
   color: #eee;
   font-weight: bold;
@@ -66,7 +67,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 40px;
+  padding: 50px;
   background-color: white;
   overflow: hidden; /* Recorta si el gif se sale */
   position: relative;
@@ -77,6 +78,8 @@ header {
     font-size: 3em;
     padding-bottom: 1em;
   }
+  font-family: 'Orbitron', sans-serif;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
   line-height: 4em;
   color: var(--color-magenta);
   z-index: 2;
@@ -88,16 +91,22 @@ header {
   overflow: visible;
 }
 
-.gif-cabecera img {
+.gif-cabecera video {
   width: 900px;
   height: 400px;
   object-fit: cover;
   border-radius: 20px;
-  margin-top: -80px;     /* Se “sale” por arriba */
-  margin-bottom: -80px;  /* Se “sale” por abajo */
-  margin-right: -100px;  /* Se “sale” por la derecha */
+  margin-top: -80px;     
+  margin-bottom: -80px; 
+  margin-right: -70px; 
   z-index: 1;
 }
+
+#videoCarrusel {
+  transition: opacity 1s ease;
+  opacity: 1;
+}
+
 
 
 /* ZONA DE SUBIDA 3D */
