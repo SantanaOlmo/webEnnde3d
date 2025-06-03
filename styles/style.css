@@ -182,6 +182,9 @@ footer h4 {
 }
 
 @media only screen and (max-width: 932px) {
+  body{
+    width: 100vw;
+  }
   main{
     z-index: 0;
     position: relative;
