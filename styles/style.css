@@ -1,7 +1,6 @@
-
-:root{
-  --color-magenta:#d76385;
-  --color-grisOscuro:#111;
+:root {
+  --color-magenta: #d76385;
+  --color-grisOscuro: #111;
 }
 
 * {
@@ -63,24 +62,22 @@ header {
 /* CABECERA VISUAL */
 #cabeceraLoop {
   display: flex;
-  height: 50vh;
+  justify-content: space-between;
+  align-items: center;
+  padding: 40px;
+  background-color: white;
 }
 
-#cabeceraLoop h1 {
+.texto-superpuesto h1 {
+  font-size: 3em;
   color: var(--color-magenta);
-  align-content: center;
-  margin-left: 2em;
-  font-size: 5em;
-  width: 25vw;
 }
 
-.texto-superpuesto {
-  position: absolute;
-  top: 20%;
-  left: 8%;
-  color: white;
-  font-size: 40px;
-  font-weight: bold;
+.gif-cabecera img {
+  width: 300px;
+  max-width: 40vw;
+  height: auto;
+  border-radius: 10px;
 }
 
 /* ZONA DE SUBIDA 3D */
@@ -97,7 +94,7 @@ header {
   justify-content: center;
   background: white;
   border-radius: 20px;
-  box-shadow: 0px 8px 16px rgba(0,0,0,0.3);
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.3);
   width: 80vw;
   aspect-ratio: 2/1;
   margin: auto;
@@ -127,7 +124,7 @@ header {
   margin-top: 32px;
   font-size: 16px;
   color: #ddd;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.5);
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 /* FOOTER */
@@ -185,12 +182,11 @@ footer h4 {
 }
 
 @media only screen and (max-width: 932px) {
-  /* Estilos para pantallas de hasta 768px */
-body {
-  background-color: lightblue;
-}
+  body {
+    background-color: lightblue;
+  }
 
-   .burguer {
+  .burguer {
     display: block;
     color: #eee;
   }
@@ -200,7 +196,7 @@ body {
     flex-direction: column;
     background-color: #111;
     position: absolute;
-    top: 72px; /* ajusta si tu header es más alto */
+    top: 72px;
     right: 0;
     width: 100%;
     padding: 16px;
@@ -216,44 +212,36 @@ body {
   }
 
   .nav-container nav ul {
-    gap: 0; /* en móvil los enlaces van uno debajo del otro */
+    gap: 0;
   }
-
 
   #cabeceraLoop {
-    position:relative;
-    height: 50vh;
-
-  
-
-  h1{
-    position: absolute;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    color:var(--color-magenta);
-    align-content: center;
-    margin: auto;
+  }
+
+  #cabeceraLoop .texto-superpuesto h1 {
     font-size: 2em;
-    width: 100vw;
+    width: 100%;
   }
-}
 
-#drop_zone {
+  .gif-cabecera img {
+    width: 200px;
+  }
 
-  aspect-ratio: 2/1.4;;
+  #drop_zone {
+    aspect-ratio: 2/1.4;
+  }
 
-}
+  #drop_zone.drag-over {
+    background-color: #ffffff;
+    transition: width 0.3s ease-in-out;
+    width: 85vw;
+  }
 
-#drop_zone.drag-over {
-  background-color: #ffffff;
-  transition: width 0.3s ease-in-out;
-  width: 85vw;
-  color:var(--color-magenta) ;
-  #svgUpload{
+  #drop_zone.drag-over #svgUpload {
     fill: var(--color-magenta);
-    transition: fill .7s ease-in-out;
+    transition: fill 0.7s ease-in-out;
   }
 }
-
-
-}
-
