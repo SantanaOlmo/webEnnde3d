@@ -57,9 +57,17 @@ function dragEnterHandler(ev) {
 function dragLeaveHandler(ev) {
   ev.target.classList.remove("drag-over"); // Quita la clase cuando el archivo sale
 }
+  const burguer = document.querySelector('.burguer');
+  const navLinks = document.getElementById('navlinks');
 
-const burguer = document.querySelector('header > .nav-container > .burguer');
-const navLinks = document.getElementById('navlinks'); // sin #
-burguer.addEventListener('click', () => {
-  navLinks.classList.toggle('show');
-});
+  burguer.addEventListener('click', () => {
+    navLinks.classList.toggle('show');
+  });
+
+  // Cerrar menú al hacer clic en un enlace
+  const links = navLinks.querySelectorAll('a');
+  links.forEach(link => {
+    link.addEventListener('click', () => {
+      navLinks.classList.remove('show');
+    });
+  });
