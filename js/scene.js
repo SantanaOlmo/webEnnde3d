@@ -4,6 +4,9 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 let scene, camera, renderer, controls, loader, gridHelper, currentModel;
+let cameraPositionX=document.getElementById('x');
+let cameraPositionY=document.getElementById('y');
+let cameraPositionZ=document.getElementById('z');
 
 export function initScene(container) {
   scene = new THREE.Scene();
@@ -14,25 +17,33 @@ export function initScene(container) {
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.physicallyCorrectLights = true; // 👈 Iluminación realista
+  renderer.outputColorSpace = THREE.SRGBColorSpace; // 👈 Para glTF correcto
   container.appendChild(renderer.domElement);
 
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
 
-  // Luz
-  const light = new THREE.HemisphereLight(0xffffff, 0x444444, 1.5);
-  scene.add(light);
+  // 💡 Luz ambiental (suave, general)
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+  scene.add(ambientLight);
 
-  // Cuadrícula
+  // 💡 Luz direccional (como el sol)
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+  directionalLight.position.set(5, 10, 7.5);
+  directionalLight.castShadow = true;
+  scene.add(directionalLight);
+
+  // Cuadrícula y ejes
   gridHelper = new THREE.GridHelper(20, 20);
   scene.add(gridHelper);
 
-  // Ejes (opcional, puedes comentar si no los quieres)
   const axesHelper = new THREE.AxesHelper(5);
   scene.add(axesHelper);
 
   loader = new GLTFLoader();
 
+  // Resize
   window.addEventListener('resize', () => {
     camera.aspect = container.clientWidth / container.clientHeight;
     camera.updateProjectionMatrix();
@@ -40,14 +51,14 @@ export function initScene(container) {
   });
 
   animate();
-
-  // Cargar modelo desde sessionStorage si existe
   autoLoadFromSession();
 }
+
 
 export function loadModel(file) {
   if (!loader) {
     console.error("Scene not initialized. Call initScene(container) first.");
+
     return;
   }
 
@@ -91,8 +102,13 @@ function animate() {
   requestAnimationFrame(animate);
   controls.update();
   renderer.render(scene, camera);
+
+  cameraPositionX.textContent=redondear(camera.position.x, 3);
+  cameraPositionY.textContent=redondear(camera.position.y, 3);
+  cameraPositionZ.textContent=redondear(camera.position.z, 3);
 }
 
+/*CARGAR EL ARCHIVO 3D DEL SESSION STORAGE*/
 function autoLoadFromSession() {
   const base64 = sessionStorage.getItem('uploadedModel');
 
@@ -118,4 +134,9 @@ function autoLoadFromSession() {
     console.error("Error al convertir y cargar modelo desde sessionStorage:", e);
     alert("El modelo no pudo cargarse desde sessionStorage. Asegúrate de haber subido un archivo válido.");
   }
+}
+
+function redondear(num,decimales){
+  const factor = Math.pow(10, decimales);
+  return Math.round(num * factor) / factor;
 }
