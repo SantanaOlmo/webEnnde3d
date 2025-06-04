@@ -1,0 +1,21 @@
+{
+  "Quartzite": {
+    "map": "/assets/textures/Quartzite/info/Quartzite_BaseColor.jpg",
+    "aoMap": "/assets/textures/Quartzite/info/Quartzite_AmbientOcclusion.jpg",
+    "metalnessMap": "/assets/textures/Quartzite/info/Quartzite_Metallic.jpg",
+    "roughnessMap": "/assets/textures/Quartzite/info/Quartzite_Roughness.jpg",
+    "normalMap": "/assets/textures/Quartzite/info/Quartzite_Normal.png",
+    "displacementMap": "/assets/textures/Quartzite/info/Quartzite_Displacement.tiff",
+    "preview": "/assets/textures/Quartzite/preview.png"
+  },
+  "WoodVeneer": {
+    "map": "/assets/textures/WoodVeneer/info/WoodVeneer_BaseColor.jpg",
+    "aoMap": "/assets/textures/WoodVeneer/info/WoodVeneer_AmbientOcclusion.jpg",
+    "metalnessMap": "/assets/textures/WoodVeneer/info/WoodVeneer_Metallic.jpg",
+    "roughnessMap": "/assets/textures/WoodVeneer/info/WoodVeneer_Roughness.jpg",
+    "normalMap": "/assets/textures/WoodVeneer/info/WoodVeneer_Normal.png",
+    "displacementMap": "/assets/textures/WoodVeneer/info/WoodVeneer_Displacement.tiff",
+    "preview": "/assets/textures/WoodVeneer/preview.png"
+  }
+}
+

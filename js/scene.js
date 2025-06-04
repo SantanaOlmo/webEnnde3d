@@ -179,12 +179,14 @@ function redondear(num,decimales){
 
 export function actualizarModelo(){
   const datos= JSON.parse(sessionStorage.getItem('estilos'));
+
       currentModel.traverse((child) => {
         if (child.isMesh) {
           child.material = new THREE.MeshStandardMaterial({
-            color: new THREE.Color(datos.color),
-            roughness: datos.roughness,
-            metalness: datos.metalness,
+          
+          color: new THREE.Color(datos.color),
+          roughness: datos.roughness,
+          metalness: datos.metalness,
           });
           child.material.needsUpdate = true;
         }
