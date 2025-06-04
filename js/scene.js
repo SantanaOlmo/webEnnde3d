@@ -91,7 +91,6 @@ export function loadModel(file) {
       scene.add(currentModel);
       centerAndFitModel(currentModel);
 
-
     },
     undefined,
     (error) => {
