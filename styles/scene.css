@@ -3,13 +3,14 @@
       padding: 0;
       overflow: hidden;
       height: 100%;
+      background-color: pink;
     }
     #three-container {
       width: 100vw;
       height: 100vh;
       z-index: 0;
     }
-    button{
+    #back{
       z-index: 2;
       position: fixed;
       top: 1.5em;
@@ -23,7 +24,7 @@
       }
     }
     
-    button:hover{
+    #back:hover{
      cursor: pointer;
      transform:scale(1.1);
      transition: all .1s ease-in-out;
@@ -47,3 +48,71 @@
       bottom: 0;
       left: 0;
     }
+
+    /*INFO DEL DESPLEGABLE*/
+    #menuDesplegable{
+      padding-top: 2em;
+      position: absolute;
+      height: 100vh;
+      width: 300px;
+      z-index: 10;
+      right: 0;
+      top: 0;
+      background-color: rgba(0, 0, 0, 0.486);
+    }
+    #formStyles{
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    #options{
+      width: 2em;
+      background: none;
+      fill: rgb(192, 192, 192);
+      position: absolute;
+      right: 2em;
+      top: 1em;
+      border: none;
+      width: 3em;
+      
+      svg{
+
+      }
+    }
+    
+    #menuDesplegable > #aplicarEstilos{
+      cursor: pointer;
+      border: none;
+      transition: transform .1s ease-in-out;
+      border-radius: 10px;
+      padding: 5px;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(102, 102, 102, 0.911);
+
+    }
+    #menuDesplegable > #aplicarEstilos:hover{
+      font-size: 1em;
+      transition: font-size .1s ease-in-out;
+    }
+    #menuDesplegable >input:hover{
+        transform: scale(1.02);
+      transition: transform .1s ease-in-out;
+    }
+
+    input{
+      border: none;
+      transition: transform .1s ease-in-out;
+      cursor: pointer;
+    }
+
+    #chooseColor{
+      width: 90%;
+      height: 3em;
+      background:none;
+      padding: 0;
+      
+    }
+   
