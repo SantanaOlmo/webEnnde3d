@@ -13,6 +13,4 @@ form.addEventListener('input',function(){
     datos.metalness=parseFloat(datos.metalness)/1000;
     sessionStorage.setItem('estilos',JSON.stringify(datos))
     actualizarModelo();
-    console.log(form);
-    console.log(`desde viewerStyle.js: datos.roughnes= ${datos.roughness}`)
-});
+    });
