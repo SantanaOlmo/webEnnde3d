@@ -92,19 +92,21 @@ export function loadModel(file) {
       centerAndFitModel(currentModel);
 
       // 🔽 Cargar la textura y aplicarla al modelo
-      /*const textureLoader = new THREE.TextureLoader();
-      const texture = textureLoader.load('/assets/textures/porcelain.jpg'); // Cambia esta ruta según tu imagen
+      const textureLoader = new THREE.TextureLoader();
+      const normalMap = textureLoader.load('/assets/textures/normalfabric.jpg'); // Cambia esta ruta según tu imagen
+      const colorMap = textureLoader.load('/assets/textures/fabric1.png'); // Cambia esta ruta según tu imagen
 
       currentModel.traverse((child) => {
         if (child.isMesh) {
           child.material = new THREE.MeshStandardMaterial({
-            map: texture,
-            roughness: 0,
-            metalness: 0.1,
+            map: colorMap,
+            normalMap:normalMap,
+            roughness: 1,
+            metalness: 0,
           });
           child.material.needsUpdate = true;
         }
-      });*/
+      });
     },
     undefined,
     (error) => {
