@@ -93,10 +93,10 @@ export function loadModel(file) {
 
       // 🔽 Cargar la textura y aplicarla al modelo
       const textureLoader = new THREE.TextureLoader();
-      const normalMap = textureLoader.load('/assets/textures/normalfabric.jpg'); // Cambia esta ruta según tu imagen
-      const colorMap = textureLoader.load('/assets/textures/fabric1.png'); // Cambia esta ruta según tu imagen
+      //const normalMap = textureLoader.load('/assets/textures/normalfabric.jpg'); // Cambia esta ruta según tu imagen
+      //const colorMap = textureLoader.load('/assets/textures/fabric1.png'); // Cambia esta ruta según tu imagen
 
-      currentModel.traverse((child) => {
+      /*currentModel.traverse((child) => {
         if (child.isMesh) {
           child.material = new THREE.MeshStandardMaterial({
             map: colorMap,
@@ -106,7 +106,7 @@ export function loadModel(file) {
           });
           child.material.needsUpdate = true;
         }
-      });
+      });*/
     },
     undefined,
     (error) => {
@@ -190,4 +190,19 @@ function autoLoadFromSession() {
 function redondear(num,decimales){
   const factor = Math.pow(10, decimales);
   return Math.round(num * factor) / factor;
+}
+
+
+export function actualizarModelo(){
+  const datos= JSON.parse(sessionStorage.getItem('estilos'));
+      currentModel.traverse((child) => {
+        if (child.isMesh) {
+          child.material = new THREE.MeshStandardMaterial({
+            color: new THREE.Color(datos.color),
+            roughness: datos.roughness,
+            metalness: datos.metalness,
+          });
+          child.material.needsUpdate = true;
+        }
+      });
 }
