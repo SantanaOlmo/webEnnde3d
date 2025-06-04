@@ -77,7 +77,7 @@ header {
 
 .texto-superpuesto{
   h1{
-    font-size: 2.5em;
+    font-size: 2.6em;
     padding-bottom: 1em;
   }
   font-family: 'Orbitron', sans-serif;
@@ -101,6 +101,11 @@ header {
   margin-bottom: -80px; 
   margin-right: -50px; 
   z-index: 1;
+
+  /* Efecto suavizado: degradado solo en los bordes extremos */
+  mask-image: linear-gradient(to right, transparent 0%, black 15%, black 95%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 95%, transparent 100%);
+
 }
 
 #videoCarrusel {

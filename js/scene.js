@@ -99,6 +99,14 @@ export function loadModel(file) {
       }
 
       currentModel = gltf.scene;
+
+      // 🔒 Guardar los materiales originales para poder restaurarlos más tarde
+      currentModel.traverse((child) => {
+        if (child.isMesh && child.material) {
+          child.userData.originalMaterial = child.material.clone();
+        }
+      });
+
       scene.add(currentModel);
       centerAndFitModel(currentModel);
     },
@@ -109,7 +117,6 @@ export function loadModel(file) {
     }
   );
 }
-
 
 // Centra el modelo y ajusta la cámara para que encaje
 function centerAndFitModel(model) {
@@ -206,3 +213,19 @@ export function actualizarModelo() {
     }
   });
 }
+
+// Restaura los materiales originales guardados en userData.originalMaterial
+export function restaurarMaterialesOriginales() {
+  if (!currentModel) {
+    alert("No hay modelo cargado actualmente.");
+    return;
+  }
+
+  currentModel.traverse((child) => {
+    if (child.isMesh && child.userData.originalMaterial) {
+      child.material = child.userData.originalMaterial.clone();
+      child.material.needsUpdate = true;
+    }
+  });
+}
+

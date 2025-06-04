@@ -1,19 +1,21 @@
 // viewerStyle.js
 
-// Importa la función que actualiza el modelo según el formulario
-import { actualizarModelo } from '/js/scene.js';
+// Importa las funciones necesarias desde scene.js
+import { actualizarModelo, restaurarMaterialesOriginales } from '/js/scene.js';
 
-// Referencias al botón y al formulario de estilos
-let btnOptions = document.getElementById('options');
-let form = document.getElementById('formStyles');
+// Referencias al botón, al panel y al formulario de estilos
+const btnOptions = document.getElementById('options');
+const form = document.getElementById('formStyles');
+const menuPanel = document.getElementById('menuDesplegable');
 
-// Evento de clic sobre el botón de opciones (sin funcionalidad por ahora)
-btnOptions.addEventListener('click', function() {
-  // (Pendiente: abrir/cerrar menú)
+// Al hacer clic en el botón de los tres puntos, alterna visibilidad del menú
+btnOptions.addEventListener('click', () => {
+  menuPanel.classList.toggle('oculto');
+  btnOptions.classList.toggle('rotado'); // Activa o desactiva la rotación del icono
 });
 
 // Escucha cambios en los inputs del formulario (color, roughness, metalness)
-form.addEventListener('input', function() {
+form.addEventListener('input', () => {
   const datos = Object.fromEntries(new FormData(form).entries());
   datos.roughness = parseFloat(datos.roughness) / 1000;
   datos.metalness = parseFloat(datos.metalness) / 1000;
@@ -21,3 +23,21 @@ form.addEventListener('input', function() {
   sessionStorage.setItem('estilos', JSON.stringify(datos));
   actualizarModelo();
 });
+
+// Botón para restablecer estilos originales del modelo
+const btnReset = document.getElementById('resetEstilos');
+
+btnReset.addEventListener('click', () => {
+  restaurarMaterialesOriginales();
+  sessionStorage.removeItem('estilos');
+
+  // También puedes reiniciar el formulario visualmente
+  const colorInput = document.getElementById('chooseColor');
+  const roughnessInput = form.elements['roughness'];
+  const metalnessInput = form.elements['metalness'];
+
+  if (colorInput) colorInput.value = "#ffffff"; // puedes ajustar esto si quieres
+  if (roughnessInput) roughnessInput.value = 500;
+  if (metalnessInput) metalnessInput.value = 500;
+});
+

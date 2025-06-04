@@ -1,118 +1,178 @@
- body, html {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-      height: 100%;
-      background-color: pink;
-    }
-    #three-container {
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
-    }
-    #back{
-      z-index: 2;
-      position: fixed;
-      top: 1.5em;
-      left: 1em;
-      background:none;
-      border: none;
-      width: 5em;
-      transition: all .1s ease-in-out;
-      svg{
-        fill: rgba(255, 255, 255, 0.733);
-      }
-    }
-    
-    #back:hover{
-     cursor: pointer;
-     transform:scale(1.1);
-     transition: all .1s ease-in-out;
-     svg{
-      fill: white;
-     }
-    }
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  height: 100%;
+  background-color: pink;
+}
 
-    #cameraPosition{
-      color: white;
-    }
+#three-container {
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+}
 
-    #bottomInfo{
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 15em;
-      height: 2em;
-      background-color: rgba(0, 0, 0, 0.555);
-      position:absolute;
-      bottom: 0;
-      left: 0;
-    }
+#back {
+  z-index: 2;
+  position: fixed;
+  top: 1.5em;
+  left: 1em;
+  background: none;
+  border: none;
+  width: 5em;
+  transition: all .1s ease-in-out;
+}
 
-    /*INFO DEL DESPLEGABLE*/
-    #menuDesplegable{
-      padding-top: 2em;
-      position: absolute;
-      height: 100vh;
-      width: 300px;
-      z-index: 10;
-      right: 0;
-      top: 0;
-      background-color: rgba(0, 0, 0, 0.486);
-    }
-    #formStyles{
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
+#back svg {
+  fill: rgba(255, 255, 255, 0.733);
+}
 
-    #options{
-      width: 2em;
-      background: none;
-      fill: rgb(192, 192, 192);
-      position: absolute;
-      right: 2em;
-      top: 1em;
-      border: none;
-      width: 3em;
-      
-      svg{
+#back:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  transition: all .1s ease-in-out;
+}
 
-      }
-    }
-    
-    #menuDesplegable > #aplicarEstilos{
-      cursor: pointer;
-      border: none;
-      transition: transform .1s ease-in-out;
-      border-radius: 10px;
-      padding: 5px;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: rgba(102, 102, 102, 0.911);
+#back:hover svg {
+  fill: white;
+}
 
-    }
-    #menuDesplegable > #aplicarEstilos:hover{
-      font-size: 1em;
-      transition: font-size .1s ease-in-out;
-    }
-    #menuDesplegable >input:hover{
-        transform: scale(1.02);
-      transition: transform .1s ease-in-out;
-    }
+#cameraPosition {
+  color: white;
+}
 
-    input{
-      border: none;
-      transition: transform .1s ease-in-out;
-      cursor: pointer;
-    }
+#bottomInfo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 15em;
+  height: 2em;
+  background-color: rgba(0, 0, 0, 0.555);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
 
-    #chooseColor{
-      width: 90%;
-      height: 3em;
-      background:none;
-      padding: 0;
-      
-    }
-   
+/* Panel lateral ocultable */
+#menuDesplegable {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 4em 0.5em 2em;
+  position: absolute;
+  height: 100vh;
+  width: 250px;
+  z-index: 10;
+  right: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #eee;
+  font-family: Arial, sans-serif;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform: translateX(0);
+  opacity: 1;
+}
+
+#menuDesplegable.oculto {
+  transform: translateX(100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+#formStyles {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#formStyles label {
+  color: #eee;
+  margin-top: 1em;
+  font-size: 0.95em;
+  letter-spacing: 0.5px;
+}
+
+/* Aplica ancho común a sliders y color picker */
+#formStyles input[type="range"],
+#formStyles input[type="color"] {
+  width: 95%;
+  margin-bottom: 1em;
+}
+
+#formStyles input[type="color"] {
+  height: 3em;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+
+/* Botón de tres puntos flotante */
+#options {
+  width: 3em;
+  background: none;
+  fill: rgb(192, 192, 192);
+  position: fixed;
+  right: 2em;
+  top: 1.5em;
+  border: none;
+  z-index: 20;
+}
+
+#menuDesplegable > #aplicarEstilos {
+  cursor: pointer;
+  border: none;
+  transition: transform .1s ease-in-out;
+  border-radius: 10px;
+  padding: 5px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(102, 102, 102, 0.911);
+}
+
+#menuDesplegable > #aplicarEstilos:hover {
+  font-size: 1em;
+  transition: font-size .1s ease-in-out;
+}
+
+#menuDesplegable > input:hover {
+  transform: scale(1.02);
+  transition: transform .1s ease-in-out;
+}
+
+input {
+  border: none;
+  transition: transform .1s ease-in-out;
+  cursor: pointer;
+}
+
+#options svg {
+  transform: rotate(90deg);
+  transition: transform 0.3s ease;
+}
+
+#options.rotado svg {
+  transform: rotate(0deg);
+}
+
+#resetEstilos {
+  margin-top: 1em;
+  padding: 6px 12px;
+  background-color: transparent;
+  border: 2px solid #eee;
+  color: #eee;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+#resetEstilos:hover {
+  background-color: #eee;
+  color: #000;
+}
+
