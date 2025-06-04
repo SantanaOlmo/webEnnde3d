@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-
+  
   function dropHandler(ev) {
     ev.preventDefault();
 

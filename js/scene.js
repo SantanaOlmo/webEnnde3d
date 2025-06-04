@@ -23,19 +23,19 @@ export function initScene(container) {
 
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
-
-  // 💡 Luz ambiental (suave, general)
-  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-  scene.add(ambientLight);
-
+  
   // 💡 Luz direccional (como el sol)
   const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
   directionalLight.position.set(5, 10, 7.5);
   directionalLight.castShadow = true;
   scene.add(directionalLight);
+  
+  // 💡 Luz ambiental (suave, general)
+ /* const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+  scene.add(ambientLight);*/
 
   // Cuadrícula y ejes
-  gridHelper = new THREE.GridHelper(20, 20);
+  gridHelper = new THREE.GridHelper(20,20);
   scene.add(gridHelper);
 
   const axesHelper = new THREE.AxesHelper(5);
@@ -53,7 +53,6 @@ export function initScene(container) {
   animate();
   autoLoadFromSession();
 }
-
 
 export function loadModel(file) {
   if (!loader) {
@@ -98,15 +97,32 @@ function centerAndFitModel(model) {
   controls.update();
 }
 
+//para rotar la imagen automaticamente
+let angle = 0;
+const radius = 5; // Distancia constante de la cámara al centro (ajústalo según tu escena)
+
 function animate() {
   requestAnimationFrame(animate);
+
+  /*// Incrementar el ángulo suavemente
+  angle += 0.005;
+
+  // Calcular la nueva posición de la cámara en un círculo
+  camera.position.x = radius * Math.sin(angle);
+  camera.position.z = radius * Math.cos(angle);
+  camera.position.y = 1.5; // Altura constante de la cámara (ajustable)
+
+  camera.lookAt(0, 0, 0); // La cámara siempre apunta al centro*/
   controls.update();
   renderer.render(scene, camera);
 
-  cameraPositionX.textContent=redondear(camera.position.x, 3);
-  cameraPositionY.textContent=redondear(camera.position.y, 3);
-  cameraPositionZ.textContent=redondear(camera.position.z, 3);
+  // Mostrar posición de cámara redondeada
+  cameraPositionX.textContent = redondear(camera.position.x, 3);
+  cameraPositionY.textContent = redondear(camera.position.y, 3);
+  cameraPositionZ.textContent = redondear(camera.position.z, 3);
 }
+
+
 
 /*CARGAR EL ARCHIVO 3D DEL SESSION STORAGE*/
 function autoLoadFromSession() {
