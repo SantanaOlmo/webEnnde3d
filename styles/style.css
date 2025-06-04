@@ -96,7 +96,6 @@ header {
 .gif-cabecera video {
   width: 900px;
   height: 400px;
-  object-fit: cover;
   border-radius: 20px;
   margin-top: -80px;     
   margin-bottom: -80px; 
@@ -107,6 +106,7 @@ header {
 #videoCarrusel {
   transition: opacity 1s ease;
   opacity: 1;
+  object-fit: contain;
 }
 
 

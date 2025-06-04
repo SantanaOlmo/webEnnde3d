@@ -2,6 +2,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+
 
 let scene, camera, renderer, controls, loader, gridHelper, currentModel;
 let cameraPositionX=document.getElementById('x');
@@ -10,8 +12,14 @@ let cameraPositionZ=document.getElementById('z');
 
 export function initScene(container) {
   scene = new THREE.Scene();
-  scene.background = new THREE.Color('grey');
+  //scene.background = new THREE.Color('red');
 
+  const rgbeLoader = new RGBELoader();
+  rgbeLoader.load('/assets/hdri/campo.hdr', function (texture) {
+  texture.mapping = THREE.EquirectangularReflectionMapping;
+  scene.background = texture;       // Fondo HDRI
+  scene.environment = texture;     // Luz ambiental basada en HDRI
+  });
   camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 1000);
   camera.position.set(2, 2, 2);
 
@@ -21,25 +29,36 @@ export function initScene(container) {
   renderer.outputColorSpace = THREE.SRGBColorSpace; // 👈 Para glTF correcto
   container.appendChild(renderer.domElement);
 
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-  
-  // 💡 Luz direccional (como el sol)
-  const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-  directionalLight.position.set(5, 10, 7.5);
-  directionalLight.castShadow = true;
-  scene.add(directionalLight);
-  
-  // 💡 Luz ambiental (suave, general)
- /* const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
-  scene.add(ambientLight);*/
-
-  // Cuadrícula y ejes
+    // Cuadrícula y ejes
   gridHelper = new THREE.GridHelper(20,20);
   scene.add(gridHelper);
 
   const axesHelper = new THREE.AxesHelper(5);
   scene.add(axesHelper);
+
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  
+  // 💡 Luz direccional (como el sol)
+  const directionalLight = new THREE.DirectionalLight('white', .25);
+  directionalLight.position.set(5, 10, 20);
+  directionalLight.castShadow = true;
+  scene.add(directionalLight);
+  const directionalLight2 = new THREE.DirectionalLight('white', 1);
+  directionalLight2.position.set(-5, -10, 7.5);
+  directionalLight2.castShadow = true;
+  scene.add(directionalLight2);
+  const directionalLight3 = new THREE.DirectionalLight('white', 1);
+  directionalLight3.position.set(-180, -360, 20);
+  directionalLight3.castShadow = true;
+  scene.add(directionalLight3);
+  
+  // 💡 Luz ambiental (suave, general)
+ /* const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+  scene.add(ambientLight);*/
+
+
+
 
   loader = new GLTFLoader();
 
@@ -57,7 +76,6 @@ export function initScene(container) {
 export function loadModel(file) {
   if (!loader) {
     console.error("Scene not initialized. Call initScene(container) first.");
-
     return;
   }
 
@@ -65,7 +83,6 @@ export function loadModel(file) {
   loader.load(
     url,
     (gltf) => {
-      // Eliminar solo el modelo anterior, no la escena entera
       if (currentModel) {
         scene.remove(currentModel);
       }
@@ -73,6 +90,21 @@ export function loadModel(file) {
       currentModel = gltf.scene;
       scene.add(currentModel);
       centerAndFitModel(currentModel);
+
+      // 🔽 Cargar la textura y aplicarla al modelo
+      /*const textureLoader = new THREE.TextureLoader();
+      const texture = textureLoader.load('/assets/textures/porcelain.jpg'); // Cambia esta ruta según tu imagen
+
+      currentModel.traverse((child) => {
+        if (child.isMesh) {
+          child.material = new THREE.MeshStandardMaterial({
+            map: texture,
+            roughness: 0,
+            metalness: 0.1,
+          });
+          child.material.needsUpdate = true;
+        }
+      });*/
     },
     undefined,
     (error) => {
@@ -81,6 +113,7 @@ export function loadModel(file) {
     }
   );
 }
+
 
 function centerAndFitModel(model) {
   const box = new THREE.Box3().setFromObject(model);
