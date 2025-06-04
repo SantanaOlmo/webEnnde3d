@@ -91,22 +91,7 @@ export function loadModel(file) {
       scene.add(currentModel);
       centerAndFitModel(currentModel);
 
-      // 🔽 Cargar la textura y aplicarla al modelo
-      const textureLoader = new THREE.TextureLoader();
-      //const normalMap = textureLoader.load('/assets/textures/normalfabric.jpg'); // Cambia esta ruta según tu imagen
-      //const colorMap = textureLoader.load('/assets/textures/fabric1.png'); // Cambia esta ruta según tu imagen
 
-      /*currentModel.traverse((child) => {
-        if (child.isMesh) {
-          child.material = new THREE.MeshStandardMaterial({
-            map: colorMap,
-            normalMap:normalMap,
-            roughness: 1,
-            metalness: 0,
-          });
-          child.material.needsUpdate = true;
-        }
-      });*/
     },
     undefined,
     (error) => {
