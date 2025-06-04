@@ -17,10 +17,12 @@ body {
 
 /* NAVEGADOR */
 header {
+  
   background-color: #111;
   padding: 16px 32px;
-  position: static;
-  top:0px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 .nav-container {
@@ -69,13 +71,13 @@ header {
   align-items: center;
   padding: 50px;
   background-color: white;
-  overflow: hidden; /* Recorta si el gif se sale */
+  overflow: hidden;
   position: relative;
 }
 
 .texto-superpuesto{
   h1{
-    font-size: 3em;
+    font-size: 2.5em;
     padding-bottom: 1em;
   }
   font-family: 'Orbitron', sans-serif;
@@ -111,12 +113,14 @@ header {
 
 /* ZONA DE SUBIDA 3D */
 #zona-subida {
-  background-color: #a64863;
+  background: linear-gradient(to bottom, #a64863 0%, #732f44 100%);
   padding: 64px 16px;
   text-align: center;
 }
 
 #drop_zone {
+  position: relative;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -127,14 +131,32 @@ header {
   width: 80vw;
   aspect-ratio: 2/1;
   margin: auto;
-  color: #b9b9b9;
+  color: #d6c4c8;
   font-weight: bold;
   transition: width 0.3s ease-in-out;
+}
+
+#drop_zone::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -75%;
+  width: 50%;
+  height: 200%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(25deg);
+  transition: transform 0.6s ease-in-out;
+  pointer-events: none;
+}
+
+#drop_zone:hover::before {
+  transform: translateX(300%) rotate(25deg);
 }
 
 #svgUpload {
   transition: fill 0.7s ease-in-out;
   width: 10em;
+  fill: #d6c4c8;
 }
 
 #drop_zone.drag-over {
@@ -362,6 +384,12 @@ footer h4 {
   text-decoration: none;
 }
 
+.footer-centro ul li:hover {
+  color: white;
+  cursor: pointer;
+}
+
+/* DISEÑO RESPONSIVE */
 
 @media only screen and (max-width: 932px) {
   body{

@@ -8,9 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   "assets/gif_video360/3DOB1.mp4",
   "assets/gif_video360/3DOB9.mp4",
   "assets/gif_video360/3DOB6.mp4",
-  "assets/gif_video360/3DOB11.mp4",
   "assets/gif_video360/3DOB5.mp4",
-  "assets/gif_video360/3DOB2.mp4",
 ];
 
 let videoIndex = 0;
