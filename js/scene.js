@@ -5,6 +5,8 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
+import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
+
 
 // Variables globales
 let scene, camera, renderer, controls, loader, gridHelper, currentModel;
@@ -56,7 +58,7 @@ directionalLight.castShadow = true;
 scene.add(directionalLight);
 
 // Helper visual para la luz direccional 1
-const helper1 = new THREE.DirectionalLightHelper(directionalLight, 2, 0xff0000); // tamaño, color
+const helper1 = new THREE.DirectionalLightHelper(directionalLight, 2, 'red'); // tamaño, color
 scene.add(helper1);
 
 // Esfera en la posición de la luz
@@ -76,6 +78,32 @@ const line1 = new THREE.Line(
   lineGeom1,
   new THREE.LineBasicMaterial({ color: 0xff0000 })
 );
+const dragControls = new DragControls([sphere1], camera, renderer.domElement);
+
+// Desactiva orbit mientras haces drag
+dragControls.addEventListener('dragstart', () => {
+  controls.enabled = false;
+});
+
+dragControls.addEventListener('dragend', () => {
+  controls.enabled = true;
+});
+
+// Mientras arrastras, actualiza la posición de la luz, el helper y la línea
+dragControls.addEventListener('drag', (event) => {
+  const pos = event.object.position;
+
+  // Mueve la luz
+  directionalLight.position.copy(pos);
+
+  // Actualiza helper
+  helper1.update();
+
+  // Actualiza línea
+  const newPoints = [new THREE.Vector3(0, 0, 0), pos.clone()];
+  lineGeom1.setFromPoints(newPoints);
+});
+
 scene.add(line1);
 
   const directionalLight2 = new THREE.DirectionalLight('white', 1);
@@ -107,18 +135,28 @@ scene.add(line1);
 
   window.addEventListener('keydown', (event) => {
   switch (event.key) {
-    case '1': // vista superior
+    case '4': // vista superior
       camera.position.set(0, 5, 0); // Y alto, X y Z = 0
       camera.lookAt(0, 0, 0);
       break;
 
-    case '2': // vista lateral (ej: eje Z negativo)
+    case '1': 
       camera.position.set(0, 0, 5);
       camera.lookAt(0, 0, 0);
       break;
 
     case '3': // vista inferior
-      camera.position.set(0, -5, 0); // Y negativo
+      camera.position.set(0, -5, 0); 
+      camera.lookAt(0, 0, 0);
+      break;
+
+    case '5': // vista trasera
+      camera.position.set(0, 0, -5);
+      camera.lookAt(0, 0, 0);
+      break;
+
+    case '2': // vista lateral izq
+      camera.position.set(5, 0, 0);
       camera.lookAt(0, 0, 0);
       break;
   }
