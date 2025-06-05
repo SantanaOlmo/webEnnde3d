@@ -8,6 +8,10 @@ import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 
 
+// NUEVO: Importamos los decodificadores para modelos comprimidos
+import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
+import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
+
 // Variables globales
 let scene, camera, renderer, controls, loader, gridHelper, currentModel;
 let cameraPositionX = document.getElementById('x');
@@ -120,8 +124,16 @@ scene.add(line1);
   /* const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
   scene.add(ambientLight); */
 
-  // Cargador de modelos GLTF/GLB
+  // NUEVO: Configuración del loader con decodificadores
   loader = new GLTFLoader();
+
+  // Draco
+  const dracoLoader = new DRACOLoader();
+  dracoLoader.setDecoderPath('/libs/draco/'); // Ajusta esta ruta si mueves la carpeta
+  loader.setDRACOLoader(dracoLoader);
+
+  // Meshopt
+  loader.setMeshoptDecoder(MeshoptDecoder);
 
   // Ajuste al redimensionar la ventana
   window.addEventListener('resize', () => {
@@ -288,6 +300,7 @@ function redondear(num, decimales) {
   return Math.round(num * factor) / factor;
 }
 
+
 // Actualiza el material del modelo cargado usando valores del sessionStorage
 export function actualizarModelo() {
   const datos = JSON.parse(sessionStorage.getItem('estilos'));
@@ -328,4 +341,3 @@ export function restaurarMaterialesOriginales() {
     }
   });
 }
-
