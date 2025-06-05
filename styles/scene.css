@@ -88,7 +88,7 @@ body, html {
 
 #formStyles label {
   color: #eee;
-  margin-top: 1.5em;
+  margin-top: 1.2em;
   font-size: 0.85em;
   font-weight: bold;
   letter-spacing: 0.8px;
@@ -177,6 +177,7 @@ input {
 
 #resetEstilos {
   margin-top: 1em;
+  margin-bottom: 2em;;
   padding: 6px 12px;
   background-color: transparent;
   border: 2px solid #eee;
@@ -191,8 +192,37 @@ input {
   color: #000;
 }
 
+.bloqueRotacion {
+  width: 95%;
+  margin: 1px auto 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bloqueRotacion label {
+  margin-bottom: 3px;
+  font-size: 0.85em;
+  font-weight: bold;
+  letter-spacing: 0.8px;
+}
+
+.bloqueRotacion input[type="range"] {
+  width: 60%;
+  accent-color: #007bff;
+}
+
+.notaShift {
+  font-size: 0.75em;
+  color: #ccc;
+  margin-top: 4px;
+  margin-bottom: 0.5em;;
+  text-align: center;
+  opacity: 0.8;
+}
+
 .seccionOpciones {
-  margin-top: 40px;
+  margin-top: 20px;
   margin-bottom: 10px;
   color: white;
   font-size: 0.85em;

@@ -329,3 +329,36 @@ export function toggleHelpers(visible) {
   if (sphere1) sphere1.visible = visible;
   if (line1) line1.visible = visible;
 }
+// 🎯 Control por teclado para rotar el modelo (Q y E)
+window.addEventListener('keydown', (event) => {
+  if (!currentModel) return;
+
+  switch (event.key.toLowerCase()) {
+    case 'q': // Rota a la izquierda
+      currentModel.rotation.y -= 0.1;
+      break;
+    case 'e': // Rota a la derecha
+      currentModel.rotation.y += 0.1;
+      break;
+    default:
+      return; // Ignora otras teclas
+  }
+
+  // 🔄 Sincroniza el valor del slider con la rotación actual (en grados)
+  if (rotationSlider) {
+    const grados = THREE.MathUtils.radToDeg(currentModel.rotation.y) % 360;
+    rotationSlider.value = (grados < 0 ? grados + 360 : grados).toFixed(0);
+  }
+});
+
+
+// 🎛️ Slider para rotar el modelo con precisión manual
+const rotationSlider = document.getElementById('rotationSlider');
+if (rotationSlider) {
+  rotationSlider.addEventListener('input', () => {
+    if (currentModel) {
+      const grados = parseFloat(rotationSlider.value);
+      currentModel.rotation.y = THREE.MathUtils.degToRad(grados);
+    }
+  });
+}
