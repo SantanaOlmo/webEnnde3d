@@ -109,6 +109,11 @@ export function loadModel(file) {
 
       scene.add(currentModel);
       centerAndFitModel(currentModel);
+
+      // ✅ Aplicar estilos guardados si existen en sessionStorage
+      if (sessionStorage.getItem('estilos')) {
+        actualizarModelo();
+      }
     },
     undefined,
     (error) => {
@@ -117,6 +122,7 @@ export function loadModel(file) {
     }
   );
 }
+
 
 // Centra el modelo y ajusta la cámara para que encaje
 function centerAndFitModel(model) {
@@ -197,22 +203,31 @@ function redondear(num, decimales) {
   return Math.round(num * factor) / factor;
 }
 
-
 // Actualiza el material del modelo cargado usando valores del sessionStorage
 export function actualizarModelo() {
   const datos = JSON.parse(sessionStorage.getItem('estilos'));
+  if (!datos) return;
 
   currentModel.traverse((child) => {
     if (child.isMesh) {
-      child.material = new THREE.MeshStandardMaterial({
+      // Solo aplicar nuevo material si el usuario lo ha cambiado
+      const nuevoMaterial = new THREE.MeshStandardMaterial({
         color: new THREE.Color(datos.color),
         roughness: datos.roughness,
         metalness: datos.metalness,
       });
+
+      // Guardar el original si aún no está guardado
+      if (!child.userData.originalMaterial) {
+        child.userData.originalMaterial = child.material.clone();
+      }
+
+      child.material = nuevoMaterial;
       child.material.needsUpdate = true;
     }
   });
 }
+
 
 // Restaura los materiales originales guardados en userData.originalMaterial
 export function restaurarMaterialesOriginales() {

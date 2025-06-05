@@ -18,21 +18,33 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Cuando se suelta el archivo sobre la zona
-  function dropHandler(ev) {
-    ev.preventDefault();
+function dropHandler(ev) {
+  ev.preventDefault();
 
-    const file = ev.dataTransfer.files[0];
-    if (!file) return; // Si no hay archivo, salimos
+  const file = ev.dataTransfer.files[0];
+  if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = function(event) {
-      // Guarda el contenido del archivo en sessionStorage
-      sessionStorage.setItem('uploadedModel', event.target.result);
-      // Redirige al visor 3D
-      window.location.href = './views/viewer.html';
-    };
-    reader.readAsDataURL(file); // Lee el archivo como base64
+  const name = file.name.toLowerCase();
+
+  if (!name.endsWith(".glb") && !name.endsWith(".gltf")) {
+    alert("Solo se permiten archivos .glb o .gltf.");
+    return;
   }
+
+  const reader = new FileReader();
+  reader.onload = function (event) {
+    try {
+      sessionStorage.setItem('uploadedModel', event.target.result);
+      window.location.href = './views/viewer.html';
+    } catch (e) {
+      alert("El archivo es demasiado grande para cargarse.");
+      console.error("Error al guardar en sessionStorage:", e);
+    }
+  };
+
+  reader.readAsDataURL(file);
+}
+
 
   // Seleccionamos la zona de subida y le asignamos eventos
   const dropArea = document.getElementById('drop_zone');
