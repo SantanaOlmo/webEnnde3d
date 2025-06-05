@@ -11,11 +11,13 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 
 // Variables globales
-let scene, camera, renderer, controls, loader, gridHelper, currentModel;
+let scene, camera, renderer, controls, loader, gridHelper, currentModel, axesHelper;
 let cameraPositionX = document.getElementById('x');
 let cameraPositionY = document.getElementById('y');
 let cameraPositionZ = document.getElementById('z');
 
+// Variables para las luces direccionales
+let helper1, sphere1, line1;
 
 // Inicializa la escena 3D completa
 export function initScene(container) {
@@ -45,7 +47,7 @@ export function initScene(container) {
   gridHelper = new THREE.GridHelper(20, 20);
   scene.add(gridHelper);
 
-  const axesHelper = new THREE.AxesHelper(5);
+  axesHelper = new THREE.AxesHelper(5);
   scene.add(axesHelper);
 
   // Controles orbitales (ratón)
@@ -60,11 +62,11 @@ directionalLight.castShadow = true;
 scene.add(directionalLight);
 
 // Helper visual para la luz direccional 1
-const helper1 = new THREE.DirectionalLightHelper(directionalLight, 2, 0xff0000); // tamaño, color
+helper1 = new THREE.DirectionalLightHelper(directionalLight, 2, 0xff0000); // tamaño, color
 scene.add(helper1);
 
 // Esfera en la posición de la luz
-const sphere1 = new THREE.Mesh(
+sphere1 = new THREE.Mesh(
   new THREE.SphereGeometry(0.2, 16, 16),
   new THREE.MeshBasicMaterial({ color: 0xff0000 })
 );
@@ -76,7 +78,8 @@ const lineGeom1 = new THREE.BufferGeometry().setFromPoints([
   new THREE.Vector3(0, 0, 0),
   directionalLight.position.clone()
 ]);
-const line1 = new THREE.Line(
+
+line1 = new THREE.Line(
   lineGeom1,
   new THREE.LineBasicMaterial({ color: 0xff0000 })
 );
@@ -303,3 +306,14 @@ export function restaurarMaterialesOriginales() {
     }
   });
 }
+
+// Alterna la visibilidad de la cuadrícula y los ejes
+  export function toggleHelpers(visible) {
+  if (gridHelper) gridHelper.visible = visible;
+  if (axesHelper) axesHelper.visible = visible;
+  if (helper1) helper1.visible = visible;
+  if (sphere1) sphere1.visible = visible;
+  if (line1) line1.visible = visible;
+}
+
+
