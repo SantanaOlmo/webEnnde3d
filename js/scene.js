@@ -19,6 +19,27 @@ let cameraPositionZ = document.getElementById('z');
 // Variables para las luces direccionales
 let helper1, sphere1, line1;
 
+// VariableHDRI
+let currentHDRI;
+
+// Cambiar HDRI desde un archivo
+export function cambiarHDRI(nombreArchivo) {
+  const rgbeLoader = new RGBELoader();
+  rgbeLoader.load(`/assets/hdri/${nombreArchivo}`, function (texture) {
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+    scene.background = texture;
+    scene.environment = texture;
+    currentHDRI = texture;
+  });
+}
+
+// Quitar HDRI y dejar fondo blanco
+export function quitarHDRI() {
+  scene.background = new THREE.Color(0xffffff); // blanco
+  scene.environment = null;
+  currentHDRI = null;
+}
+
 // Inicializa la escena 3D completa
 export function initScene(container) {
   scene = new THREE.Scene();
@@ -30,6 +51,7 @@ export function initScene(container) {
     texture.mapping = THREE.EquirectangularReflectionMapping;
     scene.background = texture;
     scene.environment = texture;
+    currentHDRI = texture; // Guardamos para poder cambiarlo después
   });
 
   // Cámara en perspectiva
@@ -55,35 +77,35 @@ export function initScene(container) {
   controls.enableDamping = true;
 
   // Luces direccionales
-// Luz direccional 1
-const directionalLight = new THREE.DirectionalLight('white', 0.25);
-directionalLight.position.set(5, 10, 20);
-directionalLight.castShadow = true;
-scene.add(directionalLight);
+  // Luz direccional 1
+  const directionalLight = new THREE.DirectionalLight('white', 0.25);
+  directionalLight.position.set(5, 10, 20);
+  directionalLight.castShadow = true;
+  scene.add(directionalLight);
 
-// Helper visual para la luz direccional 1
-helper1 = new THREE.DirectionalLightHelper(directionalLight, 2, 0xff0000); // tamaño, color
-scene.add(helper1);
+  // Helper visual para la luz direccional 1
+  helper1 = new THREE.DirectionalLightHelper(directionalLight, 2, 0xff0000); // tamaño, color
+  scene.add(helper1);
 
-// Esfera en la posición de la luz
-sphere1 = new THREE.Mesh(
-  new THREE.SphereGeometry(0.2, 16, 16),
-  new THREE.MeshBasicMaterial({ color: 0xff0000 })
-);
-sphere1.position.copy(directionalLight.position);
-scene.add(sphere1);
+  // Esfera en la posición de la luz
+  sphere1 = new THREE.Mesh(
+    new THREE.SphereGeometry(0.2, 16, 16),
+    new THREE.MeshBasicMaterial({ color: 0xff0000 })
+  );
+  sphere1.position.copy(directionalLight.position);
+  scene.add(sphere1);
 
-// Línea desde el origen hacia la luz
-const lineGeom1 = new THREE.BufferGeometry().setFromPoints([
-  new THREE.Vector3(0, 0, 0),
-  directionalLight.position.clone()
-]);
+  // Línea desde el origen hacia la luz
+  const lineGeom1 = new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(0, 0, 0),
+    directionalLight.position.clone()
+  ]);
 
-line1 = new THREE.Line(
-  lineGeom1,
-  new THREE.LineBasicMaterial({ color: 0xff0000 })
-);
-scene.add(line1);
+  line1 = new THREE.Line(
+    lineGeom1,
+    new THREE.LineBasicMaterial({ color: 0xff0000 })
+  );
+  scene.add(line1);
 
   const directionalLight2 = new THREE.DirectionalLight('white', 1);
   directionalLight2.position.set(-5, -10, 7.5);
@@ -121,29 +143,27 @@ scene.add(line1);
   autoLoadFromSession();  // Carga desde sessionStorage si hay algo
 
   window.addEventListener('keydown', (event) => {
-  switch (event.key) {
-    case '1': // vista superior
-      camera.position.set(0, 5, 0); // Y alto, X y Z = 0
-      camera.lookAt(0, 0, 0);
-      break;
+    switch (event.key) {
+      case '1': // vista superior
+        camera.position.set(0, 5, 0); // Y alto, X y Z = 0
+        camera.lookAt(0, 0, 0);
+        break;
 
-    case '2': // vista lateral (ej: eje Z negativo)
-      camera.position.set(0, 0, 5);
-      camera.lookAt(0, 0, 0);
-      break;
+      case '2': // vista lateral (ej: eje Z negativo)
+        camera.position.set(0, 0, 5);
+        camera.lookAt(0, 0, 0);
+        break;
 
-    case '3': // vista inferior
-      camera.position.set(0, -5, 0); // Y negativo
-      camera.lookAt(0, 0, 0);
-      break;
-  }
+      case '3': // vista inferior
+        camera.position.set(0, -5, 0); // Y negativo
+        camera.lookAt(0, 0, 0);
+        break;
+    }
 
-  // Si usas OrbitControls, actualízalo:
-  controls.update();
-});
-
+    // Si usas OrbitControls, actualízalo:
+    controls.update();
+  });
 }
-
 
 // Carga un modelo desde archivo (GLB/GLTF)
 export function loadModel(file) {
@@ -185,7 +205,6 @@ export function loadModel(file) {
   );
 }
 
-
 // Centra el modelo y ajusta la cámara para que encaje
 function centerAndFitModel(model) {
   const box = new THREE.Box3().setFromObject(model);
@@ -201,7 +220,6 @@ function centerAndFitModel(model) {
   controls.target.set(0, 0, 0);
   controls.update();
 }
-
 
 // Bucle de renderizado y actualización
 let angle = 0;
@@ -228,7 +246,6 @@ function animate() {
   cameraPositionY.textContent = redondear(camera.position.y, 3);
   cameraPositionZ.textContent = redondear(camera.position.z, 3);
 }
-
 
 // Carga automática de modelo desde sessionStorage
 function autoLoadFromSession() {
@@ -258,13 +275,11 @@ function autoLoadFromSession() {
   }
 }
 
-
 // Redondea número a n decimales
 function redondear(num, decimales) {
   const factor = Math.pow(10, decimales);
   return Math.round(num * factor) / factor;
 }
-
 
 // Actualiza el material del modelo cargado usando valores del sessionStorage
 export function actualizarModelo() {
@@ -291,7 +306,6 @@ export function actualizarModelo() {
   });
 }
 
-
 // Restaura los materiales originales guardados en userData.originalMaterial
 export function restaurarMaterialesOriginales() {
   if (!currentModel) {
@@ -308,12 +322,10 @@ export function restaurarMaterialesOriginales() {
 }
 
 // Alterna la visibilidad de la cuadrícula y los ejes
-  export function toggleHelpers(visible) {
+export function toggleHelpers(visible) {
   if (gridHelper) gridHelper.visible = visible;
   if (axesHelper) axesHelper.visible = visible;
   if (helper1) helper1.visible = visible;
   if (sphere1) sphere1.visible = visible;
   if (line1) line1.visible = visible;
 }
-
-
