@@ -31,7 +31,7 @@ const btnReset = document.getElementById('resetEstilos');
 btnReset.addEventListener('click', () => {
   restaurarMaterialesOriginales();
   sessionStorage.removeItem('estilos');
-
+  
   // También puedes reiniciar el formulario visualmente
   const colorInput = document.getElementById('chooseColor');
   const roughnessInput = form.elements['roughness'];
@@ -94,3 +94,6 @@ window.addEventListener('DOMContentLoaded', () => {
     quitarHDRI();
   }
 });
+
+
+
