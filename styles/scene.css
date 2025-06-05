@@ -121,6 +121,7 @@ body, html {
   top: 1.5em;
   border: none;
   z-index: 20;
+  cursor: pointer;
 }
 
 #menuDesplegable > #aplicarEstilos {
