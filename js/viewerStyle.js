@@ -41,3 +41,19 @@ btnReset.addEventListener('click', () => {
   if (metalnessInput) metalnessInput.value = 500;
 });
 
+// Activar / Desactivar coordenadas
+const toggleCoords = document.getElementById('toggleCoords');
+const coordPanel = document.getElementById('bottomInfo');
+
+toggleCoords.addEventListener('change', () => {
+  coordPanel.style.display = toggleCoords.checked ? 'flex' : 'none';
+});
+
+// Activar / Desactivar cuadrícula y ejes
+import { toggleHelpers } from '/js/scene.js';
+
+const toggleHelpersCheckbox = document.getElementById('toggleHelpers');
+
+toggleHelpersCheckbox.addEventListener('change', () => {
+  toggleHelpers(toggleHelpersCheckbox.checked);
+});
