@@ -53,10 +53,34 @@ export function initScene(container) {
   controls.enableDamping = true;
 
   // Luces direccionales
-  const directionalLight = new THREE.DirectionalLight('white', 0.25);
-  directionalLight.position.set(5, 10, 20);
-  directionalLight.castShadow = true;
-  scene.add(directionalLight);
+// Luz direccional 1
+const directionalLight = new THREE.DirectionalLight('white', 0.25);
+directionalLight.position.set(5, 10, 20);
+directionalLight.castShadow = true;
+scene.add(directionalLight);
+
+// Helper visual para la luz direccional 1
+const helper1 = new THREE.DirectionalLightHelper(directionalLight, 2, 0xff0000); // tamaño, color
+scene.add(helper1);
+
+// Esfera en la posición de la luz
+const sphere1 = new THREE.Mesh(
+  new THREE.SphereGeometry(0.2, 16, 16),
+  new THREE.MeshBasicMaterial({ color: 0xff0000 })
+);
+sphere1.position.copy(directionalLight.position);
+scene.add(sphere1);
+
+// Línea desde el origen hacia la luz
+const lineGeom1 = new THREE.BufferGeometry().setFromPoints([
+  new THREE.Vector3(0, 0, 0),
+  directionalLight.position.clone()
+]);
+const line1 = new THREE.Line(
+  lineGeom1,
+  new THREE.LineBasicMaterial({ color: 0xff0000 })
+);
+scene.add(line1);
 
   const directionalLight2 = new THREE.DirectionalLight('white', 1);
   directionalLight2.position.set(-5, -10, 7.5);
@@ -92,6 +116,29 @@ export function initScene(container) {
 
   animate();              // Comienza el bucle de render
   autoLoadFromSession();  // Carga desde sessionStorage si hay algo
+
+  window.addEventListener('keydown', (event) => {
+  switch (event.key) {
+    case '1': // vista superior
+      camera.position.set(0, 5, 0); // Y alto, X y Z = 0
+      camera.lookAt(0, 0, 0);
+      break;
+
+    case '2': // vista lateral (ej: eje Z negativo)
+      camera.position.set(0, 0, 5);
+      camera.lookAt(0, 0, 0);
+      break;
+
+    case '3': // vista inferior
+      camera.position.set(0, -5, 0); // Y negativo
+      camera.lookAt(0, 0, 0);
+      break;
+  }
+
+  // Si usas OrbitControls, actualízalo:
+  controls.update();
+});
+
 }
 
 
