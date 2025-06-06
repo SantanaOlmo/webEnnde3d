@@ -51,14 +51,44 @@
 
     <label for="metalness">Metalness:</label>
     <input type="range" name="metalness" min="0" max="1000">
-
+    
     <div id="previewTexturas"></div>
     <button type="button" id="resetEstilos">Restablecer</button>
-  </form>
+    </form>
+
+    <div class="bloqueRotacion">
+      <label for="rotationSlider">Rotar modelo [Q | E]</label>
+      <input type="range" id="rotationSlider" min="0" max="360" value="0">
+    </div>
+
+    <small class="notaShift">Pulsa Shift y arrastra<br>para mover el modelo</small>
+
+    <p class="seccionOpciones">Opciones del Visor</p>
+
+
+<div class="opcionesCheckbox">
+  <label><input type="checkbox" id="toggleCoords" checked> Coordenadas</label>
+  <label><input type="checkbox" id="toggleHelpers" checked> Cuadrícula y ejes</label>
+  <label><input type="checkbox" id="toggleHR" checked> Mostrar HR</label>
 </div>
 
+<!-- Selector de fondo HDRI -->
+<p class="seccionOpciones">Escenario HDRI</p>
+<div class="opcionesHDRI">
+  <select id="selectorHDRI">
+    <option value="campo.hdr">Naturaleza de día</option>
+    <option value="tren.hdr">Naturaleza de día II</option>
+    <option value="campo_noche1.hdr">Naturaleza de noche</option>
+    <option value="parque.hdr">Parque al Atardecer</option>
+    <option value="art_studio.hdr">Estudio de Arte I</option>
+    <option value="artist.hdr">Estudio de Arte II</option>
+    <option value="studio.hdr">Estudio Fotográfico</option>
+    <option value="fireplace.hdr">Habitación cálida</option>
+    <option value="calle1.hdr">Zona Puerto</option>
+  </select>
+</div>
 
-
+</div>
 
     <!-- Script JS tipo módulo: importa la función de iniciar escena -->
   <script type="module">

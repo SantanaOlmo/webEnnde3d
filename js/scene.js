@@ -13,11 +13,34 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 
 // Variables globales
-let scene, camera, renderer, controls, loader, gridHelper, currentModel;
+let scene, camera, renderer, controls, loader, gridHelper, currentModel, axesHelper;
 let cameraPositionX = document.getElementById('x');
 let cameraPositionY = document.getElementById('y');
 let cameraPositionZ = document.getElementById('z');
 
+// Variables para las luces direccionales
+let helper1, sphere1, line1;
+
+// VariableHDRI
+let currentHDRI;
+
+// Cambiar HDRI desde un archivo
+export function cambiarHDRI(nombreArchivo) {
+  const rgbeLoader = new RGBELoader();
+  rgbeLoader.load(`/assets/hdri/${nombreArchivo}`, function (texture) {
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+    scene.background = texture;
+    scene.environment = texture;
+    currentHDRI = texture;
+  });
+}
+
+// Quitar HDRI y dejar fondo blanco
+export function quitarHDRI() {
+  scene.background = new THREE.Color(0xffffff); // blanco
+  scene.environment = null;
+  currentHDRI = null;
+}
 
 // Inicializa la escena 3D completa
 export function initScene(container) {
@@ -30,6 +53,7 @@ export function initScene(container) {
     texture.mapping = THREE.EquirectangularReflectionMapping;
     scene.background = texture;
     scene.environment = texture;
+    currentHDRI = texture; // Guardamos para poder cambiarlo después
   });
 
   // Cámara en perspectiva
@@ -47,7 +71,7 @@ export function initScene(container) {
   gridHelper = new THREE.GridHelper(20, 20);
   scene.add(gridHelper);
 
-  const axesHelper = new THREE.AxesHelper(5);
+  axesHelper = new THREE.AxesHelper(5);
   scene.add(axesHelper);
 
   // Controles orbitales (ratón)
@@ -55,23 +79,23 @@ export function initScene(container) {
   controls.enableDamping = true;
 
   // Luces direccionales
-// Luz direccional 1
-const directionalLight = new THREE.DirectionalLight('white', 0.25);
-directionalLight.position.set(5, 10, 20);
-directionalLight.castShadow = true;
-scene.add(directionalLight);
+  // Luz direccional 1
+  const directionalLight = new THREE.DirectionalLight('white', 0.25);
+  directionalLight.position.set(5, 10, 20);
+  directionalLight.castShadow = true;
+  scene.add(directionalLight);
 
 // Helper visual para la luz direccional 1
 const helper1 = new THREE.DirectionalLightHelper(directionalLight, 2, 'red'); // tamaño, color
 scene.add(helper1);
 
-// Esfera en la posición de la luz
-const sphere1 = new THREE.Mesh(
-  new THREE.SphereGeometry(0.2, 16, 16),
-  new THREE.MeshBasicMaterial({ color: 0xff0000 })
-);
-sphere1.position.copy(directionalLight.position);
-scene.add(sphere1);
+  // Esfera en la posición de la luz
+  sphere1 = new THREE.Mesh(
+    new THREE.SphereGeometry(0.2, 16, 16),
+    new THREE.MeshBasicMaterial({ color: 0xff0000 })
+  );
+  sphere1.position.copy(directionalLight.position);
+  scene.add(sphere1);
 
 // Línea desde el origen hacia la luz
 const lineGeom1 = new THREE.BufferGeometry().setFromPoints([
@@ -173,12 +197,10 @@ scene.add(line1);
       break;
   }
 
-  // Si usas OrbitControls, actualízalo:
-  controls.update();
-});
-
+    // Si usas OrbitControls, actualízalo:
+    controls.update();
+  });
 }
-
 
 // Carga un modelo desde archivo (GLB/GLTF)
 export function loadModel(file) {
@@ -220,7 +242,6 @@ export function loadModel(file) {
   );
 }
 
-
 // Centra el modelo y ajusta la cámara para que encaje
 function centerAndFitModel(model) {
   const box = new THREE.Box3().setFromObject(model);
@@ -236,7 +257,6 @@ function centerAndFitModel(model) {
   controls.target.set(0, 0, 0);
   controls.update();
 }
-
 
 // Bucle de renderizado y actualización
 let angle = 0;
@@ -263,7 +283,6 @@ function animate() {
   cameraPositionY.textContent = redondear(camera.position.y, 3);
   cameraPositionZ.textContent = redondear(camera.position.z, 3);
 }
-
 
 // Carga automática de modelo desde sessionStorage
 function autoLoadFromSession() {
@@ -293,13 +312,11 @@ function autoLoadFromSession() {
   }
 }
 
-
 // Redondea número a n decimales
 function redondear(num, decimales) {
   const factor = Math.pow(10, decimales);
   return Math.round(num * factor) / factor;
 }
-
 
 // Actualiza el material del modelo cargado usando valores del sessionStorage
 export function actualizarModelo() {
@@ -326,7 +343,6 @@ export function actualizarModelo() {
   });
 }
 
-
 // Restaura los materiales originales guardados en userData.originalMaterial
 export function restaurarMaterialesOriginales() {
   if (!currentModel) {
@@ -338,6 +354,48 @@ export function restaurarMaterialesOriginales() {
     if (child.isMesh && child.userData.originalMaterial) {
       child.material = child.userData.originalMaterial.clone();
       child.material.needsUpdate = true;
+    }
+  });
+}
+
+// Alterna la visibilidad de la cuadrícula y los ejes
+export function toggleHelpers(visible) {
+  if (gridHelper) gridHelper.visible = visible;
+  if (axesHelper) axesHelper.visible = visible;
+  if (helper1) helper1.visible = visible;
+  if (sphere1) sphere1.visible = visible;
+  if (line1) line1.visible = visible;
+}
+// 🎯 Control por teclado para rotar el modelo (Q y E)
+window.addEventListener('keydown', (event) => {
+  if (!currentModel) return;
+
+  switch (event.key.toLowerCase()) {
+    case 'q': // Rota a la izquierda
+      currentModel.rotation.y -= 0.1;
+      break;
+    case 'e': // Rota a la derecha
+      currentModel.rotation.y += 0.1;
+      break;
+    default:
+      return; // Ignora otras teclas
+  }
+
+  // 🔄 Sincroniza el valor del slider con la rotación actual (en grados)
+  if (rotationSlider) {
+    const grados = THREE.MathUtils.radToDeg(currentModel.rotation.y) % 360;
+    rotationSlider.value = (grados < 0 ? grados + 360 : grados).toFixed(0);
+  }
+});
+
+
+// 🎛️ Slider para rotar el modelo con precisión manual
+const rotationSlider = document.getElementById('rotationSlider');
+if (rotationSlider) {
+  rotationSlider.addEventListener('input', () => {
+    if (currentModel) {
+      const grados = parseFloat(rotationSlider.value);
+      currentModel.rotation.y = THREE.MathUtils.degToRad(grados);
     }
   });
 }
