@@ -111,7 +111,6 @@ body, html {
   -webkit-appearance: none;
 }
 
-
 /* Botón de tres puntos flotante */
 #options {
   width: 3em;
@@ -252,3 +251,21 @@ input {
   margin-right: 8px;
 }
 
+#bloqueColor {
+  width: 60%;
+  display: flex;
+  justify-content: center;
+}
+
+#backgroundColor {
+  width: 90%;
+  margin-left: 7px;
+  height: 2em;
+  padding: 0;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
