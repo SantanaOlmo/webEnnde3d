@@ -182,10 +182,13 @@ export function initScene(container) {
 //                 CARGA DE MODELOS               
 //==================================================
 
-// Carga un modelo desde archivo (GLB/GLTF,STL)
+// Carga un modelo desde archivo (GLB/GLTF, STL)
 export function loadModel(url, name) {
   if (!loader || !loaderSTL) return;
 
+  //--------------------------------------------
+  //     CARGA DE ARCHIVOS GLB / GLTF
+  //--------------------------------------------
   if (name.toLowerCase().endsWith('.glb') || name.toLowerCase().endsWith('.gltf')) {
     loader.load(url, (gltf) => {
       if (currentModel) scene.remove(currentModel);
@@ -202,20 +205,33 @@ export function loadModel(url, name) {
       console.error("Error cargando modelo:", error);
     });
 
+  //--------------------------------------------
+  //     CARGA DE ARCHIVOS STL
+  //--------------------------------------------
   } else if (name.toLowerCase().endsWith('.stl')) {
     loaderSTL.load(url, (geometry) => {
       if (currentModel) scene.remove(currentModel);
       const material = new THREE.MeshStandardMaterial({});
+      
+      // ✅ CORREGIR ORIENTACIÓN: STL suele venir en Z-up, lo rotamos a Y-up
+      geometry.rotateX(-Math.PI / 2);
+
       const mesh = new THREE.Mesh(geometry, material);
       mesh.userData.originalMaterial = material.clone();
+
       currentModel = mesh;
       scene.add(currentModel);
+
       centerAndFitModel(currentModel);
       if (localStorage.getItem('estilos')) actualizarModelo();
     }, undefined, (error) => {
       console.error("Error cargando STL:", error);
     });
 
+
+  //--------------------------------------------
+  //     ARCHIVO NO SOPORTADO
+  //--------------------------------------------
   } else {
     alert("Formato de archivo no soportado. Usa .glb, .gltf o .stl");
   }
