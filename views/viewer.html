@@ -69,12 +69,20 @@
 <div class="opcionesCheckbox">
   <label><input type="checkbox" id="toggleCoords" checked> Coordenadas</label>
   <label><input type="checkbox" id="toggleHelpers" checked> Cuadrícula y ejes</label>
-  <label><input type="checkbox" id="toggleHR" checked> Mostrar HR</label>
+  <label><input type="checkbox" id="toggleHR" checked> Mostrar HDRI</label>
 </div>
 
-<!-- Selector de fondo HDRI -->
-<p class="seccionOpciones">Escenario HDRI</p>
-<div class="opcionesHDRI">
+<div id="colorFondoContainer" style="display: none;">
+  <label for="fondoColor">Color de fondo:</label>
+  <input type="color" id="fondoColor" value="#ffffff">
+</div>
+
+
+<!-- Selector de fondo HDRI o color plano -->
+<p class="seccionOpciones">Fondo de la Escena</p>
+
+<!-- Este bloque se muestra si HDRI está activado -->
+<div id="bloqueHDRI" class="opcionesHDRI">
   <select id="selectorHDRI">
     <option value="campo.hdr">Naturaleza de día</option>
     <option value="tren.hdr">Naturaleza de día II</option>
@@ -87,6 +95,13 @@
     <option value="calle1.hdr">Zona Puerto</option>
   </select>
 </div>
+
+<!-- Este bloque aparece si HDRI está desactivado -->
+<div id="bloqueColor" style="display: none;">
+  <label for="backgroundColor">Color de fondo:</label>
+  <input type="color" id="backgroundColor" value="#222222">
+</div>
+
 
 </div>
 
