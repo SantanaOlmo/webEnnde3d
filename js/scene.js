@@ -6,6 +6,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
 import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
+import { STLLoader } from 'three/examples/jsm/Addons.js';
 
 
 // NUEVO: Importamos los decodificadores para modelos comprimidos
@@ -13,7 +14,7 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 
 // Variables globales
-let scene, camera, renderer, controls, loader, gridHelper, currentModel, axesHelper;
+let scene, camera, renderer, controls, loader, loaderSTL, gridHelper, currentModel, axesHelper;
 let cameraPositionX = document.getElementById('x');
 let cameraPositionY = document.getElementById('y');
 let cameraPositionZ = document.getElementById('z');
@@ -150,6 +151,8 @@ scene.add(line1);
 
   // NUEVO: Configuración del loader con decodificadores
   loader = new GLTFLoader();
+  loaderSTL = new STLLoader();
+  
 
   // Draco
   const dracoLoader = new DRACOLoader();
@@ -204,42 +207,73 @@ scene.add(line1);
 
 // Carga un modelo desde archivo (GLB/GLTF)
 export function loadModel(file) {
-  if (!loader) {
+  if (!loader && !loaderSTL) {
     console.error("Scene not initialized. Call initScene(container) first.");
     return;
   }
 
   const url = URL.createObjectURL(file);
-  loader.load(
-    url,
-    (gltf) => {
-      if (currentModel) {
-        scene.remove(currentModel);
-      }
 
-      currentModel = gltf.scene;
-
-      // 🔒 Guardar los materiales originales para poder restaurarlos más tarde
-      currentModel.traverse((child) => {
-        if (child.isMesh && child.material) {
-          child.userData.originalMaterial = child.material.clone();
+  if (file.name.endsWith('.glb') || file.name.endsWith('.gltf')) {
+    loader.load(
+      url,
+      (gltf) => {
+        if (currentModel) {
+          scene.remove(currentModel);
         }
-      });
 
-      scene.add(currentModel);
-      centerAndFitModel(currentModel);
+        currentModel = gltf.scene;
 
-      // ✅ Aplicar estilos guardados si existen en sessionStorage
-      if (sessionStorage.getItem('estilos')) {
-        actualizarModelo();
+        currentModel.traverse((child) => {
+          if (child.isMesh && child.material) {
+            child.userData.originalMaterial = child.material.clone();
+          }
+        });
+
+        scene.add(currentModel);
+        centerAndFitModel(currentModel);
+
+        if (sessionStorage.getItem('estilos')) {
+          actualizarModelo();
+        }
+      },
+      undefined,
+      (error) => {
+        console.error("Error cargando modelo:", error);
+        alert("Error al cargar el modelo. Verifica que sea un archivo .glb o .gltf válido.");
       }
-    },
-    undefined,
-    (error) => {
-      console.error("Error cargando modelo:", error);
-      alert("Error al cargar el modelo. Verifica que sea un archivo .glb o .gltf válido.");
-    }
-  );
+    );
+  } else if (file.name.endsWith('.stl')) {
+    loaderSTL.load(
+      url,
+      (geometry) => {
+        if (currentModel) {
+          scene.remove(currentModel);
+        }
+
+        const material = new THREE.MeshStandardMaterial({});
+        const mesh = new THREE.Mesh(geometry, material);
+
+        // Guardar material original
+        mesh.userData.originalMaterial = material.clone();
+
+        currentModel = mesh;
+        scene.add(currentModel);
+        centerAndFitModel(currentModel);
+
+        if (sessionStorage.getItem('estilos')) {
+          actualizarModelo();
+        }
+      },
+      undefined,
+      (error) => {
+        console.error("Error cargando STL:", error);
+        alert("Error al cargar el modelo. Verifica que sea un archivo .stl válido.");
+      }
+    );
+  } else {
+    alert("Formato de archivo no soportado. Usa .glb, .gltf o .stl");
+  }
 }
 
 // Centra el modelo y ajusta la cámara para que encaje
