@@ -1,6 +1,5 @@
 // viewerStyle.js
 
-// Importa funciones desde scene.js
 import {
   actualizarModelo,
   restaurarMaterialesOriginales,
@@ -10,63 +9,85 @@ import {
   cambiarColorFondo
 } from '/js/scene.js';
 
-// Referencias al botón, al panel y al formulario de estilos
+// Referencias generales
 const btnOptions = document.getElementById('options');
 const form = document.getElementById('formStyles');
 const menuPanel = document.getElementById('menuDesplegable');
+const toggleModo = document.getElementById('toggleModo');
+const menuContenido = document.getElementById('menuContenido');
+const menuTecnico = document.getElementById('menuTecnico');
 
-// Mostrar/ocultar menú de opciones
+// Mostrar/ocultar panel lateral completo
 btnOptions.addEventListener('click', () => {
   menuPanel.classList.toggle('oculto');
   btnOptions.classList.toggle('rotado');
 });
 
-// Estilos del modelo (color, roughness, metalness)
+// Modo técnico ON/OFF
+let modoTecnicoActivo = false;
+
+toggleModo?.addEventListener('click', () => {
+  modoTecnicoActivo = !modoTecnicoActivo;
+
+  if (modoTecnicoActivo) {
+    menuContenido.style.display = 'none';
+    menuTecnico.style.display = 'block';
+    toggleModo.innerText = '🔙';
+    toggleModo.title = 'Volver al menú normal';
+  } else {
+    menuTecnico.style.display = 'none';
+    menuContenido.style.display = 'block';
+    toggleModo.innerText = '🛠️';
+    toggleModo.title = 'Modo técnico';
+  }
+});
+
+// =======================
+// Estilos del modelo
+// =======================
 form.addEventListener('input', () => {
   const datos = Object.fromEntries(new FormData(form).entries());
   datos.roughness = parseFloat(datos.roughness) / 1000;
   datos.metalness = parseFloat(datos.metalness) / 1000;
-
   localStorage.setItem('estilos', JSON.stringify(datos));
   actualizarModelo();
 });
 
-// Botón para restablecer estilos
 const btnReset = document.getElementById('resetEstilos');
 btnReset.addEventListener('click', () => {
   restaurarMaterialesOriginales();
   localStorage.removeItem('estilos');
-
-  const colorInput = document.getElementById('chooseColor');
-  const roughnessInput = form.elements['roughness'];
-  const metalnessInput = form.elements['metalness'];
-
-  if (colorInput) colorInput.value = "#ffffff";
-  if (roughnessInput) roughnessInput.value = 500;
-  if (metalnessInput) metalnessInput.value = 500;
+  form.elements['color'].value = '#ffffff';
+  form.elements['roughness'].value = 500;
+  form.elements['metalness'].value = 500;
 });
 
-// Coordenadas
+// =======================
+// Mostrar coordenadas
+// =======================
 const toggleCoords = document.getElementById('toggleCoords');
 const coordPanel = document.getElementById('bottomInfo');
 toggleCoords.addEventListener('change', () => {
   coordPanel.style.display = toggleCoords.checked ? 'flex' : 'none';
 });
 
+// =======================
 // Cuadrícula y ejes
+// =======================
 const toggleHelpersCheckbox = document.getElementById('toggleHelpers');
 toggleHelpersCheckbox.addEventListener('change', () => {
   toggleHelpers(toggleHelpersCheckbox.checked);
 });
 
-// HDRI y fondo
+// =======================
+// HDRI y fondo plano
+// =======================
 const toggleHR = document.getElementById('toggleHR');
 const selectorHDRI = document.getElementById('selectorHDRI');
 const bloqueHDRI = document.getElementById('bloqueHDRI');
 const bloqueColor = document.getElementById('bloqueColor');
 const inputColor = document.getElementById('backgroundColor');
 
-// Mostrar/ocultar elementos según HDRI activado
 toggleHR.addEventListener('change', () => {
   const activo = toggleHR.checked;
   bloqueHDRI.style.display = activo ? 'block' : 'none';
@@ -84,7 +105,6 @@ toggleHR.addEventListener('change', () => {
   }
 });
 
-// Cambio de HDRI
 selectorHDRI.addEventListener('change', () => {
   if (toggleHR.checked && selectorHDRI.value !== 'none') {
     cambiarHDRI(selectorHDRI.value);
@@ -95,7 +115,6 @@ selectorHDRI.addEventListener('change', () => {
   }
 });
 
-// Cambio de color de fondo
 inputColor.addEventListener('input', () => {
   if (!toggleHR.checked) {
     cambiarColorFondo(inputColor.value);
@@ -103,12 +122,9 @@ inputColor.addEventListener('input', () => {
   }
 });
 
-// Si no hay valores previos, activa HDRI por defecto
-if (!localStorage.getItem('hdriActivo') && !localStorage.getItem('colorFondo')) {
-  localStorage.setItem('hdriActivo', 'campo.hdr');
-}
-
-// Restaurar estado desde localStorage
+// =======================
+// Restaurar estado inicial
+// =======================
 window.addEventListener('load', () => {
   const hdriGuardado = localStorage.getItem('hdriActivo');
   const colorGuardado = localStorage.getItem('colorFondo');
