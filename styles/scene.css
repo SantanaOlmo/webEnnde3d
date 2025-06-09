@@ -146,23 +146,44 @@ body, html {
   transition: transform .1s ease-in-out;
 }
 
+/* Cabecera del menú lateral */
 #menuHeader {
   position: absolute;
-  top: 1.1em;
-  right: 7.6em; /* justo alineado con los tres puntos */
+  top: 1.2em;
+  left: 1.1em; 
+  display: flex;
+  align-items: center;
+  gap: 0.7em;
   z-index: 20;
 }
 
 #menuHeader img {
-  height: 2.4em;
+  height: 2.3em;
   opacity: 0.95;
   pointer-events: none;
 }
+
+#toggleModo {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 1.4em;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+#toggleModo:hover {
+  transform: scale(1.2);
+  color: white;
+}
+
 
 input {
   border: none;
   transition: transform .1s ease-in-out;
   cursor: pointer;
+  accent-color: #d95e7d;
 }
 
 #options svg {
@@ -193,7 +214,7 @@ input {
 
 .bloqueRotacion {
   width: 95%;
-  margin: 1px auto 5px;
+  margin: 1px auto 15px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -201,24 +222,31 @@ input {
 
 .bloqueRotacion label {
   margin-bottom: 3px;
-  font-size: 0.85em;
+  font-size: 0.8em;  /* antes 0.85em */
   font-weight: bold;
-  letter-spacing: 0.8px;
+  letter-spacing: 0.6px;
+  white-space: nowrap;
 }
+
 
 .bloqueRotacion input[type="range"] {
   width: 60%;
-  accent-color: #007bff;
+  accent-color: #d95e7d;
 }
 
 .notaShift {
   font-size: 0.75em;
   color: #ccc;
-  margin-top: 4px;
-  margin-bottom: 0.5em;;
+  margin-top: 14px;
+  margin-bottom: 0.5em;
   text-align: center;
   opacity: 0.8;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
+
 
 .seccionOpciones {
   margin-top: 20px;
@@ -249,6 +277,7 @@ input {
 
 .opcionesCheckbox input[type="checkbox"] {
   margin-right: 8px;
+  accent-color: #d95e7d;
 }
 
 #bloqueColor {
@@ -258,8 +287,8 @@ input {
 }
 
 #backgroundColor {
-  width: 90%;
-  margin-left: 7px;
+  width: 10em;
+  margin-left: 10px;
   height: 2em;
   padding: 0;
   border: none;
@@ -268,4 +297,50 @@ input {
   appearance: none;
   -webkit-appearance: none;
   cursor: pointer;
+}
+
+#menuTecnico {
+  display: none;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  color: #eee;
+  font-family: Arial, sans-serif;
+}
+
+#menuTecnico.oculto {
+  display: none;
+}
+
+#toggleModo,
+#volverMenu {
+  background: none;
+  border: none;
+  color: #ccc;
+  font-size: 1.4em;
+  cursor: pointer;
+  margin-left: 0.7em;
+}
+
+#toggleModo:hover,
+#volverMenu:hover {
+  transform: scale(1.2);
+  color: white;
+}
+
+#menuHeaderTecnico {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1em;
+}
+
+#menuHeaderTecnico img {
+    top: 1.2em;
+  left: 1.1em; 
+  height: 2.4em;
+  opacity: 0.95;
+  pointer-events: none;
 }
