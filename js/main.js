@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Cuando se suelta el archivo sobre la zona
-function dropHandler(ev) {
+async function dropHandler(ev) {
   ev.preventDefault();
 
   const file = ev.dataTransfer.files[0];
@@ -26,24 +26,25 @@ function dropHandler(ev) {
 
   const name = file.name.toLowerCase();
 
-  if (!name.endsWith(".glb") && !name.endsWith(".gltf")) {
-    alert("Solo se permiten archivos .glb o .gltf.");
+  if (
+    !name.endsWith(".glb") &&
+    !name.endsWith(".gltf") &&
+    !name.endsWith(".stl") &&
+    !name.endsWith(".stp")
+  ) {
+    alert("Solo se permiten archivos .glb, .gltf, .stl o .stp.");
     return;
   }
 
-  const reader = new FileReader();
-  reader.onload = function (event) {
-    try {
-      sessionStorage.setItem('uploadedModel', event.target.result);
-      window.location.href = './views/viewer.html';
-    } catch (e) {
-      alert("El archivo es demasiado grande para cargarse.");
-      console.error("Error al guardar en sessionStorage:", e);
-    }
-  };
-
-  reader.readAsDataURL(file);
+  try {
+    await saveFileToIndexedDB(file);
+    sessionStorage.setItem('uploadedModelName', name); // guardamos el nombre para usar en la otra página
+    window.location.href = './views/viewer.html';
+  } catch (e) {
+    alert("Error guardando archivo en IndexedDB: " + e);
+  }
 }
+
 
 
   // Seleccionamos la zona de subida y le asignamos eventos
@@ -54,3 +55,28 @@ function dropHandler(ev) {
   dropArea.addEventListener('drop', dropHandler);
 
 });
+
+function saveFileToIndexedDB(file) {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open("ModelDB", 1);
+
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains("models")) {
+        db.createObjectStore("models");
+      }
+    };
+
+    request.onerror = () => reject("Error abriendo IndexedDB");
+    request.onsuccess = (event) => {
+      const db = event.target.result;
+      const transaction = db.transaction("models", "readwrite");
+      const store = transaction.objectStore("models");
+
+      const putRequest = store.put(file, "uploadedModel");
+      putRequest.onsuccess = () => resolve();
+      putRequest.onerror = () => reject("Error guardando archivo");
+    };
+  });
+}
+
