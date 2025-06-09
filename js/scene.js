@@ -433,3 +433,12 @@ if (rotationSlider) {
     }
   });
 }
+
+export function cambiarColorFondo(colorHex) {
+  if (scene && renderer) {
+    const color = new THREE.Color(colorHex);
+    scene.background = color;
+    renderer.setClearColor(color); // por si acaso también afecta
+  }
+}
+
