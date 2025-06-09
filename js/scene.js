@@ -90,7 +90,7 @@ const helper1 = new THREE.DirectionalLightHelper(directionalLight, 2, 'red'); //
 scene.add(helper1);
 
   // Esfera en la posición de la luz
-  sphere1 = new THREE.Mesh(
+  const sphere1 = new THREE.Mesh(
     new THREE.SphereGeometry(0.2, 16, 16),
     new THREE.MeshBasicMaterial({ color: 0xff0000 })
   );
