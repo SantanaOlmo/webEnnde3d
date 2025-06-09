@@ -27,7 +27,7 @@ form.addEventListener('input', () => {
   datos.roughness = parseFloat(datos.roughness) / 1000;
   datos.metalness = parseFloat(datos.metalness) / 1000;
 
-  sessionStorage.setItem('estilos', JSON.stringify(datos));
+  localStorage.setItem('estilos', JSON.stringify(datos));
   actualizarModelo();
 });
 
@@ -35,7 +35,7 @@ form.addEventListener('input', () => {
 const btnReset = document.getElementById('resetEstilos');
 btnReset.addEventListener('click', () => {
   restaurarMaterialesOriginales();
-  sessionStorage.removeItem('estilos');
+  localStorage.removeItem('estilos');
 
   const colorInput = document.getElementById('chooseColor');
   const roughnessInput = form.elements['roughness'];
@@ -74,13 +74,13 @@ toggleHR.addEventListener('change', () => {
 
   if (activo) {
     cambiarHDRI(selectorHDRI.value);
-    sessionStorage.setItem('hdriActivo', selectorHDRI.value);
-    sessionStorage.removeItem('colorFondo');
+    localStorage.setItem('hdriActivo', selectorHDRI.value);
+    localStorage.removeItem('colorFondo');
   } else {
     quitarHDRI();
     cambiarColorFondo(inputColor.value);
-    sessionStorage.setItem('colorFondo', inputColor.value);
-    sessionStorage.removeItem('hdriActivo');
+    localStorage.setItem('colorFondo', inputColor.value);
+    localStorage.removeItem('hdriActivo');
   }
 });
 
@@ -88,10 +88,10 @@ toggleHR.addEventListener('change', () => {
 selectorHDRI.addEventListener('change', () => {
   if (toggleHR.checked && selectorHDRI.value !== 'none') {
     cambiarHDRI(selectorHDRI.value);
-    sessionStorage.setItem('hdriActivo', selectorHDRI.value);
+    localStorage.setItem('hdriActivo', selectorHDRI.value);
   } else {
     quitarHDRI();
-    sessionStorage.removeItem('hdriActivo');
+    localStorage.removeItem('hdriActivo');
   }
 });
 
@@ -99,19 +99,19 @@ selectorHDRI.addEventListener('change', () => {
 inputColor.addEventListener('input', () => {
   if (!toggleHR.checked) {
     cambiarColorFondo(inputColor.value);
-    sessionStorage.setItem('colorFondo', inputColor.value);
+    localStorage.setItem('colorFondo', inputColor.value);
   }
 });
 
 // Si no hay valores previos, activa HDRI por defecto
-if (!sessionStorage.getItem('hdriActivo') && !sessionStorage.getItem('colorFondo')) {
-  sessionStorage.setItem('hdriActivo', 'campo.hdr');
+if (!localStorage.getItem('hdriActivo') && !localStorage.getItem('colorFondo')) {
+  localStorage.setItem('hdriActivo', 'campo.hdr');
 }
 
-// Restaurar estado desde sessionStorage
+// Restaurar estado desde localStorage
 window.addEventListener('load', () => {
-  const hdriGuardado = sessionStorage.getItem('hdriActivo');
-  const colorGuardado = sessionStorage.getItem('colorFondo');
+  const hdriGuardado = localStorage.getItem('hdriActivo');
+  const colorGuardado = localStorage.getItem('colorFondo');
 
   if (hdriGuardado && hdriGuardado !== 'none') {
     toggleHR.checked = true;

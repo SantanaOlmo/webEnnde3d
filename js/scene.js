@@ -13,7 +13,10 @@ import { STLLoader } from 'three/examples/jsm/Addons.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 
+
 // Variables globales
+const modelUrl = localStorage.getItem('uploadedModelURL');
+const modelName = localStorage.getItem('uploadedModelName');
 let scene, camera, renderer, controls, loader, loaderSTL, gridHelper, currentModel, axesHelper;
 let cameraPositionX = document.getElementById('x');
 let cameraPositionY = document.getElementById('y');
@@ -24,6 +27,14 @@ let helper1, sphere1, line1;
 
 // VariableHDRI
 let currentHDRI;
+
+if (!modelUrl) {
+  alert("No se ha cargado ningún modelo.");
+} else {
+  // Aquí puedes usar modelUrl con GLTFLoader, STLLoader, etc.
+  console.log("URL del modelo cargado:", modelUrl);
+  console.log("Nombre del archivo:", modelName);
+}
 
 // Cambiar HDRI desde un archivo
 export function cambiarHDRI(nombreArchivo) {
@@ -170,7 +181,7 @@ scene.add(line1);
   });
 
   animate();              // Comienza el bucle de render
-  autoLoadFromSession();  // Carga desde sessionStorage si hay algo
+  autoLoadFromIndexedDB()  // Carga desde IndexedDB si hay algo
 
   window.addEventListener('keydown', (event) => {
   switch (event.key) {
@@ -205,16 +216,14 @@ scene.add(line1);
   });
 }
 
-// Carga un modelo desde archivo (GLB/GLTF)
-export function loadModel(file) {
+// Carga un modelo desde archivo (GLB/GLTF,STL)
+export function loadModel(url, name) {
   if (!loader && !loaderSTL) {
     console.error("Scene not initialized. Call initScene(container) first.");
     return;
   }
 
-  const url = URL.createObjectURL(file);
-
-  if (file.name.endsWith('.glb') || file.name.endsWith('.gltf')) {
+  if (name.toLowerCase().endsWith('.glb') || name.toLowerCase().endsWith('.gltf')) {
     loader.load(
       url,
       (gltf) => {
@@ -233,7 +242,7 @@ export function loadModel(file) {
         scene.add(currentModel);
         centerAndFitModel(currentModel);
 
-        if (sessionStorage.getItem('estilos')) {
+        if (localStorage.getItem('estilos')) {
           actualizarModelo();
         }
       },
@@ -243,7 +252,8 @@ export function loadModel(file) {
         alert("Error al cargar el modelo. Verifica que sea un archivo .glb o .gltf válido.");
       }
     );
-  } else if (file.name.endsWith('.stl')) {
+
+  } else if (name.toLowerCase().endsWith('.stl')) {
     loaderSTL.load(
       url,
       (geometry) => {
@@ -254,14 +264,13 @@ export function loadModel(file) {
         const material = new THREE.MeshStandardMaterial({});
         const mesh = new THREE.Mesh(geometry, material);
 
-        // Guardar material original
         mesh.userData.originalMaterial = material.clone();
 
         currentModel = mesh;
         scene.add(currentModel);
         centerAndFitModel(currentModel);
 
-        if (sessionStorage.getItem('estilos')) {
+        if (localStorage.getItem('estilos')) {
           actualizarModelo();
         }
       },
@@ -271,10 +280,12 @@ export function loadModel(file) {
         alert("Error al cargar el modelo. Verifica que sea un archivo .stl válido.");
       }
     );
+
   } else {
     alert("Formato de archivo no soportado. Usa .glb, .gltf o .stl");
   }
 }
+
 
 // Centra el modelo y ajusta la cámara para que encaje
 function centerAndFitModel(model) {
@@ -318,33 +329,44 @@ function animate() {
   cameraPositionZ.textContent = redondear(camera.position.z, 3);
 }
 
-// Carga automática de modelo desde sessionStorage
-function autoLoadFromSession() {
-  const base64 = sessionStorage.getItem('uploadedModel');
+// Función para recuperar archivo desde IndexedDB
+function getFileFromIndexedDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open("ModelDB", 1);
 
-  if (!base64) {
-    console.warn("No hay modelo en sessionStorage para cargar.");
-    return;
-  }
+    request.onerror = () => reject("Error abriendo IndexedDB");
+    request.onsuccess = (event) => {
+      const db = event.target.result;
+      const transaction = db.transaction("models", "readonly");
+      const store = transaction.objectStore("models");
 
+      const getRequest = store.get("uploadedModel");
+      getRequest.onsuccess = () => {
+        if (getRequest.result) {
+          resolve(getRequest.result);
+        } else {
+          reject("No se encontró archivo en IndexedDB");
+        }
+      };
+      getRequest.onerror = () => reject("Error leyendo archivo de IndexedDB");
+    };
+  });
+}
+
+// Nueva función para cargar el modelo desde IndexedDB
+export async function autoLoadFromIndexedDB() {
   try {
-    const mimeMatch = base64.match(/^data:(.*?);base64,/);
-    const mimeType = mimeMatch ? mimeMatch[1] : 'model/gltf-binary';
-    const byteString = atob(base64.split(',')[1]);
-    const ab = new ArrayBuffer(byteString.length);
-    const ia = new Uint8Array(ab);
-    for (let i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
-    }
-    const blob = new Blob([ab], { type: mimeType });
-    const file = new File([blob], 'model.glb', { type: mimeType });
-
-    loadModel(file);
+    const file = await getFileFromIndexedDB();
+    const modelName = sessionStorage.getItem('uploadedModelName') || 'model.glb';
+    const url = URL.createObjectURL(file);
+    loadModel(url, modelName);
   } catch (e) {
-    console.error("Error al convertir y cargar modelo desde sessionStorage:", e);
-    alert("El modelo no pudo cargarse desde sessionStorage. Asegúrate de haber subido un archivo válido.");
+    console.error("Error cargando modelo desde IndexedDB:", e);
+    alert("No se pudo cargar el modelo guardado. Por favor sube uno nuevo.");
   }
 }
+
+
 
 // Redondea número a n decimales
 function redondear(num, decimales) {
@@ -352,9 +374,9 @@ function redondear(num, decimales) {
   return Math.round(num * factor) / factor;
 }
 
-// Actualiza el material del modelo cargado usando valores del sessionStorage
+// Actualiza el material del modelo cargado usando valores del localStorage
 export function actualizarModelo() {
-  const datos = JSON.parse(sessionStorage.getItem('estilos'));
+  const datos = JSON.parse(localStorage.getItem('estilos'));
   if (!datos) return;
 
   currentModel.traverse((child) => {
