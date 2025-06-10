@@ -171,6 +171,8 @@ export function initScene(container) {
       case '3': camera.position.set(0, -5, 0); break;    // inferior
       case '5': camera.position.set(0, 0, -5); break;    // trasera
       case '2': camera.position.set(5, 0, 0); break;     // lateral izquierda
+      case '6': camera.position.set(0, 5, 0); break;     // lateral izquierda
+      case '7': camera.position.set(-5, 0, 0); break;     // lateral izquierda
     }
     camera.lookAt(0, 0, 0);
     controls.update();
@@ -309,6 +311,37 @@ export function actualizarModelo() {
         child.userData.originalMaterial = child.material.clone();
       }
       child.material = nuevoMaterial;
+      child.material.needsUpdate = true;
+    }
+  });
+}
+
+export function cambiarMaterial(tipo) {
+  if (!currentModel) return;
+
+  currentModel.traverse((child) => {
+    if (child.isMesh) {
+      if (!child.userData.originalMaterial) {
+        // Guarda el material original si aún no se ha hecho
+        child.userData.originalMaterial = child.material.clone();
+      }
+
+      if (tipo === 'wireframe') {
+        child.material = new THREE.MeshBasicMaterial({
+          color: 'black',
+          wireframe: true
+        });
+      
+      } else if (tipo === 'solido') {
+        // Restaurar a MeshStandardMaterial con valores por defecto o personalizados
+        const datos = JSON.parse(localStorage.getItem('estilos'));
+        child.material = new THREE.MeshStandardMaterial({
+          color: new THREE.Color(datos?.color || '#ffffff'),
+          roughness: datos?.roughness ?? 0.5,
+          metalness: datos?.metalness ?? 0.5,
+        });
+      }
+
       child.material.needsUpdate = true;
     }
   });

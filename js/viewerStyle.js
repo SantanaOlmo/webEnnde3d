@@ -6,7 +6,8 @@ import {
   cambiarHDRI,
   quitarHDRI,
   toggleHelpers,
-  cambiarColorFondo
+  cambiarColorFondo,
+  cambiarMaterial
 } from '/js/scene.js';
 
 // Referencias generales
@@ -16,6 +17,7 @@ const menuPanel = document.getElementById('menuDesplegable');
 const toggleModo = document.getElementById('toggleModo');
 const menuContenido = document.getElementById('menuContenido');
 const menuTecnico = document.getElementById('menuTecnico');
+const mallas = document.getElementById('mallas');
 
 // Mostrar/ocultar panel lateral completo
 btnOptions.addEventListener('click', () => {
@@ -61,6 +63,18 @@ btnReset.addEventListener('click', () => {
   form.elements['roughness'].value = 500;
   form.elements['metalness'].value = 500;
 });
+
+const btnWireframe=document.getElementById('wireframe');
+const btnSolido=document.getElementById('solido');
+
+btnWireframe.addEventListener('click', () => {
+  cambiarMaterial('wireframe');
+});
+
+btnSolido.addEventListener('click', () => {
+  cambiarMaterial('solido');
+});
+
 
 // =======================
 // Mostrar coordenadas
