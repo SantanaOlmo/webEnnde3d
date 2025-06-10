@@ -13,16 +13,18 @@ import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
 import { STLLoader } from 'three/examples/jsm/Addons.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
-
+import { contain } from 'three/src/extras/TextureUtils.js';
 //=============================
 //    VARIABLES GLOBALES
 //=============================
 
 let scene, camera, renderer, controls, loader, loaderSTL;
-let gridHelper, currentModel, axesHelper;
+let gridHelper, currentModel, axesHelper, cameraY;
 let helper1, sphere1, line1;
 let currentHDRI;
-
+let play = false;
+const container= document.getElementById('three-container');
+const drop_zone=document.getElementById('drop_zone');
 let cameraPositionX = document.getElementById('x');
 let cameraPositionY = document.getElementById('y');
 let cameraPositionZ = document.getElementById('z');
@@ -141,8 +143,8 @@ export function initScene(container) {
   });
 
   // Otras luces direccionales
-  scene.add(new THREE.DirectionalLight('white', 1).position.set(-5, -10, 7.5));
-  scene.add(new THREE.DirectionalLight('white', 1).position.set(-180, -360, 20));
+  /*scene.add(new THREE.DirectionalLight('white', 1).position.set(-5, -10, 7.5));
+  scene.add(new THREE.DirectionalLight('white', 1).position.set(-180, -360, 20));*/
 
   // Loaders de modelos
   loader = new GLTFLoader();
@@ -203,6 +205,9 @@ export function loadModel(url, name) {
       scene.add(currentModel);
       centerAndFitModel(currentModel);
       if (localStorage.getItem('estilos')) actualizarModelo();
+      document.getElementById('loader-container').style.display='none';
+      document.getElementById('contenido').style.visibility='visible';
+    
     }, undefined, (error) => {
       console.error("Error cargando modelo:", error);
     });
@@ -223,9 +228,12 @@ export function loadModel(url, name) {
 
       currentModel = mesh;
       scene.add(currentModel);
+      
 
       centerAndFitModel(currentModel);
       if (localStorage.getItem('estilos')) actualizarModelo();
+      document.getElementById('loader-container').style.display='none';
+      document.getElementById('contenido').style.visibility='visible';
     }, undefined, (error) => {
       console.error("Error cargando STL:", error);
     });
@@ -252,7 +260,6 @@ function centerAndFitModel(model) {
   controls.update();
 }
 
-
 //==================================================
 //             BUCLE DE RENDERIZADO               
 //==================================================
@@ -265,12 +272,6 @@ const radius = 5;
 function animate() {
   requestAnimationFrame(animate);
 
-  /* // Movimiento de cámara circular automático (comentado)
-  angle += 0.005;
-  camera.position.x = radius * Math.sin(angle);
-  camera.position.z = radius * Math.cos(angle);
-  camera.position.y = 1.5;
-  camera.lookAt(0, 0, 0); */
 
   controls.update();
   renderer.render(scene, camera);
@@ -280,7 +281,38 @@ function animate() {
   cameraPositionZ.textContent = redondear(camera.position.z, 3);
 }
 
+function rotarCamara() {
+  if (!play) return;
+  angle += 0.001;
+  camera.position.x = radius * Math.sin(angle);
+  camera.position.z = radius * Math.cos(angle);
+  
+  camera.lookAt(0, 0, 0);
 
+  controls.update();
+  renderer.render(scene, camera);
+
+  cameraPositionX.textContent = redondear(camera.position.x, 3);
+  cameraPositionY.textContent = redondear(camera.position.y, 3);
+  cameraPositionZ.textContent = redondear(camera.position.z, 3);
+
+  requestAnimationFrame(rotarCamara);
+}
+
+document.addEventListener('keydown', function(event) {
+  if (event.code === 'Space') {
+    play = !play;
+
+    if (!play) {
+   
+      controls.update();
+    } else {
+      
+      angle = Math.atan2(camera.position.x, camera.position.z);
+      rotarCamara(); // Iniciar rotación
+    }
+  }
+});
 //==================================================
 //               FUNCIONES AUXILIARES            
 //==================================================
@@ -435,3 +467,100 @@ window.addEventListener('keydown', (event) => {
     rotationSlider.value = (grados < 0 ? grados + 360 : grados).toFixed(0);
   }
 });
+
+
+
+/*
+intentando hacer que viewer también tenga un dragover y no haga
+falta volver hacia atrás para cargar otro archivo
+  // Cuando el archivo entra en la zona de drop
+  function dragEnterHandler(ev) {
+    ev.preventDefault();
+    drop_zone.style.display='flex';
+  }
+
+  // Mientras el archivo se mantiene encima
+  function dragOverHandler(ev) {
+    ev.preventDefault();
+    drop_zone.style.display='flex';
+  }
+
+  // Cuando el archivo sale de la zona sin soltarse
+  function dragLeaveHandler(ev) {
+    drop_zone.style.display='none';
+  }
+
+  // Cuando se suelta el archivo sobre la zona
+async function dropHandler(ev) {
+  ev.preventDefault();
+
+  const file = ev.dataTransfer.files[0];
+  if (!file) return;
+
+  const name = file.name.toLowerCase();
+
+  if (
+    !name.endsWith(".glb") &&
+    !name.endsWith(".gltf") &&
+    !name.endsWith(".stl") &&
+    !name.endsWith(".stp")
+  ) {
+    alert("Solo se permiten archivos .glb, .gltf, .stl o .stp.");
+    return;
+  }
+
+  try {
+    await saveFileToIndexedDB(file);
+    sessionStorage.setItem('uploadedModelName', name); // guardamos el nombre para usar en la otra página
+    if(path.endsWith('index.html')){
+      window.location.href = './views/viewer.html';
+    }
+  } catch (e) {
+    alert("Error guardando archivo en IndexedDB: " + e);
+  }
+}
+
+
+
+  // Seleccionamos la zona de subida y le asignamos eventos
+
+const path = window.location.pathname;
+
+if (path.endsWith('index.html')) {
+  container.addEventListener('dragover', dragOverHandler);
+  container.addEventListener('dragenter', dragEnterHandler);
+  container.addEventListener('dragleave', dragLeaveHandler);
+  container.addEventListener('drop', dropHandler);
+} else if (path.endsWith('viewer.html')) {
+  container.addEventListener('dragover', dragOverHandler);
+  container.addEventListener('dragenter', dragEnterHandler);
+  container.addEventListener('dragleave', dragLeaveHandler);
+  container.addEventListener('drop', dropHandler);
+}
+
+
+
+function saveFileToIndexedDB(file) {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open("ModelDB", 1);
+
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains("models")) {
+        db.createObjectStore("models");
+      }
+    };
+
+    request.onerror = () => reject("Error abriendo IndexedDB");
+    request.onsuccess = (event) => {
+      const db = event.target.result;
+      const transaction = db.transaction("models", "readwrite");
+      const store = transaction.objectStore("models");
+
+      const putRequest = store.put(file, "uploadedModel");
+      putRequest.onsuccess = () => resolve();
+      putRequest.onerror = () => reject("Error guardando archivo");
+    };
+  });
+}
+*/
