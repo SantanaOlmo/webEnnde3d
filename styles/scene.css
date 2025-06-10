@@ -344,3 +344,18 @@ input {
   opacity: 0.95;
   pointer-events: none;
 }
+
+#mallas{
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  gap: 10px;
+  button{
+    width: 35%;
+    height: 30px;
+    cursor: pointer;
+  }
+  button:hover{
+    background-color: rgb(86, 86, 86);
+  }
+}
