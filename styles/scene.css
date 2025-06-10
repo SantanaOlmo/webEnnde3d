@@ -3,9 +3,52 @@ body, html {
   padding: 0;
   overflow: hidden;
   height: 100%;
-  background-color: pink;
+  background-color: rgb(48, 38, 38);
+}
+#loader-container{
+  display: flex;
+  height: 100%;
+  align-content: center;
+  justify-content: center;
+}
+#contenido{
+  visibility: hidden;
+  border-radius: 25px;
+  
+}
+#drop_zone{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: #00000080;
+  display: none;
+  justify-content: center;
+  align-content: center;
+
 }
 
+#svgPlus{
+  width: 100px;
+  fill: grey;
+}
+
+
+/* HTML: <div class="loader"></div> */
+.loader {
+  --s: 25px;
+  
+  --_d: calc(0.353*var(--s));
+  width: calc(var(--s) + var(--_d));
+  aspect-ratio: 1;
+  clip-path: polygon(var(--_d) 0,100% 0,100% calc(100% - var(--_d)),calc(100% - var(--_d)) 100%,0 100%,0 var(--_d));
+  background:
+    conic-gradient(from -90deg at var(--s) var(--_d),
+     #fff 135deg,#666 0 270deg,#aaa 0);
+  animation: l1 1s infinite cubic-bezier(0.5,300,0.5,-300);
+}
+@keyframes l1{
+  50%,100% {transform:translateY(0.1px)}
+}
 #three-container {
   width: 100vw;
   height: 100vh;

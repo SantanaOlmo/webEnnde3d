@@ -39,7 +39,9 @@ async function dropHandler(ev) {
   try {
     await saveFileToIndexedDB(file);
     sessionStorage.setItem('uploadedModelName', name); // guardamos el nombre para usar en la otra página
-    window.location.href = './views/viewer.html';
+    if(path.endsWith('index.html')){
+      window.location.href = './views/viewer.html';
+    }
   } catch (e) {
     alert("Error guardando archivo en IndexedDB: " + e);
   }
@@ -48,11 +50,20 @@ async function dropHandler(ev) {
 
 
   // Seleccionamos la zona de subida y le asignamos eventos
-  const dropArea = document.getElementById('drop_zone');
+const dropArea = document.getElementById('drop_zone');
+const path = window.location.pathname;
+
+if (path.endsWith('index.html')) {
   dropArea.addEventListener('dragover', dragOverHandler);
   dropArea.addEventListener('dragenter', dragEnterHandler);
   dropArea.addEventListener('dragleave', dragLeaveHandler);
   dropArea.addEventListener('drop', dropHandler);
+} else if (path.endsWith('viewer.html')) {
+  dropArea.addEventListener('dragover', dragOverHandler);
+  dropArea.addEventListener('dragenter', dragEnterHandler);
+  dropArea.addEventListener('dragleave', dragLeaveHandler);
+  dropArea.addEventListener('drop', dropHandler);
+}
 
 });
 
