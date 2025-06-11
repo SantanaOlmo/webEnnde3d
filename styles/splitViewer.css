@@ -5,33 +5,37 @@ body, html {
   height: 100vh;
   background-color: rgb(48, 38, 38);
 }
-#loader-container{
+
+#loader-container {
   display: none;
- 
   height: 100%;
   align-content: center;
   justify-content: center;
 }
 
-/* HTML: <div class="loader"></div> */
+/* Loader animation */
 .loader {
   --s: 25px;
-  
-  --_d: calc(0.353*var(--s));
+  --_d: calc(0.353 * var(--s));
   width: calc(var(--s) + var(--_d));
   aspect-ratio: 1;
-  clip-path: polygon(var(--_d) 0,100% 0,100% calc(100% - var(--_d)),calc(100% - var(--_d)) 100%,0 100%,0 var(--_d));
+  clip-path: polygon(var(--_d) 0, 100% 0, 100% calc(100% - var(--_d)), calc(100% - var(--_d)) 100%, 0 100%, 0 var(--_d));
   background:
     conic-gradient(from -90deg at var(--s) var(--_d),
-     #fff 135deg,#666 0 270deg,#aaa 0);
-  animation: l1 1s infinite cubic-bezier(0.5,300,0.5,-300);
+      #fff 135deg, #666 0 270deg, #aaa 0);
+  animation: l1 1s infinite cubic-bezier(0.5, 300, 0.5, -300);
 }
-@keyframes l1{
-  50%,100% {transform:translateY(0.1px)}
+@keyframes l1 {
+  50%, 100% { transform: translateY(0.1px); }
 }
 
-#contenido{
-  visibility:visible;
+.contenido {
+  display: flex !important; /* importante para forzar */
+  flex-direction: row;
+  height: 100vh;
+  position: relative; /* para el resizer */
+  overflow: hidden;
+  padding: 0; /* opcional */
 }
 
 #back {
@@ -59,29 +63,55 @@ body, html {
   fill: white;
 }
 
-.c-viewer1{
-visibility: visible;
-border-radius: 5px;
-}
-
-.c-viewer2{
-visibility: visible;
-border-radius: 5px;
-visibility: visible;
+.c-viewer1, .c-viewer2 {
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-basis: 50%; /* empiezan iguales */
+  min-width: 10%;
+  min-height: 10%;
+  overflow: hidden;
 }
 
 .viewer1, .viewer2 {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color:rgb(85, 85, 85);
-    height: 100%;
-    color: rgb(48, 48, 48);
-    font-size: 5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(85, 85, 85);
+  height: 100%;
+  color: rgb(48, 48, 48);
+  font-size: 5em;
 }
 
-#inputFile{
-    background-color: rgb(68, 68, 68);
+#inputFile {
+  background-color: rgb(68, 68, 68);
+  width: 100%;
+  height: 100%;
+}
+
+.resizer {
+  position: absolute;
+  background:transparent;
+  z-index: 1000;
+  cursor: col-resize;
+  width: 6px;
+  top: 0;
+  bottom: 0;
+  left: 50%; /* al medio al inicio */
+  transform: translateX(-50%);
+}
+
+/* Para móvil, cambia flex-direction a columna y resizer horizontal */
+@media (max-width: 991px) {
+  .contenido {
+    flex-direction: column;
+  }
+  .resizer {
+    cursor: row-resize;
     width: 100%;
-    height: 100%;
+    height: 6px;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+  }
 }

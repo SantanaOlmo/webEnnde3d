@@ -5,12 +5,7 @@ body, html {
   height: 100%;
   background-color: rgb(48, 38, 38);
 }
-#loader-container{
-  display: flex;
-  height: 100%;
-  align-content: center;
-  justify-content: center;
-}
+
 #contenido{
   visibility: hidden;
   border-radius: 25px;
