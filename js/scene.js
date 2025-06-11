@@ -539,73 +539,108 @@ function guardarVertices(model) {
 
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
-
-const DISTANCIA_MAXIMA = 0.05;
+let puntosSeleccionados = [];
 
 window.addEventListener('click', function (event) {
-  if (!currentModel || !camera || !renderer) return;
+  if (!camera || !renderer || !currentModel) return;
 
   const rect = renderer.domElement.getBoundingClientRect();
   mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
   mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
 
-  const ray = raycaster.ray;
-  let verticeMasCercano = null;
-  let distanciaMasCorta = Infinity;
+  currentModel.traverse((child) => {
+    if (child.isPoints && child.geometry?.attributes?.color) {
+      const intersects = raycaster.intersectObject(child, true);
+      if (intersects.length > 0) {
+        const intersect = intersects[0];
+        const geometry = child.geometry;
+        const positions = geometry.attributes.position;
+        const colors = geometry.attributes.color;
 
-  verticesModelo.forEach((vertice) => {
-    const distancia = ray.distanceToPoint(vertice);
-    if (distancia < distanciaMasCorta && distancia < DISTANCIA_MAXIMA) {
-      distanciaMasCorta = distancia;
-      verticeMasCercano = vertice;
+        let closestIndex = -1;
+        let shortestDistance = Infinity;
+
+        for (let i = 0; i < positions.count; i++) {
+          const dx = positions.getX(i);
+          const dy = positions.getY(i);
+          const dz = positions.getZ(i);
+          const dist = intersect.point.distanceTo(new THREE.Vector3(dx, dy, dz));
+          if (dist < shortestDistance) {
+            shortestDistance = dist;
+            closestIndex = i;
+          }
+        }
+
+        if (closestIndex !== -1 && shortestDistance < 0.05) {
+          colors.setXYZ(closestIndex, 1, 1, 0); // amarillo
+          colors.needsUpdate = true;
+
+          puntosSeleccionados.push({
+            x: positions.getX(closestIndex).toFixed(4),
+            y: positions.getY(closestIndex).toFixed(4),
+            z: positions.getZ(closestIndex).toFixed(4)
+          });
+
+          console.log("📍 Punto exacto guardado:", puntosSeleccionados.at(-1));
+        }
+      }
     }
   });
-
-  if (verticeMasCercano) {
-    console.log("Vértice clicado:", verticeMasCercano);
-  }
 });
 
 //==================================================
 //        NUBE DE PUNTOS A PARTIR DEL MESH
 //==================================================
 
-let puntosMesh = null;
-
 function crearNubeDePuntos(mesh) {
-  const geometry = mesh.geometry;
+  const geometry = mesh.geometry.clone();
+  const count = geometry.attributes.position.count;
 
-  // Calcular tamaño relativo de los puntos
-  const box = new THREE.Box3().setFromObject(mesh);
-  const size = box.getSize(new THREE.Vector3());
-  const averageSize = (size.x + size.y + size.z) / 3;
-  const puntoSize = averageSize * 0.005; // Puedes subirlo si lo ves pequeño
+  const colors = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    colors[i * 3 + 0] = 1; // R
+    colors[i * 3 + 1] = 0; // G
+    colors[i * 3 + 2] = 0; // B
+  }
+  geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-  const material = new THREE.PointsMaterial({
-    size: puntoSize,
-    color: 0xff0000,
-    sizeAttenuation: true,
-    transparent: true,
-    alphaTest: 0.5,
-    depthWrite: false
-  });
+const material = new THREE.PointsMaterial({
+  size: 0.08,
+  vertexColors: true,
+  sizeAttenuation: true,
+  depthTest: false,         // ✅ se dibujan siempre por delante
+  depthWrite: false,        // ✅ no escriben en el buffer de profundidad
+  transparent: true,
+  opacity: 1
+});
 
-  puntosMesh = new THREE.Points(geometry, material);
-  mesh.add(puntosMesh);
-  puntosMesh.visible = false;
+
+  const puntos = new THREE.Points(geometry, material);
+  puntos.name = 'puntos_nube';
+  puntos.visible = true; // ¡Ahora siempre visibles!
+  mesh.add(puntos);
+  mesh.userData.nubePuntos = puntos;
 }
+
+//==================================================
+//        ACTIVAR/DESACTIVAR NUBE DE PUNTOS
+//==================================================
 
 export function toggleNubeDePuntos(visible) {
   if (!currentModel) return;
   currentModel.traverse((child) => {
     if (child.isMesh && child.children.length > 0) {
       child.children.forEach(c => {
-        if (c.isPoints) c.visible = visible;
+        if (c.isPoints) {
+          c.visible = visible;
+          console.log(`🔁 Visibilidad de nube de puntos: ${visible}`);
+        }
       });
     }
   });
 }
+
 
 /*
 intentando hacer que viewer también tenga un dragover y no haga
