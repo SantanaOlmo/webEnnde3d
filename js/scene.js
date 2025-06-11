@@ -14,6 +14,7 @@ import { STLLoader } from 'three/examples/jsm/Addons.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { contain } from 'three/src/extras/TextureUtils.js';
+
 //=============================
 //    VARIABLES GLOBALES
 //=============================
@@ -28,6 +29,9 @@ const drop_zone=document.getElementById('drop_zone');
 let cameraPositionX = document.getElementById('x');
 let cameraPositionY = document.getElementById('y');
 let cameraPositionZ = document.getElementById('z');
+// let puntosMarcados = [];
+
+
 
 // const modelName = localStorage.getItem('uploadedModelName'); // ya no se usa, ahora va por sessionStorage
 // console.log("Nombre del archivo:", modelName);
@@ -203,6 +207,7 @@ export function loadModel(url, name) {
         }
       });
       scene.add(currentModel);
+      guardarVertices(currentModel);
       centerAndFitModel(currentModel);
       if (localStorage.getItem('estilos')) actualizarModelo();
       document.getElementById('loader-container').style.display='none';
@@ -228,7 +233,8 @@ export function loadModel(url, name) {
 
       currentModel = mesh;
       scene.add(currentModel);
-      
+      guardarVertices(currentModel);
+
 
       centerAndFitModel(currentModel);
       if (localStorage.getItem('estilos')) actualizarModelo();
@@ -358,13 +364,16 @@ export function cambiarMaterial(tipo) {
         child.userData.originalMaterial = child.material.clone();
       }
 
-      if (tipo === 'wireframe') {
-        child.material = new THREE.MeshBasicMaterial({
-          color: 'black',
-          wireframe: true
-        });
-      
-      } else if (tipo === 'solido') {
+       if (tipo === 'wireframe') {
+const estilos = JSON.parse(localStorage.getItem('estilos')) || {};
+const colorWireframe = estilos.wireframeColor || '#ff00ff';
+
+  child.material = new THREE.MeshBasicMaterial({
+    color: new THREE.Color(colorWireframe),
+    wireframe: true,
+  });
+}
+ else if (tipo === 'solido') {
         // Restaurar a MeshStandardMaterial con valores por defecto o personalizados
         const datos = JSON.parse(localStorage.getItem('estilos'));
         child.material = new THREE.MeshStandardMaterial({
@@ -386,6 +395,10 @@ export function restaurarMaterialesOriginales() {
     if (child.isMesh && child.userData.originalMaterial) {
       child.material = child.userData.originalMaterial.clone();
       child.material.needsUpdate = true;
+      // Eliminar esferas marcadas con clics
+      // puntosMarcados.forEach(p => scene.remove(p));
+      // puntosMarcados = [];
+
     }
   });
 }
@@ -468,6 +481,59 @@ window.addEventListener('keydown', (event) => {
   }
 });
 
+// =======================================
+// GUARDAR VÉRTICES DEL MODELO
+// =======================================
+let verticesModelo = [];
+
+function guardarVertices(model) {
+  verticesModelo = []; // resetear si ya había algo
+  model.traverse((child) => {
+    if (child.isMesh && child.geometry && child.geometry.attributes.position) {
+      const posiciones = child.geometry.attributes.position;
+      for (let i = 0; i < posiciones.count; i++) {
+        const vertice = new THREE.Vector3().fromBufferAttribute(posiciones, i);
+        child.localToWorld(vertice); // Pasar a coordenadas globales
+        verticesModelo.push(vertice);
+      }
+    }
+  });
+}
+
+
+//==================================================
+//        RAYCASTER PARA DETECTAR CLICS EN VÉRTICES
+//==================================================
+
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+const DISTANCIA_MAXIMA = 0.05;
+
+window.addEventListener('click', function (event) {
+  if (!currentModel || !camera || !renderer) return;
+
+  const rect = renderer.domElement.getBoundingClientRect();
+  mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+  raycaster.setFromCamera(mouse, camera);
+
+  const ray = raycaster.ray;
+  let verticeMasCercano = null;
+  let distanciaMasCorta = Infinity;
+
+  verticesModelo.forEach((vertice) => {
+    const distancia = ray.distanceToPoint(vertice);
+    if (distancia < distanciaMasCorta && distancia < DISTANCIA_MAXIMA) {
+      distanciaMasCorta = distancia;
+      verticeMasCercano = vertice;
+    }
+  });
+
+  if (verticeMasCercano) {
+    console.log("Vértice clicado:", verticeMasCercano);
+  }
+});
 
 
 /*

@@ -18,6 +18,9 @@ const toggleModo = document.getElementById('toggleModo');
 const menuContenido = document.getElementById('menuContenido');
 const menuTecnico = document.getElementById('menuTecnico');
 const mallas = document.getElementById('mallas');
+const btnWireframe = document.getElementById('wireframe');
+const btnSolido = document.getElementById('solido');
+
 
 // Mostrar/ocultar panel lateral completo
 btnOptions.addEventListener('click', () => {
@@ -62,10 +65,23 @@ btnReset.addEventListener('click', () => {
   form.elements['color'].value = '#ffffff';
   form.elements['roughness'].value = 500;
   form.elements['metalness'].value = 500;
+  if (inputWireframeColor) inputWireframeColor.value = '#d95e7d';
 });
 
-const btnWireframe=document.getElementById('wireframe');
-const btnSolido=document.getElementById('solido');
+const inputWireframeColor = document.getElementById('wireframeColor');
+
+btnWireframe.addEventListener('click', () => {
+  const wireColor = inputWireframeColor.value;
+  const estilos = JSON.parse(localStorage.getItem('estilos')) || {};
+  estilos.wireframeColor = wireColor;
+  localStorage.setItem('estilos', JSON.stringify(estilos));
+  cambiarMaterial('wireframe');
+});
+
+btnSolido.addEventListener('click', () => {
+  cambiarMaterial('solido');
+});
+
 
 btnWireframe.addEventListener('click', () => {
   cambiarMaterial('wireframe');
@@ -75,6 +91,16 @@ btnSolido.addEventListener('click', () => {
   cambiarMaterial('solido');
 });
 
+// ACTUALIZACIÓN DEL COLOR DE LA MALLA AL CAMBIARLO
+inputWireframeColor.addEventListener('input', () => {
+  const wireColor = inputWireframeColor.value;
+  const estilos = JSON.parse(localStorage.getItem('estilos')) || {};
+  estilos.wireframeColor = wireColor;
+  localStorage.setItem('estilos', JSON.stringify(estilos));
+
+  // Si estamos en modo malla, lo aplicamos directamente
+  cambiarMaterial('wireframe');
+});
 
 // =======================
 // Mostrar coordenadas
