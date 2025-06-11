@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/SantanaOlmo/webEnnde3d#readme",
   "dependencies": {
+    "bootstrap-icons": "^1.13.1",
     "three": "^0.177.0"
   },
   "devDependencies": {

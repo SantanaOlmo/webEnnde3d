@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>3D Scene</title>
+    <link rel="icon" href="/assets/img/ennde3d_icon.png" type="image/png">
+    <script defer type="module" src="/js/viewerStyle.js"></script>
+
+    <script defer src="/js/main.js"></script>
+    <script defer type="module" src="/js/viewer.js"></script>
+
+    <link rel="stylesheet" href="/styles/bootstrap.css">
+    <link rel="stylesheet" href="/styles/scene.css">
+
+
+</head>
+
+<body class="bg-dark">
+
+  <div id="loader-container">
+     <div class="loader m-auto"></div>
+  </div>
+  
+  <div id="contenido">
+
+    <div id="drop_zone" class="z-1">
+      <svg id="svgPlus" viewBox="0 0 24 24" fill="grey" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M4 12H20M12 4V20" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+    </div>
+      <!-- Contenedor donde se insertará la escena 3D -->
+    <div id="three-container" class="z-0"></div>
+    
+      <!-- Botón para volver a la página principal -->
+    <button id="back" onclick="window.location.href = '/index.html'">
+      <svg fill="#ffffff" version="1.1" id="Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" xml:space="preserve" stroke="#ffffff" stroke-width="0.00032"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z M22,17h-8.6l2.3,2.3c0.4,0.4,0.4,1,0,1.4 C15.5,20.9,15.3,21,15,21s-0.5-0.1-0.7-0.3l-4-4c-0.1-0.1-0.2-0.2-0.2-0.3c-0.1-0.2-0.1-0.5,0-0.8c0.1-0.1,0.1-0.2,0.2-0.3l4-4 c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4L13.4,15H22c0.6,0,1,0.4,1,1S22.6,17,22,17z"></path> </g></svg>  
+    </button>
+
+      <!-- Info opcional: posición actual de la cámara -->
+    <div id="bottomInfo">
+      <p id="cameraPosition">X: <span id="x"></span>, Y: <span id="y"></span>, Z: <span id="z"></span></p>
+    </div>
+
+  <!-- Botón flotante de los tres puntos, siempre visible -->
+  <button id="options">
+    <svg viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg">
+      <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+      <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+      <g id="SVGRepo_iconCarrier">
+        <path d="M28.106 19.944h-0.85c-0.069-0.019-0.131-0.050-0.2-0.063-1.788-0.275-3.2-1.762-3.319-3.506-0.137-1.95 0.975-3.6 2.787-4.137 0.238-0.069 0.488-0.119 0.731-0.181h0.85c0.056 0.019 0.106 0.050 0.169 0.056 1.65 0.269 2.906 1.456 3.262 3.081 0.025 0.125 0.063 0.25 0.094 0.375v0.85c-0.019 0.056-0.050 0.113-0.056 0.169-0.262 1.625-1.419 2.863-3.025 3.238-0.156 0.038-0.3 0.081-0.444 0.119zM4.081 12.056l0.85 0c0.069 0.019 0.131 0.050 0.2 0.056 1.8 0.281 3.206 1.775 3.319 3.537 0.125 1.944-1 3.588-2.819 4.119-0.231 0.069-0.469 0.119-0.7 0.175h-0.85c-0.056-0.019-0.106-0.050-0.162-0.063-1.625-0.3-2.688-1.244-3.194-2.819-0.069-0.206-0.106-0.425-0.162-0.637v-0.85c0.019-0.056 0.050-0.113 0.056-0.169 0.269-1.631 1.419-2.863 3.025-3.238 0.15-0.037 0.294-0.075 0.437-0.113zM15.669 12.056h0.85c0.069 0.019 0.131 0.050 0.2 0.063 1.794 0.281 3.238 1.831 3.313 3.581 0.087 1.969-1.1 3.637-2.931 4.106-0.194 0.050-0.387 0.094-0.581 0.137h-0.85c-0.069-0.019-0.131-0.050-0.2-0.063-1.794-0.275-3.238-1.831-3.319-3.581-0.094-1.969 1.1-3.637 2.931-4.106 0.2-0.050 0.394-0.094 0.588-0.137z"></path>
+      </g>
+    </svg>
+  </button>
+
+  <!-- Panel lateral ocultable -->
+  <div id="menuDesplegable" class="oculto">
+
+    <!-- Cabecera común con logo + botón alternancia -->
+    <div id="menuHeader">
+      <img src="/assets/img/logo-ennde3DV2.png" alt="Logo ENNDE">
+      <button id="toggleModo" title="Modo técnico">🛠️</button>
+    </div>
+
+    <!-- Contenido normal del menú -->
+    <div id="menuContenido">
+      <form id="formStyles">
+        <label for="color">Color:</label>
+        <input type="color" name="color" id="chooseColor" class="input">
+        <label for="roughness">Roughness:</label>
+        <input type="range" name="roughness" min="0" max="1000">  
+        <label for="metalness">Metalness:</label>
+        <input type="range" name="metalness" min="0" max="1000">
+        <div id="previewTexturas"></div>
+        <button type="button" id="resetEstilos">Restablecer</button>
+      </form>
+
+      <div class="bloqueRotacion">
+        <label for="rotationSlider">Rotar modelo [Q | E]</label>
+        <input type="range" id="rotationSlider" min="0" max="360" value="0">
+      </div>
+
+      <small class="notaShift">Pulsa Shift y arrastra<br>para mover el modelo</small>
+
+      <p class="seccionOpciones">Opciones del Visor</p>
+      <div class="opcionesCheckbox">
+        <label><input type="checkbox" id="toggleCoords" checked> Coordenadas</label>
+        <label><input type="checkbox" id="toggleHelpers" checked> Cuadrícula y ejes</label>
+        <label><input type="checkbox" id="toggleHR" checked> Mostrar HDRI</label>
+      </div>
+
+      <p class="seccionOpciones">Fondo de la Escena</p>
+      <div id="bloqueHDRI" class="opcionesHDRI">
+        <select id="selectorHDRI">
+          <option value="campo.hdr">Naturaleza de día</option>
+          <option value="tren.hdr">Naturaleza de día II</option>
+          <option value="campo_noche1.hdr">Naturaleza de noche</option>
+          <option value="parque.hdr">Parque al Atardecer</option>
+          <option value="art_studio.hdr">Estudio de Arte I</option>
+          <option value="artist.hdr">Estudio de Arte II</option>
+          <option value="studio.hdr">Estudio Fotográfico</option>
+          <option value="fireplace.hdr">Habitación cálida</option>
+          <option value="calle1.hdr">Zona Puerto</option>
+        </select>
+      </div>
+
+      <div id="bloqueColor">
+        <input type="color" id="backgroundColor">
+      </div>
+    </div>
+
+    <!-- Contenido técnico oculto -->
+    <div id="menuTecnico" class="oculto">
+      <div style="padding: 2em; text-align: center; color: white;">
+        <h2>Panel Técnico</h2>
+        <p>(modo en desarrollo...)</p>
+        <p>Se mostrarán herramientas más avanzadas.</p>
+      </div>
+          <div id="mallas">
+        <button class="botonMalla" id="wireframe">malla</button>
+        <button class="botonMalla" id="solido">solido</button>
+      </div>
+
+<div id="bloqueColorMalla" style="margin-top: 1em;">
+  <label for="wireframeColor" style="color: #eee;">Color de la malla:</label><br>
+  <input type="color" id="wireframeColor" value="#d95e7d">
+</div>
+
+
+
+    </div>
+  </div>
+  </div>
+
+</body>
+</html>

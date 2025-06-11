@@ -1,3 +1,6 @@
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+
 body, html {
   margin: 0;
   padding: 0;
@@ -35,7 +38,7 @@ body, html {
   height: 100vh;
   position: relative; /* para el resizer */
   overflow: hidden;
-  padding: 0; /* opcional */
+  
 }
 
 #back {
@@ -80,6 +83,7 @@ body, html {
   height: 100%;
   color: rgb(48, 48, 48);
   font-size: 5em;
+  overflow: hidden;
 }
 
 #inputFile {
@@ -114,4 +118,39 @@ body, html {
     right: 0;
     transform: translateY(-50%);
   }
+}
+.sidebar{
+  button{
+    padding: 0%;
+    border: none;
+    background: none;
+  }
+}
+.options-sidebar{
+  width: 28px;
+  fill: white;
+  padding: 0;
+}
+.magnet:hover{
+ width: 28px;
+ fill: rgb(247, 64, 64);
+}
+
+.info:hover{
+  width: 28px;
+  fill: rgb(115, 164, 255);
+}
+.light-bulb:hover{
+  fill: rgb(243, 243, 17);
+   width: 28px;
+
+}
+.wireframe:hover{
+  fill: rgb(255, 111, 0);
+  width: 28px;
+}
+
+.environment:hover{
+  fill: green;
+  width: 28px;
 }
