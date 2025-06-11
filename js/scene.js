@@ -206,9 +206,15 @@ export function loadModel(url, name) {
           child.userData.originalMaterial = child.material.clone();
         }
       });
+      
+      escalarModelo(currentModel);
       scene.add(currentModel);
       guardarVertices(currentModel);
       centerAndFitModel(currentModel);
+      currentModel.traverse((child) => {
+        if (child.isMesh) crearNubeDePuntos(child);
+      });
+
       if (localStorage.getItem('estilos')) actualizarModelo();
       document.getElementById('loader-container').style.display='none';
       document.getElementById('contenido').style.visibility='visible';
@@ -232,9 +238,12 @@ export function loadModel(url, name) {
       mesh.userData.originalMaterial = material.clone();
 
       currentModel = mesh;
+      escalarModelo(currentModel);
       scene.add(currentModel);
       guardarVertices(currentModel);
-
+      currentModel.traverse((child) => {
+        if (child.isMesh) crearNubeDePuntos(child);
+      });
 
       centerAndFitModel(currentModel);
       if (localStorage.getItem('estilos')) actualizarModelo();
@@ -323,6 +332,16 @@ document.addEventListener('keydown', function(event) {
 //               FUNCIONES AUXILIARES            
 //==================================================
 
+// Escala el modelo para que encaje en un cubo de 3 unidades
+function escalarModelo(model) {
+  const box = new THREE.Box3().setFromObject(model);
+  const size = box.getSize(new THREE.Vector3());
+  const maxDim = Math.max(size.x, size.y, size.z);
+  const escalaDeseada = 8; // estándar (puedes ajustar)
+  const factorEscala = escalaDeseada / maxDim;
+  model.scale.setScalar(factorEscala);
+}
+
   // Mostrar posición de cámara redondeada
   // Redondea número a n decimales
 function redondear(num, decimales) {
@@ -354,27 +373,38 @@ export function actualizarModelo() {
   });
 }
 
-export function cambiarMaterial(tipo) {
+// =======================================================
+//  FUNCIÓN PARA CAMBIAR EL MATERIAL DEL MODELO ACTUAL
+// =======================================================
+export function cambiarMaterial(tipo, colorWireframeManual) {
   if (!currentModel) return;
 
   currentModel.traverse((child) => {
+    if (child.isPoints) return;
+
     if (child.isMesh) {
+      // Guarda el material original si aún no se ha hecho
       if (!child.userData.originalMaterial) {
-        // Guarda el material original si aún no se ha hecho
         child.userData.originalMaterial = child.material.clone();
       }
 
-       if (tipo === 'wireframe') {
-const estilos = JSON.parse(localStorage.getItem('estilos')) || {};
-const colorWireframe = estilos.wireframeColor || '#ff00ff';
+      // ==========================================
+      //            MODO MALLA (Wireframe)
+      // ==========================================
+      if (tipo === 'wireframe') {
+        // Usa el color recibido por parámetro, o negro por defecto
+        const colorWireframe = colorWireframeManual || '#000000';
 
-  child.material = new THREE.MeshBasicMaterial({
-    color: new THREE.Color(colorWireframe),
-    wireframe: true,
-  });
-}
- else if (tipo === 'solido') {
-        // Restaurar a MeshStandardMaterial con valores por defecto o personalizados
+        child.material = new THREE.MeshBasicMaterial({
+          color: new THREE.Color(colorWireframe),
+          wireframe: true,
+        });
+
+      // ==========================================
+      //            MODO SÓLIDO (Standard)
+      // ==========================================
+      } else if (tipo === 'solido') {
+        // Carga color, rugosidad y metalicidad desde localStorage
         const datos = JSON.parse(localStorage.getItem('estilos'));
         child.material = new THREE.MeshStandardMaterial({
           color: new THREE.Color(datos?.color || '#ffffff'),
@@ -383,10 +413,12 @@ const colorWireframe = estilos.wireframeColor || '#ff00ff';
         });
       }
 
+      // ⚠️ Asegura que el material se actualice en pantalla
       child.material.needsUpdate = true;
     }
   });
 }
+
 
 // Restaura los materiales originales guardados en userData.originalMaterial
 export function restaurarMaterialesOriginales() {
@@ -535,6 +567,45 @@ window.addEventListener('click', function (event) {
   }
 });
 
+//==================================================
+//        NUBE DE PUNTOS A PARTIR DEL MESH
+//==================================================
+
+let puntosMesh = null;
+
+function crearNubeDePuntos(mesh) {
+  const geometry = mesh.geometry;
+
+  // Calcular tamaño relativo de los puntos
+  const box = new THREE.Box3().setFromObject(mesh);
+  const size = box.getSize(new THREE.Vector3());
+  const averageSize = (size.x + size.y + size.z) / 3;
+  const puntoSize = averageSize * 0.005; // Puedes subirlo si lo ves pequeño
+
+  const material = new THREE.PointsMaterial({
+    size: puntoSize,
+    color: 0xff0000,
+    sizeAttenuation: true,
+    transparent: true,
+    alphaTest: 0.5,
+    depthWrite: false
+  });
+
+  puntosMesh = new THREE.Points(geometry, material);
+  mesh.add(puntosMesh);
+  puntosMesh.visible = false;
+}
+
+export function toggleNubeDePuntos(visible) {
+  if (!currentModel) return;
+  currentModel.traverse((child) => {
+    if (child.isMesh && child.children.length > 0) {
+      child.children.forEach(c => {
+        if (c.isPoints) c.visible = visible;
+      });
+    }
+  });
+}
 
 /*
 intentando hacer que viewer también tenga un dragover y no haga

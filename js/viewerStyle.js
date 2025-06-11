@@ -7,10 +7,13 @@ import {
   quitarHDRI,
   toggleHelpers,
   cambiarColorFondo,
-  cambiarMaterial
+  cambiarMaterial,
+  toggleNubeDePuntos
 } from '/js/scene.js';
 
+// =======================
 // Referencias generales
+// =======================
 const btnOptions = document.getElementById('options');
 const form = document.getElementById('formStyles');
 const menuPanel = document.getElementById('menuDesplegable');
@@ -18,8 +21,32 @@ const toggleModo = document.getElementById('toggleModo');
 const menuContenido = document.getElementById('menuContenido');
 const menuTecnico = document.getElementById('menuTecnico');
 const mallas = document.getElementById('mallas');
+
+// =======================
+// Botones de visualización
+// =======================
 const btnWireframe = document.getElementById('wireframe');
 const btnSolido = document.getElementById('solido');
+const btnPuntos = document.getElementById('togglePuntos');
+let puntosVisibles = false;
+
+// =======================
+// Acciones de botones
+// =======================
+btnWireframe.addEventListener('click', () => {
+  const wireColor = inputWireframeColor.value;
+  cambiarMaterial('wireframe', wireColor);
+});
+
+btnSolido.addEventListener('click', () => {
+  cambiarMaterial('solido');
+});
+
+btnPuntos?.addEventListener('click', () => {
+  puntosVisibles = !puntosVisibles;
+  toggleNubeDePuntos(puntosVisibles);
+});
+
 
 
 // Mostrar/ocultar panel lateral completo
@@ -70,37 +97,15 @@ btnReset.addEventListener('click', () => {
 
 const inputWireframeColor = document.getElementById('wireframeColor');
 
-btnWireframe.addEventListener('click', () => {
-  const wireColor = inputWireframeColor.value;
-  const estilos = JSON.parse(localStorage.getItem('estilos')) || {};
-  estilos.wireframeColor = wireColor;
-  localStorage.setItem('estilos', JSON.stringify(estilos));
-  cambiarMaterial('wireframe');
-});
-
-btnSolido.addEventListener('click', () => {
-  cambiarMaterial('solido');
-});
-
-
-btnWireframe.addEventListener('click', () => {
-  cambiarMaterial('wireframe');
-});
-
-btnSolido.addEventListener('click', () => {
-  cambiarMaterial('solido');
-});
+inputWireframeColor.value = '#000000';
 
 // ACTUALIZACIÓN DEL COLOR DE LA MALLA AL CAMBIARLO
 inputWireframeColor.addEventListener('input', () => {
   const wireColor = inputWireframeColor.value;
-  const estilos = JSON.parse(localStorage.getItem('estilos')) || {};
-  estilos.wireframeColor = wireColor;
-  localStorage.setItem('estilos', JSON.stringify(estilos));
-
-  // Si estamos en modo malla, lo aplicamos directamente
-  cambiarMaterial('wireframe');
+  cambiarMaterial('wireframe', wireColor);
 });
+
+
 
 // =======================
 // Mostrar coordenadas
@@ -188,3 +193,4 @@ window.addEventListener('load', () => {
     bloqueColor.style.display = 'block';
   }
 });
+
