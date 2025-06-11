@@ -43,7 +43,7 @@ async function dropHandler(ev) {
       window.location.href = './views/viewer.html';
     }
   } catch (e) {
-    alert("Error guardando archivo en IndexedDB: " + e);
+    console.error("Error guardando archivo en IndexedDB: " + e);
   }
 }
 
