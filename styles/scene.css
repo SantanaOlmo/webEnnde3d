@@ -32,7 +32,6 @@ body, html {
   fill: grey;
 }
 
-
 /* HTML: <div class="loader"></div> */
 .loader {
   --s: 25px;
