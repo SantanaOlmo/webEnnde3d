@@ -26,6 +26,7 @@ setupDragAndDrop({
   onFileDrop: handleFile,
   viewerId: 'viewer2'
 });
+
 setOnFileProcessed(async (file, viewerId) => {
   console.log(`📥 Archivo soltado en ${viewerId}: ${file.name}`);
 

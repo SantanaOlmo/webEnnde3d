@@ -4,17 +4,66 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Visor Único</title>
+  <link rel="icon" href="../assets/img/ennde3d_icon.png" type="image/png">
   <link rel="stylesheet" href="/styles/bootstrap.css">
   <script type="module" src="/js/scene/init/initSingleViewer.js" defer></script>
+  <link rel="stylesheet" href="/styles/loader.css">
+  <link rel="stylesheet" href="../styles/sidebar.css">
+  <script type="module" src="/js/loader.js" defer></script>
+  <script defer type="module" src="/js/ui/viewerMenus.js"></script>
+
+  
+
 </head>
 <body class="bg-dark">
+  <div id="loader-container">
+       <div class="scene">
+            <div class="cube-wrapper">
+                <div class="cube">
+                    <div class="cube-faces">
+                        <div class="cube-face shadow"></div>
+                        <div class="cube-face bottom"></div>
+                        <div class="cube-face top"></div>
+                        <div class="cube-face left"></div>
+                        <div class="cube-face right"></div>
+                        <div class="cube-face back"></div>
+                        <div class="cube-face front"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
   <div class="container-fluid vh-100">
     <div class="row h-100">
       <div class="col-12 h-100 p-2">
-        <div id="indexViewer1" class="w-100 h-100 rounded-4 bg-secondary position-relative"></div>
+        <div id="indexViewer1" class="w-100 h-100 rounded-4 bg-secondary position-relative overflow-hidden"></div>
       </div>
     </div>
+
+      <aside id="sidebar" class="sidebar rounded-2 overflow-hidden">
+          <div id="toolbar" class=" text-white d-flex flex-lg-column flex-row gap-5 align-items-center justify-content-center">
+              <button id="btn-SwitchViewer" class="btnPrincipales">
+                  <img class="options-sidebar area_swap" src="../assets/icons/area_swap.svg" alt="area_swap">
+              </button>
+              <button id="btn-world" class="btnPrincipales world">
+                  <img class="options-sidebar world" src="../assets/icons/world.svg" alt="world">
+              </button>
+              <button class="material btnPrincipales" id="btn-axes">
+                  <img class="options-sidebar monkey" src="../assets/icons/monkey.svg" alt="monkey">
+              </button>
+              <button class="magnet btnPrincipales" id="btn-material">
+                  <img class="options-sidebar linked" src="../assets/icons/linked.svg" alt="link">
+              </button>
+              <button class="info btnPrincipales">
+                  <img class="options-sidebar info" src="../assets/icons/info.svg" alt="info">
+              </button>
+          </div>
+          <div id="menuPanel" class="menu-panel overflow-hidden ">
+              <div id="menu-world" class="menu-content d-none h-100">Menú Mundo hola hola</div>
+              <div id="menu-modelo" class="menu-content d-none h-100">Menú Modelo</div>
+          </div>
+      </aside>
   </div>
 
 </body>

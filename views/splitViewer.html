@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Comparacion de modelos</title>
+    <link rel="icon" href="../assets/img/ennde3d_icon.png" type="image/png">
     <link rel="stylesheet" href="/styles/bootstrap.css">
     <link rel="stylesheet" href="/styles/splitViewer.css">
     <script defer src="/js/resizer.js"></script>
@@ -11,9 +12,13 @@
     <script defer type="module" src="/js/scene/db/model-upload.js"></script>
     <script defer type="module" src="/js/scene/splitViewerScene.js"></script>
     <script defer type="module" src="/js/ui/viewerMenus.js"></script>
+    <script type="module" src="/js/loader.js" defer></script>
+    <link rel="stylesheet" href="../styles/sidebar.css">
+
+
 
 </head>
-<body class="bg-dark">
+<body class="bg-black">
     <div id="loader-container">
        <div class="scene">
             <div class="cube-wrapper">
@@ -32,9 +37,9 @@
         </div>
     </div>
     
-    <div class="container-fluid">
+    <div id="container">
         <input type="file" id="inputFile" style="display: none;">
-        <div class="contenido row visible b vh-100">
+        <div class="contenido row visible b ">
             <button id="back" onclick="window.location.href = '/index.html'">
                 <svg fill="#ffffff" version="1.1" id="Icons" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 32 32" xml:space="preserve" stroke="#ffffff" stroke-width="0.00032"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M16,2C8.3,2,2,8.3,2,16s6.3,14,14,14s14-6.3,14-14S23.7,2,16,2z M22,17h-8.6l2.3,2.3c0.4,0.4,0.4,1,0,1.4 C15.5,20.9,15.3,21,15,21s-0.5-0.1-0.7-0.3l-4-4c-0.1-0.1-0.2-0.2-0.2-0.3c-0.1-0.2-0.1-0.5,0-0.8c0.1-0.1,0.1-0.2,0.2-0.3l4-4 c0.4-0.4,1-0.4,1.4,0s0.4,1,0,1.4L13.4,15H22c0.6,0,1,0.4,1,1S22.6,17,22,17z"></path> </g></svg>  
             </button>
@@ -42,20 +47,20 @@
             <div class="d-flex flex-column flex-lg-row h-100">
                 <div class="flex-grow-1 d-flex flex-column flex-lg-row flex-wrap">
                    <div class="c-viewer1 col-12 col-lg-6 p-1">
-                        <div id="viewer1" class="viewer1 rounded-4 position-relative">
+                        <div id="viewer1" class="viewer1 rounded-2 position-relative">
                             +
                             <input type="file" id="inputFile1" class="d-none"></div>
                         </div>
 
                         <div class="c-viewer2 col-12 col-lg-6 p-1">
-                        <div id="viewer2" class="viewer2 rounded-4 position-relative">
+                        <div id="viewer2" class="viewer2 rounded-2 position-relative">
                             +
                             <input type="file" id="inputFile2" class="d-none"></div>
                         </div>
                     </div>
 
-                <aside id="sidebar" class="sidebar">
-                    <div id="toolbar" class="bg-dark text-white d-flex flex-lg-column flex-row p-1 gap-5 align-items-center justify-content-center">
+                <aside id="sidebar" class="sidebar rounded-2 overflow-hidden">
+                    <div id="toolbar" class=" text-white d-flex flex-lg-column flex-row gap-5 align-items-center justify-content-center">
                         <button id="btn-SwitchViewer" class="btnPrincipales">
                             <img class="options-sidebar area_swap" src="../assets/icons/area_swap.svg" alt="area_swap">
                         </button>
@@ -72,10 +77,9 @@
                             <img class="options-sidebar info" src="../assets/icons/info.svg" alt="info">
                         </button>
                     </div>
-
-                    <div id="menuPanel" class="menu-panel">
-                        <div id="menu-world" class="menu-content d-none">Menú Mundo</div>
-                        <div id="menu-modelo" class="menu-content d-none">Menú Modelo</div>
+                    <div id="menuPanel" class="menu-panel overflow-hidden ">
+                        <div id="menu-world" class="menu-content d-none h-100">Menú Mundo hola hola</div>
+                        <div id="menu-modelo" class="menu-content d-none h-100">Menú Modelo</div>
                     </div>
                 </aside>
 

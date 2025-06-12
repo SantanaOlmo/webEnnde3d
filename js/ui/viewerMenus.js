@@ -1,8 +1,47 @@
-export function initViewerMenus() {
+document.addEventListener('DOMContentLoaded', () => {
   const btnWorld = document.getElementById('btn-world');
+  const btnModelo = document.getElementById('btn-axes');
+
+  const panelWorld = document.getElementById('menu-world');
+  const panelModelo = document.getElementById('menu-modelo');
   const menuPanel = document.getElementById('menuPanel');
+  menuPanel.classList.remove('show');
+  menuPanel.style.display = 'none';
+
+  let activePanel = null;
+  console.log("viewerMenus cargado")
+
+const showPanel = (panel) => {
+  menuPanel.style.display = 'block'; // asegúrate de que se muestre
+  menuPanel.classList.add('show');
+  panel.classList.remove('d-none');
+  activePanel = panel;
+};
+
+
+const hideAllPanels = () => {
+  panelWorld.classList.add('d-none');
+  panelModelo.classList.add('d-none');
+  menuPanel.classList.remove('show');
+  menuPanel.style.display = 'none';
+  activePanel = null;
+};
 
   btnWorld.addEventListener('click', () => {
-    menuPanel.classList.toggle('show');
+    if (activePanel === panelWorld) {
+      hideAllPanels();
+    } else {
+      hideAllPanels();
+      showPanel(panelWorld);
+    }
   });
-}
+
+  btnModelo.addEventListener('click', () => {
+    if (activePanel === panelModelo) {
+      hideAllPanels();
+    } else {
+      hideAllPanels();
+      showPanel(panelModelo);
+    }
+  });
+});

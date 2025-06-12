@@ -1,6 +1,5 @@
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
-
 body, html {
   margin: 0;
   padding: 0;
@@ -16,29 +15,18 @@ body, html {
   justify-content: center;
 }
 
-/* Loader animation */
-.loader {
-  --s: 25px;
-  --_d: calc(0.353 * var(--s));
-  width: calc(var(--s) + var(--_d));
-  aspect-ratio: 1;
-  clip-path: polygon(var(--_d) 0, 100% 0, 100% calc(100% - var(--_d)), calc(100% - var(--_d)) 100%, 0 100%, 0 var(--_d));
-  background:
-    conic-gradient(from -90deg at var(--s) var(--_d),
-      #fff 135deg, #666 0 270deg, #aaa 0);
-  animation: l1 1s infinite cubic-bezier(0.5, 300, 0.5, -300);
-}
-@keyframes l1 {
-  50%, 100% { transform: translateY(0.1px); }
+#container {
+  height: 100%;
+  width: 100%;
+  padding: 1em;
 }
 
 .contenido {
-  display: flex !important; /* importante para forzar */
+  display: flex;
   flex-direction: row;
-  height: 100vh;
-  position: relative; /* para el resizer */
+  position: relative;
   overflow: hidden;
-  
+  height: 100%;
 }
 
 #back {
@@ -69,7 +57,7 @@ body, html {
 .c-viewer1, .c-viewer2 {
   flex-grow: 1;
   flex-shrink: 1;
-  flex-basis: 50%; /* empiezan iguales */
+  flex-basis: 50%;
   min-width: 10%;
   min-height: 10%;
   overflow: hidden;
@@ -94,125 +82,23 @@ body, html {
 
 .resizer {
   position: absolute;
-  background:transparent;
   z-index: 1000;
   cursor: col-resize;
   width: 6px;
   top: 0;
   bottom: 0;
-  left: 50%; /* al medio al inicio */
-  transform: translateX(-50%);
+  left: 50%;
+  transform: translateX(-100%);
 }
-/* Para móvil, cambia flex-direction a columna y resizer horizontal */
+
 @media (max-width: 991px) {
-  .contenido {
-    flex-direction: column;
-  }
   .resizer {
     cursor: row-resize;
     width: 100%;
     height: 6px;
-    top: 50%;
+    top: 48.8%;
     left: 0;
     right: 0;
-    transform: translateY(-50%);
-  }
-}
-
-.sidebar {
-  button {
-    padding: 0%;
-    border: none;
-    background: none;
-  }
-}
-
-.options-sidebar {
-  border-radius: 5px;
-  width: 20px;
-  fill: white;
-  padding: 0;
-}
-
-.btnPrincipales {
-  aspect-ratio: 1/1;
-  width: 30px;
-  border-radius: 15%;
-}
-
-.linked:hover {
-  transform: scale(1.1);
-  fill: rgb(247, 64, 64);
-}
-
-.info:hover {
-  transform: scale(1.1);
-  fill: rgb(115, 164, 255);
-}
-
-.light-bulb:hover {
-  fill: rgb(243, 243, 17);
-  transform: scale(1.1);
-}
-
-.wireframe:hover {
-  fill: rgb(255, 111, 0);
-  transform: scale(1.1);
-}
-
-.world:hover {
-  background-color: red;
-  transform: scale(1.1);
-}
-
-.area_swap:hover {
-  transform: scale(1.1);
-}
-.sidebar {
-  transition: transform 0.3s ease;
-  z-index: 100;
-}
-
-.menu-panel {
-  background-color: #1e1e1e;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-  opacity: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-
-/* Mostrar menú */
-.menu-panel.show {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Layout en horizontal (mobile) */
-@media (max-width: 991px) {
-  .sidebar {
-    flex-direction: column;
-  }
-  .menu-panel {
-    height: 200px;
-    width: 100vw;
-    transform: translateY(100%);
-  }
-  .menu-panel.show {
-    transform: translateY(0);
-  }
-}
-
-/* Layout en vertical (desktop) */
-@media (min-width: 992px) {
-  .sidebar {
-    flex-direction: row;
-  }
-  .menu-panel {
-    width: 200px;
-    height: 100vh;
-    transform: translateX(100%);
-  }
-  .menu-panel.show {
-    transform: translateX(0);
+    transform: translateY(-190%);
   }
 }
