@@ -1,28 +1,33 @@
 // js/utils/drag-drop-handler.js
 
+/* Inicializa una zona de arrastrar y soltar para subir modelos 3D.
+ * Puede usar también un input de archivo opcional. */
 export function setupDragAndDrop({ dropArea, fileInput = null, onFileDrop, viewerId = null }) {
   if (!dropArea) return;
 
   let activeViewer = viewerId;
 
+  // === EVENTOS PARA DRAG & DROP ===
+
+  // Al entrar el archivo en la zona
   dropArea.addEventListener('dragenter', ev => {
     ev.preventDefault();
-    dropArea.classList.add("drag-over");
-    dropArea.style.color = 'white';
-    dropArea.style.fontSize = '8em';
-    dropArea.style.backgroundColor = 'rgb(20,20,20)';
+    dropArea.classList.add("drag-over"); // solo esto activa el estilo CSS correcto
   });
 
+  // Al mantener el archivo encima
   dropArea.addEventListener('dragover', ev => ev.preventDefault());
 
+  // Al salir sin soltarlo
   dropArea.addEventListener('dragleave', () => {
     dropArea.classList.remove("drag-over");
-    resetViewerStyle(dropArea);
   });
 
+  // Al soltar el archivo
   dropArea.addEventListener('drop', async (ev) => {
     ev.preventDefault();
-    resetViewerStyle(dropArea);
+    dropArea.classList.remove("drag-over");
+
     const file = ev.dataTransfer.files[0];
     if (file) {
       console.log(`📦 Archivo soltado en ${viewerId || dropArea.id}: ${file.name}`);
@@ -30,10 +35,12 @@ export function setupDragAndDrop({ dropArea, fileInput = null, onFileDrop, viewe
     }
   });
 
-  // Si hay un input asociado y se permite click
+  // === OPCIONAL: Soporte para input tipo file ===
+
   if (fileInput) {
     dropArea.addEventListener('click', () => {
-      if (!dropArea.hasChildNodes() || dropArea.querySelector('canvas') === null) {
+      const noCanvasCargado = !dropArea.hasChildNodes() || dropArea.querySelector('canvas') === null;
+      if (noCanvasCargado) {
         activeViewer = viewerId;
         fileInput.click();
       }
@@ -48,10 +55,4 @@ export function setupDragAndDrop({ dropArea, fileInput = null, onFileDrop, viewe
       }
     });
   }
-}
-
-function resetViewerStyle(area) {
-  area.style.color = 'rgb(48,48,48)';
-  area.style.fontSize = '5em';
-  area.style.backgroundColor = 'rgb(85,85,85)';
 }

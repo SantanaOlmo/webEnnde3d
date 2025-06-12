@@ -11,7 +11,7 @@ body, html {
   border-radius: 25px;
   
 }
-#drop_zone{
+.drop_zone{
   position: fixed;
   width: 100%;
   height: 100%;

@@ -144,7 +144,7 @@ header {
   display: none;
 }
 
-#drop_zone::before {
+.drop_zone::before {
   content: "";
   position: absolute;
   top: -50%;
@@ -157,7 +157,7 @@ header {
   pointer-events: none;
 }
 
-#drop_zone:hover::before {
+.drop_zone:hover::before {
   transform: translateX(300%) rotate(25deg);
 }
 
@@ -167,14 +167,14 @@ header {
   fill: #d6c4c8;
 }
 
-#drop_zone.drag-over {
+.drop_zone.drag-over {
   background-color: #ffffff;
   width: 85vw;
   color: var(--color-magenta);
   transition: width 0.3s ease-in-out;
 }
 
-#drop_zone.drag-over #svgUpload {
+.drop_zone.drag-over #svgUpload {
   fill: var(--color-magenta);
   transition: fill 0.7s ease-in-out;
 }
@@ -497,17 +497,17 @@ footer h4 {
 }
 /* ZONA DE SUBIDA 3D RESPONSIVE */
 #zona-subida {
-  #drop_zone {
+  .drop_zone {
     aspect-ratio: 2/1.4;
   }
 
-  #drop_zone.drag-over {
+  .drop_zone.drag-over {
     background-color: #ffffff;
     transition: width 0.3s ease-in-out;
     width: 85vw;
   }
 
-  #drop_zone.drag-over #svgUpload {
+  .drop_zone.drag-over #svgUpload {
     fill: var(--color-magenta);
     transition: fill 0.7s ease-in-out;
   }
