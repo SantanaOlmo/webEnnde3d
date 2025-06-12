@@ -43,7 +43,8 @@ body, html {
 @keyframes l1{
   50%,100% {transform:translateY(0.1px)}
 }
-#three-container {
+#three-container,
+#viewer1 {
   width: 100vw;
   height: 100vh;
   z-index: 0;
