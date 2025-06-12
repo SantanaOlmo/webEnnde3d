@@ -8,7 +8,7 @@ export function initScene(containerId) {
   const camera = new THREE.PerspectiveCamera(
     75,
     container.clientWidth / container.clientHeight,
-    0.1,
+    0.075,
     1000
   );
   camera.position.set(0, 0, 5);

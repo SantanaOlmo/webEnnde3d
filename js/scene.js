@@ -1,8 +1,7 @@
 // scene.js
 
-
 //==================================================
-//   IMPORTACIONES DE MODULOS NECESARIOS THREE.JS
+//   IMPORTACIONES DE MÓDULOS NECESARIOS THREE.JS
 //==================================================
 
 import * as THREE from 'three';
@@ -20,33 +19,26 @@ import { contain } from 'three/src/extras/TextureUtils.js';
 //=============================
 
 let scene, camera, renderer, controls, loader, loaderSTL;
-let gridHelper, currentModel, axesHelper, cameraY;
+let gridHelper, currentModel, axesHelper;
 let helper1, sphere1, line1;
 let currentHDRI;
 let play = false;
-const container= document.getElementById('three-container');
-const drop_zone=document.getElementById('drop_zone');
+const container   = document.getElementById('three-container');
+const drop_zone   = document.getElementById('drop_zone');
 let cameraPositionX = document.getElementById('x');
 let cameraPositionY = document.getElementById('y');
 let cameraPositionZ = document.getElementById('z');
-// let puntosMarcados = [];
-
-
-
-// const modelName = localStorage.getItem('uploadedModelName'); // ya no se usa, ahora va por sessionStorage
-// console.log("Nombre del archivo:", modelName);
-
 
 //==================================================
-//           CONFIGURACIÓN HDRI Y FONDOS          
+//           CONFIGURACIÓN HDRI Y FONDOS
 //==================================================
 
 // Cambiar HDRI desde un archivo
 export function cambiarHDRI(nombreArchivo) {
-  const rgbeLoader = new RGBELoader(); // Fondo HDRI (fondo + luz ambiental)
-  rgbeLoader.load(`/assets/hdri/${nombreArchivo}`, function (texture) {
+  const rgbeLoader = new RGBELoader();
+  rgbeLoader.load(`/assets/hdri/${nombreArchivo}`, (texture) => {
     texture.mapping = THREE.EquirectangularReflectionMapping;
-    scene.background = texture;
+    scene.background  = texture;
     scene.environment = texture;
     currentHDRI = texture;
   });
@@ -54,72 +46,70 @@ export function cambiarHDRI(nombreArchivo) {
 
 // Quitar HDRI y dejar fondo blanco
 export function quitarHDRI() {
-  scene.background = new THREE.Color(0xffffff); // fondo blanco por defecto
+  scene.background  = new THREE.Color(0xffffff);
   scene.environment = null;
   currentHDRI = null;
 }
 
-// Cambiar color de fondo 
+// Cambiar color de fondo sólido
 export function cambiarColorFondo(colorHex) {
   if (scene && renderer) {
     const color = new THREE.Color(colorHex);
     scene.background = color;
-    renderer.setClearColor(color); // asegúrate de limpiar el fondo también
+    renderer.setClearColor(color);
   }
 }
 
-
 //==================================================
-//                INICIALIZAR ESCENA              
+//                INICIALIZAR ESCENA
 //==================================================
 
-// Inicializa la escena 3D completa
 export function initScene(container) {
   scene = new THREE.Scene();
 
-  // Fondo HDRI por defecto (fondo + luz ambiental)
+  // Fondo HDRI por defecto
   const rgbeLoader = new RGBELoader();
-  rgbeLoader.load('/assets/hdri/campo.hdr', function (texture) {
+  rgbeLoader.load('/assets/hdri/campo.hdr', (texture) => {
     texture.mapping = THREE.EquirectangularReflectionMapping;
-    scene.background = texture;
+    scene.background  = texture;
     scene.environment = texture;
     currentHDRI = texture;
   });
 
-  // Cámara en perspectiva
-  camera = new THREE.PerspectiveCamera(40, container.clientWidth / container.clientHeight, 0.1, 1000);
+  // Cámara (🔧 MOD: near=0.01 para evitar clipping de puntos)
+  camera = new THREE.PerspectiveCamera(
+    40,
+    container.clientWidth / container.clientHeight,
+    0.01,
+    1000
+  );
   camera.position.set(2, 2, 2);
 
-  // Renderizador WebGL
+  // Renderizador
   renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.physicallyCorrectLights = true;
-  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.outputColorSpace        = THREE.SRGBColorSpace;
   container.appendChild(renderer.domElement);
 
-  // Controles orbitales (ratón)
+  // Controles orbitales
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
 
-  // Cuadrícula
-  gridHelper = new THREE.GridHelper(20, 20);
-  scene.add(gridHelper);
+  // Cuadrícula y ejes
+  gridHelper  = new THREE.GridHelper(20, 20);
+  axesHelper  = new THREE.AxesHelper(5);
+  scene.add(gridHelper, axesHelper);
 
-  // Ejes
-  axesHelper = new THREE.AxesHelper(5);
-  scene.add(axesHelper);
-
-  // Luz direccional principal
+  // Luz direccional principal + helper + drag
   const directionalLight = new THREE.DirectionalLight('white', 0.25);
   directionalLight.position.set(5, 10, 20);
   directionalLight.castShadow = true;
   scene.add(directionalLight);
 
-  // Helper visual
   helper1 = new THREE.DirectionalLightHelper(directionalLight, 2, 'red');
   scene.add(helper1);
 
-  // Esfera para representar posición de la luz
   sphere1 = new THREE.Mesh(
     new THREE.SphereGeometry(0.2, 16, 16),
     new THREE.MeshBasicMaterial({ color: 0xff0000 })
@@ -127,7 +117,6 @@ export function initScene(container) {
   sphere1.position.copy(directionalLight.position);
   scene.add(sphere1);
 
-  // Línea desde el origen a la luz
   const lineGeom1 = new THREE.BufferGeometry().setFromPoints([
     new THREE.Vector3(0, 0, 0),
     directionalLight.position.clone()
@@ -135,138 +124,126 @@ export function initScene(container) {
   line1 = new THREE.Line(lineGeom1, new THREE.LineBasicMaterial({ color: 0xff0000 }));
   scene.add(line1);
 
-  // Controles de arrastre para la luz
   const dragControls = new DragControls([sphere1], camera, renderer.domElement);
-  dragControls.addEventListener('dragstart', () => { controls.enabled = false; });
-  dragControls.addEventListener('dragend', () => { controls.enabled = true; });
-  dragControls.addEventListener('drag', (event) => {
-    const pos = event.object.position;
+  dragControls.addEventListener('dragstart', () => (controls.enabled = false));
+  dragControls.addEventListener('dragend',   () => (controls.enabled = true));
+  dragControls.addEventListener('drag', (e) => {
+    const pos = e.object.position;
     directionalLight.position.copy(pos);
     helper1.update();
     lineGeom1.setFromPoints([new THREE.Vector3(0, 0, 0), pos.clone()]);
   });
 
-  // Otras luces direccionales
-  /*scene.add(new THREE.DirectionalLight('white', 1).position.set(-5, -10, 7.5));
-  scene.add(new THREE.DirectionalLight('white', 1).position.set(-180, -360, 20));*/
-
-  // Loaders de modelos
-  loader = new GLTFLoader();
-  loaderSTL = new STLLoader();
+  // Loaders
+  loader     = new GLTFLoader();
+  loaderSTL  = new STLLoader();
   const dracoLoader = new DRACOLoader();
   dracoLoader.setDecoderPath('/libs/draco/');
   loader.setDRACOLoader(dracoLoader);
   loader.setMeshoptDecoder(MeshoptDecoder);
 
-  // Ajustar al redimensionar
+  // Resize
   window.addEventListener('resize', () => {
     camera.aspect = container.clientWidth / container.clientHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(container.clientWidth, container.clientHeight);
   });
 
-  // Iniciar renderizado y cargar desde IndexedDB
+  // Iniciar
   animate();
   autoLoadFromIndexedDB();
 
-  // Teclas para cambio de vistas
+  // Vistas rápidas numpad-like
   window.addEventListener('keydown', (event) => {
     switch (event.key) {
-      case '4': camera.position.set(0, 5, 0); break;     // vista superior
-      case '1': camera.position.set(0, 0, 5); break;     // frontal
-      case '3': camera.position.set(0, -5, 0); break;    // inferior
-      case '5': camera.position.set(0, 0, -5); break;    // trasera
-      case '2': camera.position.set(5, 0, 0); break;     // lateral izquierda
-      case '6': camera.position.set(0, 5, 0); break;     // lateral izquierda
-      case '7': camera.position.set(-5, 0, 0); break;     // lateral izquierda
+      case '4': camera.position.set(0, 5, 0);  break; // top
+      case '1': camera.position.set(0, 0, 5);  break; // front
+      case '3': camera.position.set(0, -5, 0); break; // bottom
+      case '5': camera.position.set(0, 0, -5); break; // back
+      case '2': camera.position.set(5, 0, 0);  break; // right
+      case '6': camera.position.set(0, 5, 0);  break;
+      case '7': camera.position.set(-5,0, 0);  break; // left
     }
     camera.lookAt(0, 0, 0);
     controls.update();
   });
 }
 
-
 //==================================================
-//                 CARGA DE MODELOS               
+//                 CARGA DE MODELOS
 //==================================================
 
-// Carga un modelo desde archivo (GLB/GLTF, STL)
 export function loadModel(url, name) {
   if (!loader || !loaderSTL) return;
 
-  //--------------------------------------------
-  //     CARGA DE ARCHIVOS GLB / GLTF
-  //--------------------------------------------
+  // ---------- GLB / GLTF ----------
   if (name.toLowerCase().endsWith('.glb') || name.toLowerCase().endsWith('.gltf')) {
-    loader.load(url, (gltf) => {
-      if (currentModel) scene.remove(currentModel);
-      currentModel = gltf.scene;
-      currentModel.traverse((child) => {
-        if (child.isMesh && child.material) {
-          child.userData.originalMaterial = child.material.clone();
-        }
-      });
-      
-      escalarModelo(currentModel);
-      scene.add(currentModel);
-      guardarVertices(currentModel);
-      centerAndFitModel(currentModel);
-      currentModel.traverse((child) => {
-        if (child.isMesh) crearNubeDePuntos(child);
-      });
+    loader.load(
+      url,
+      (gltf) => {
+        if (currentModel) scene.remove(currentModel);
+        currentModel = gltf.scene;
 
-      if (localStorage.getItem('estilos')) actualizarModelo();
-      document.getElementById('loader-container').style.display='none';
-      document.getElementById('contenido').style.visibility='visible';
-    
-    }, undefined, (error) => {
-      console.error("Error cargando modelo:", error);
-    });
+        currentModel.traverse((c) => {
+          if (c.isMesh && c.material) c.userData.originalMaterial = c.material.clone();
+        });
 
-  //--------------------------------------------
-  //     CARGA DE ARCHIVOS STL
-  //--------------------------------------------
+        escalarModelo(currentModel);
+        scene.add(currentModel);
+        guardarVertices(currentModel);
+        currentModel.traverse((c) => {
+          if (c.isMesh) crearNubeDePuntos(c);
+        });
+        centerAndFitModel(currentModel);
+
+        if (localStorage.getItem('estilos')) actualizarModelo();
+        document.getElementById('loader-container').style.display = 'none';
+        document.getElementById('contenido').style.visibility      = 'visible';
+      },
+      undefined,
+      (e) => console.error('Error cargando modelo:', e)
+    );
+
+  // ---------- STL ----------
   } else if (name.toLowerCase().endsWith('.stl')) {
-    loaderSTL.load(url, (geometry) => {
-      if (currentModel) scene.remove(currentModel);
-      const material = new THREE.MeshStandardMaterial({});
-      
-      // ✅ CORREGIR ORIENTACIÓN: STL suele venir en Z-up, lo rotamos a Y-up
-      geometry.rotateX(-Math.PI / 2);
+    loaderSTL.load(
+      url,
+      (geometry) => {
+        if (currentModel) scene.remove(currentModel);
+        const material = new THREE.MeshStandardMaterial({});
+        geometry.rotateX(-Math.PI / 2); // corregir orientación
 
-      const mesh = new THREE.Mesh(geometry, material);
-      mesh.userData.originalMaterial = material.clone();
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.userData.originalMaterial = material.clone();
+        currentModel = mesh;
 
-      currentModel = mesh;
-      escalarModelo(currentModel);
-      scene.add(currentModel);
-      guardarVertices(currentModel);
-      currentModel.traverse((child) => {
-        if (child.isMesh) crearNubeDePuntos(child);
-      });
+        escalarModelo(currentModel);
+        scene.add(currentModel);
+        guardarVertices(currentModel);
+        currentModel.traverse((c) => {
+          if (c.isMesh) crearNubeDePuntos(c);
+        });
+        centerAndFitModel(currentModel);
 
-      centerAndFitModel(currentModel);
-      if (localStorage.getItem('estilos')) actualizarModelo();
-      document.getElementById('loader-container').style.display='none';
-      document.getElementById('contenido').style.visibility='visible';
-    }, undefined, (error) => {
-      console.error("Error cargando STL:", error);
-    });
+        if (localStorage.getItem('estilos')) actualizarModelo();
+        document.getElementById('loader-container').style.display = 'none';
+        document.getElementById('contenido').style.visibility      = 'visible';
+      },
+      undefined,
+      (e) => console.error('Error cargando STL:', e)
+    );
 
-
-  //--------------------------------------------
-  //     ARCHIVO NO SOPORTADO
-  //--------------------------------------------
   } else {
-    alert("Formato de archivo no soportado. Usa .glb, .gltf o .stl");
+    alert('Formato no soportado. Usa .glb, .gltf o .stl.');
   }
 }
 
-// Centra el modelo y ajusta la cámara para que encaje
+// Centrar + cámara
 function centerAndFitModel(model) {
-  const box = new THREE.Box3().setFromObject(model);
+  const box    = new THREE.Box3().setFromObject(model);
   const center = box.getCenter(new THREE.Vector3());
   model.position.sub(center);
+
   const size = box.getSize(new THREE.Vector3());
   const dist = Math.max(size.x, size.y, size.z) * 1.5;
   camera.position.set(dist, dist, dist);
@@ -276,18 +253,14 @@ function centerAndFitModel(model) {
 }
 
 //==================================================
-//             BUCLE DE RENDERIZADO               
+//             BUCLE DE RENDERIZADO
 //==================================================
 
-// Bucle de renderizado y actualización
 let angle = 0;
-// Distancia constante de la cámara al centro (ajustable)
 const radius = 5;
 
 function animate() {
   requestAnimationFrame(animate);
-
-
   controls.update();
   renderer.render(scene, camera);
 
@@ -301,9 +274,7 @@ function rotarCamara() {
   angle += 0.001;
   camera.position.x = radius * Math.sin(angle);
   camera.position.z = radius * Math.cos(angle);
-  
   camera.lookAt(0, 0, 0);
-
   controls.update();
   renderer.render(scene, camera);
 
@@ -314,332 +285,280 @@ function rotarCamara() {
   requestAnimationFrame(rotarCamara);
 }
 
-document.addEventListener('keydown', function(event) {
-  if (event.code === 'Space') {
+document.addEventListener('keydown', (e) => {
+  if (e.code === 'Space') {
     play = !play;
-
     if (!play) {
-   
       controls.update();
     } else {
-      
       angle = Math.atan2(camera.position.x, camera.position.z);
-      rotarCamara(); // Iniciar rotación
+      rotarCamara();
     }
   }
 });
+
 //==================================================
-//               FUNCIONES AUXILIARES            
+//               FUNCIONES AUXILIARES
 //==================================================
 
-// Escala el modelo para que encaje en un cubo de 3 unidades
 function escalarModelo(model) {
-  const box = new THREE.Box3().setFromObject(model);
-  const size = box.getSize(new THREE.Vector3());
-  const maxDim = Math.max(size.x, size.y, size.z);
-  const escalaDeseada = 8; // estándar (puedes ajustar)
-  const factorEscala = escalaDeseada / maxDim;
-  model.scale.setScalar(factorEscala);
+  const box     = new THREE.Box3().setFromObject(model);
+  const size    = box.getSize(new THREE.Vector3());
+  const factor  = 7 / Math.max(size.x, size.y, size.z);
+  model.scale.setScalar(factor);
 }
 
-  // Mostrar posición de cámara redondeada
-  // Redondea número a n decimales
-function redondear(num, decimales) {
-  const factor = Math.pow(10, decimales);
-  return Math.round(num * factor) / factor;
+function redondear(num, d) {
+  const f = Math.pow(10, d);
+  return Math.round(num * f) / f;
 }
 
-// Actualiza el material del modelo cargado usando valores del localStorage
+//==================================================
+//      ACTUALIZAR / RESTAURAR MATERIALES
+//==================================================
+
 export function actualizarModelo() {
   const datos = JSON.parse(localStorage.getItem('estilos'));
   if (!datos) return;
-  currentModel.traverse((child) => {
-    if (child.isMesh) {
-     
-      // Solo aplicar nuevo material si el usuario lo ha cambiado
-      const nuevoMaterial = new THREE.MeshStandardMaterial({
-        color: new THREE.Color(datos.color),
-        roughness: datos.roughness,
-        metalness: datos.metalness,
-      });
-      
-      // Guardar el original si aún no está guardado
-      if (!child.userData.originalMaterial) {
-        child.userData.originalMaterial = child.material.clone();
-      }
-      child.material = nuevoMaterial;
-      child.material.needsUpdate = true;
-    }
+  currentModel.traverse((c) => {
+    if (!c.isMesh) return;
+    const nuevoMat = new THREE.MeshStandardMaterial({
+      color:     new THREE.Color(datos.color),
+      roughness: datos.roughness,
+      metalness: datos.metalness
+    });
+    if (!c.userData.originalMaterial) c.userData.originalMaterial = c.material.clone();
+    c.material = nuevoMat;
+    c.material.needsUpdate = true;
   });
 }
 
-// =======================================================
-//  FUNCIÓN PARA CAMBIAR EL MATERIAL DEL MODELO ACTUAL
-// =======================================================
 export function cambiarMaterial(tipo, colorWireframeManual) {
   if (!currentModel) return;
+  currentModel.traverse((c) => {
+    if (!c.isMesh || c.isPoints) return;
 
-  currentModel.traverse((child) => {
-    if (child.isPoints) return;
+    // Guarda el original una sola vez
+    if (!c.userData.originalMaterial) c.userData.originalMaterial = c.material.clone();
 
-    if (child.isMesh) {
-      // Guarda el material original si aún no se ha hecho
-      if (!child.userData.originalMaterial) {
-        child.userData.originalMaterial = child.material.clone();
-      }
-
-      // ==========================================
-      //            MODO MALLA (Wireframe)
-      // ==========================================
-      if (tipo === 'wireframe') {
-        // Usa el color recibido por parámetro, o negro por defecto
-        const colorWireframe = colorWireframeManual || '#000000';
-
-        child.material = new THREE.MeshBasicMaterial({
-          color: new THREE.Color(colorWireframe),
-          wireframe: true,
-        });
-
-      // ==========================================
-      //            MODO SÓLIDO (Standard)
-      // ==========================================
-      } else if (tipo === 'solido') {
-        // Carga color, rugosidad y metalicidad desde localStorage
-        const datos = JSON.parse(localStorage.getItem('estilos'));
-        child.material = new THREE.MeshStandardMaterial({
-          color: new THREE.Color(datos?.color || '#ffffff'),
-          roughness: datos?.roughness ?? 0.5,
-          metalness: datos?.metalness ?? 0.5,
-        });
-      }
-
-      // ⚠️ Asegura que el material se actualice en pantalla
-      child.material.needsUpdate = true;
+    if (tipo === 'wireframe') {
+      c.material = new THREE.MeshBasicMaterial({
+        color: new THREE.Color(colorWireframeManual || '#000000'),
+        wireframe: true
+      });
+    } else if (tipo === 'solido') {
+      const datos = JSON.parse(localStorage.getItem('estilos'));
+      c.material = new THREE.MeshStandardMaterial({
+        color:     new THREE.Color(datos?.color || '#ffffff'),
+        roughness: datos?.roughness ?? 0.5,
+        metalness: datos?.metalness ?? 0.5
+      });
     }
+    c.material.needsUpdate = true;
   });
 }
 
-
-// Restaura los materiales originales guardados en userData.originalMaterial
 export function restaurarMaterialesOriginales() {
   if (!currentModel) return;
-  currentModel.traverse((child) => {
-    if (child.isMesh && child.userData.originalMaterial) {
-      child.material = child.userData.originalMaterial.clone();
-      child.material.needsUpdate = true;
-      // Eliminar esferas marcadas con clics
-      // puntosMarcados.forEach(p => scene.remove(p));
-      // puntosMarcados = [];
-
+  currentModel.traverse((c) => {
+    if (c.isMesh && c.userData.originalMaterial) {
+      c.material = c.userData.originalMaterial.clone();
+      c.material.needsUpdate = true;
     }
   });
 }
 
-// Alterna la visibilidad de la cuadrícula y los ejes
 export function toggleHelpers(visible) {
-  if (gridHelper) gridHelper.visible = visible;
-  if (axesHelper) axesHelper.visible = visible;
-  if (helper1) helper1.visible = visible;
-  if (sphere1) sphere1.visible = visible;
-  if (line1) line1.visible = visible;
+  [gridHelper, axesHelper, helper1, sphere1, line1].forEach((h) => {
+    if (h) h.visible = visible;
+  });
 }
 
-
 //==================================================
-//         INDEXEDDB: CARGA DE ARCHIVOS           
+//         INDEXEDDB: CARGA DE ARCHIVOS
 //==================================================
 
-// Función para recuperar archivo desde IndexedDB
 function getFileFromIndexedDB() {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open("ModelDB", 1);
-    request.onerror = () => reject("Error abriendo IndexedDB");
-    request.onsuccess = (event) => {
-      const db = event.target.result;
-      const transaction = db.transaction("models", "readonly");
-      const store = transaction.objectStore("models");
-      const getRequest = store.get("uploadedModel");
-      getRequest.onsuccess = () => {
-        if (getRequest.result) resolve(getRequest.result);
-        else reject("No se encontró archivo en IndexedDB");
-      };
-      getRequest.onerror = () => reject("Error leyendo archivo de IndexedDB");
+  return new Promise((res, rej) => {
+    const req = indexedDB.open('ModelDB', 1);
+    req.onerror   = () => rej('Error abriendo IndexedDB');
+    req.onsuccess = (e) => {
+      const db  = e.target.result;
+      const tx  = db.transaction('models', 'readonly');
+      const st  = tx.objectStore('models');
+      const grq = st.get('uploadedModel');
+      grq.onsuccess = () =>
+        grq.result ? res(grq.result) : rej('No se encontró archivo en IndexedDB');
+      grq.onerror   = () => rej('Error leyendo archivo de IndexedDB');
     };
   });
 }
 
-// Nueva función para cargar el modelo desde IndexedDB
 export async function autoLoadFromIndexedDB() {
   try {
-    const file = await getFileFromIndexedDB();
+    const file      = await getFileFromIndexedDB();
     const modelName = sessionStorage.getItem('uploadedModelName') || 'model.glb';
-    const url = URL.createObjectURL(file);
-    loadModel(url, modelName);
+    loadModel(URL.createObjectURL(file), modelName);
   } catch (e) {
-    console.error("Error cargando modelo desde IndexedDB:", e);
-    alert("No se pudo cargar el modelo guardado. Por favor sube uno nuevo.");
+    console.error('IndexedDB:', e);
+    alert('No se pudo cargar el modelo guardado. Sube uno nuevo.');
   }
 }
 
-
 //==================================================
-//         INTERACCIÓN: ROTACIÓN CON TECLAS       
+//   INTERACCIÓN: ROTACIÓN CON TECLAS + SLIDER
 //==================================================
 
-// Slider para rotar el modelo con precisión manual
 const rotationSlider = document.getElementById('rotationSlider');
 if (rotationSlider) {
   rotationSlider.addEventListener('input', () => {
     if (currentModel) {
-      const grados = parseFloat(rotationSlider.value);
-      currentModel.rotation.y = THREE.MathUtils.degToRad(grados);
+      currentModel.rotation.y = THREE.MathUtils.degToRad(parseFloat(rotationSlider.value));
     }
   });
 }
 
-// Control por teclado para rotar el modelo (Q y E)
-window.addEventListener('keydown', (event) => {
+window.addEventListener('keydown', (e) => {
   if (!currentModel) return;
-  switch (event.key.toLowerCase()) {
-    case 'q': currentModel.rotation.y -= 0.1; break;
-    case 'e': currentModel.rotation.y += 0.1; break;
-    default: return;
-  }
-
-  // Sincroniza el valor del slider con la rotación actual (en grados)
+  if (e.key.toLowerCase() === 'q') currentModel.rotation.y -= 0.1;
+  if (e.key.toLowerCase() === 'e') currentModel.rotation.y += 0.1;
   if (rotationSlider) {
     const grados = THREE.MathUtils.radToDeg(currentModel.rotation.y) % 360;
     rotationSlider.value = (grados < 0 ? grados + 360 : grados).toFixed(0);
   }
 });
 
-// =======================================
-// GUARDAR VÉRTICES DEL MODELO
-// =======================================
+//==================================================
+//        GUARDAR VÉRTICES DEL MODELO
+//==================================================
+
 let verticesModelo = [];
 
 function guardarVertices(model) {
-  verticesModelo = []; // resetear si ya había algo
-  model.traverse((child) => {
-    if (child.isMesh && child.geometry && child.geometry.attributes.position) {
-      const posiciones = child.geometry.attributes.position;
-      for (let i = 0; i < posiciones.count; i++) {
-        const vertice = new THREE.Vector3().fromBufferAttribute(posiciones, i);
-        child.localToWorld(vertice); // Pasar a coordenadas globales
-        verticesModelo.push(vertice);
+  verticesModelo = [];
+  model.traverse((c) => {
+    if (c.isMesh && c.geometry?.attributes?.position) {
+      const pos = c.geometry.attributes.position;
+      for (let i = 0; i < pos.count; i++) {
+        const v = new THREE.Vector3().fromBufferAttribute(pos, i);
+        c.localToWorld(v);
+        verticesModelo.push(v);
       }
     }
   });
 }
 
-
 //==================================================
-//        RAYCASTER PARA DETECTAR CLICS EN VÉRTICES
+//        RAYCASTER PARA VÉRTICES  (🔧 MOD)
 //==================================================
 
 const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
+const mouse     = new THREE.Vector2();
 let puntosSeleccionados = [];
 
-window.addEventListener('click', function (event) {
-  if (!camera || !renderer || !currentModel) return;
+const TEMP_VEC = new THREE.Vector3();   // fuera del listener (reutilizable)
 
+window.addEventListener('click', (e) => {
+  if (!currentModel) return;
+
+  // 1. coords normalizadas
   const rect = renderer.domElement.getBoundingClientRect();
-  mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-  mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+  mouse.x = ((e.clientX - rect.left) / rect.width)  * 2 - 1;
+  mouse.y = -((e.clientY - rect.top)  / rect.height) * 2 + 1;
   raycaster.setFromCamera(mouse, camera);
 
-  currentModel.traverse((child) => {
-    if (child.isPoints && child.geometry?.attributes?.color) {
-      const intersects = raycaster.intersectObject(child, true);
-      if (intersects.length > 0) {
-        const intersect = intersects[0];
-        const geometry = child.geometry;
-        const positions = geometry.attributes.position;
-        const colors = geometry.attributes.color;
+  // 2. recojo todos los impactos
+  const hits = [];
+  currentModel.traverse((pt) => {
+    if (!pt.isPoints) return;
 
-        let closestIndex = -1;
-        let shortestDistance = Infinity;
+    // --- distancia del centro de la nube al ojo
+    pt.getWorldPosition(TEMP_VEC);
+    const dist = TEMP_VEC.distanceTo(camera.position);
 
-        for (let i = 0; i < positions.count; i++) {
-          const dx = positions.getX(i);
-          const dy = positions.getY(i);
-          const dz = positions.getZ(i);
-          const dist = intersect.point.distanceTo(new THREE.Vector3(dx, dy, dz));
-          if (dist < shortestDistance) {
-            shortestDistance = dist;
-            closestIndex = i;
-          }
-        }
+    /*  FACTOR DE UMBRAL:
+        - tamaño real del sprite (pickSize)
+        - multiplicado por (distancia_relativa) para ampliar si está cerca
+        - 0.8…1.2 es la escala que mejor funciona; ajusta si hace falta
+    */
+    const adapt = THREE.MathUtils.clamp( 1.2 / dist, 0.8, 1.2 );
+    raycaster.params.Points.threshold = pt.material.userData.pickSize * adapt;
 
-        if (closestIndex !== -1 && shortestDistance < 0.05) {
-          colors.setXYZ(closestIndex, 1, 1, 0); // amarillo
-          colors.needsUpdate = true;
-
-          puntosSeleccionados.push({
-            x: positions.getX(closestIndex).toFixed(4),
-            y: positions.getY(closestIndex).toFixed(4),
-            z: positions.getZ(closestIndex).toFixed(4)
-          });
-
-          console.log("📍 Punto exacto guardado:", puntosSeleccionados.at(-1));
-        }
-      }
-    }
+    hits.push(...raycaster.intersectObject(pt, false));
   });
+
+  if (!hits.length) return;
+
+  // 3. mejor impacto = mínima distancia al RAYO
+  hits.sort((a, b) => a.distanceToRay - b.distanceToRay);
+  const { object, index, point } = hits[0];
+
+  // 4. pintar amarillo
+  const colors = object.geometry.attributes.color;
+  colors.setXYZ(index, 1, 1, 0);
+  colors.needsUpdate = true;
+
+  // 5. registrar coordenadas
+  puntosSeleccionados.push({
+    x: point.x.toFixed(4),
+    y: point.y.toFixed(4),
+    z: point.z.toFixed(4)
+  });
+  console.log('🎯', puntosSeleccionados.at(-1));
 });
 
+
+
+// justo después de crear raycaster
+//raycaster.params.Points.threshold = 0.25;   // 0.25–0.3 suele ir bien
+
+
 //==================================================
-//        NUBE DE PUNTOS A PARTIR DEL MESH
+//        NUBE DE PUNTOS DESDE CADA MESH
 //==================================================
 
 function crearNubeDePuntos(mesh) {
   const geometry = mesh.geometry.clone();
+  geometry.computeBoundingSphere();          // 🔧 MOD
   const count = geometry.attributes.position.count;
 
+  // Colores iniciales (rojo)
   const colors = new Float32Array(count * 3);
-  for (let i = 0; i < count; i++) {
-    colors[i * 3 + 0] = 1; // R
-    colors[i * 3 + 1] = 0; // G
-    colors[i * 3 + 2] = 0; // B
+  for (let i = 0; i < colors.length; i += 3) {
+    colors[i] = 1; colors[i + 1] = 0; colors[i + 2] = 0;
   }
   geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
 const material = new THREE.PointsMaterial({
-  size: 0.08,
-  vertexColors: true,
-  sizeAttenuation: true,
-  depthTest: false,         // ✅ se dibujan siempre por delante
-  depthWrite: false,        // ✅ no escriben en el buffer de profundidad
-  transparent: true,
-  opacity: 1
-});
+    size: 0.08,
+    sizeAttenuation: true,
+    vertexColors: true,
+    depthWrite: false,
+    transparent: true
+  });
 
+  // 👇 guardamos el tamaño para el picker
+  material.userData.pickSize = material.size;
 
   const puntos = new THREE.Points(geometry, material);
-  puntos.name = 'puntos_nube';
-  puntos.visible = true; // ¡Ahora siempre visibles!
+  puntos.name  = 'puntos_nube';
+  puntos.visible = true;
   mesh.add(puntos);
   mesh.userData.nubePuntos = puntos;
 }
 
 //==================================================
-//        ACTIVAR/DESACTIVAR NUBE DE PUNTOS
+//        ACTIVAR / DESACTIVAR NUBE DE PUNTOS
 //==================================================
 
 export function toggleNubeDePuntos(visible) {
   if (!currentModel) return;
-  currentModel.traverse((child) => {
-    if (child.isMesh && child.children.length > 0) {
-      child.children.forEach(c => {
-        if (c.isPoints) {
-          c.visible = visible;
-          console.log(`🔁 Visibilidad de nube de puntos: ${visible}`);
-        }
-      });
-    }
+  currentModel.traverse((c) => {
+    if (c.isPoints) c.visible = visible;
   });
+  console.log('🔁 Nube de puntos:', visible);
 }
+
 
 
 /*
