@@ -149,5 +149,18 @@
 </div>
 
 </footer>
+
+<script type="module">
+  import { setupDragAndDrop } from './js/utils/drag-drop-handler.js';
+  import { handleFile } from './js/scene/db/model-upload.js';
+
+  setupDragAndDrop({
+    dropArea: document.getElementById("dropIndex1"),
+    fileInput: document.getElementById("inputIndexFile1"),
+    onFileDrop: handleFile,
+    viewerId: "viewer1"
+  });
+</script>
+
 </body>
 </html>

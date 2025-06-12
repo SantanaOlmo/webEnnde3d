@@ -22,6 +22,11 @@ export async function handleFile(file, viewerId) {
     // Guardar archivo en IndexedDB
     await saveFileToIndexedDB(file, `uploadedModel_${viewerId}`);
     sessionStorage.setItem(`uploadedModelName_${viewerId}`, name);
+
+    // Guardamos el origen para que splitViewer pueda recuperarlo automáticamente
+    localStorage.setItem("modeloOrigen", viewerId);
+
+    // Notificamos que se ha procesado el archivo
     onFileProcessed(file, viewerId);
   } catch (e) {
     console.error("❌ Error al guardar archivo:", e);
