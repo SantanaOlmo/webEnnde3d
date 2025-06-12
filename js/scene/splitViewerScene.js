@@ -7,11 +7,10 @@ import { initScene } from './core/initScene.js';
 import { addOrbitControls } from './core/cameraControls.js';
 import { initViewerSwitchUI } from '../ui/viewerSwitch.js';
 import { attachSceneToViewer } from './environment/backgroundManager.js';
-import { initViewerMenus } from '../ui/viewerMenus.js';
 import { setupDragAndDrop } from '../utils/drag-drop-handler.js';
 import { handleFile } from './db/model-upload.js';
 
-initViewerMenus();
+//initViewerMenus();
 initViewerSwitchUI();
 setupDragAndDrop({
   dropArea: document.querySelector('.viewer1'),
@@ -45,3 +44,4 @@ setOnFileProcessed(async (file, viewerId) => {
   await loadModel(scene, fileFromDB);
   animate(renderer, scene, camera, controls);
 });
+
