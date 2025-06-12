@@ -123,7 +123,7 @@ header {
   text-align: center;
 }
 
-#drop_zone {
+.drop_zone {
   position: relative;
   overflow: hidden;
   display: flex;
@@ -139,6 +139,9 @@ header {
   color: #d6c4c8;
   font-weight: bold;
   transition: width 0.3s ease-in-out;
+}
+#inputIndexFile1{
+  display: none;
 }
 
 #drop_zone::before {

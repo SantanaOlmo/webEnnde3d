@@ -1,5 +1,5 @@
 // script.js
-import '../styles/splitViewer.css'; // ajusta la ruta si es necesario
+//import '../styles/splitViewer.css'; // ajusta la ruta si es necesario
 
 // Ejecuta el código una vez que el DOM esté completamente cargado
 document.addEventListener("DOMContentLoaded", () => {

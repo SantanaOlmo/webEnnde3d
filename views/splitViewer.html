@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/styles/loader.css">
     <script defer type="module" src="/js/scene/db/model-upload.js"></script>
     <script defer type="module" src="/js/scene/splitViewerScene.js"></script>
+    <script defer type="module" src="/js/ui/viewerMenus.js"></script>
 
 </head>
 <body class="bg-dark">
@@ -53,24 +54,29 @@
                         </div>
                     </div>
 
-                <aside class="sidebar bg-dark text-white d-flex flex-lg-column flex-row p-1 gap-5 align-items-center justify-content-center ">
-                    <button id="btn-SwitchViewer" class="btnPrincipales">
-                        <img class="options-sidebar area_swap" src="../assets/icons/area_swap.svg" alt="area_swap">
-                    </button>
-                    <button id="btn-world" class="btnPrincipales world">
-                        <img class="options-sidebar world" src="../assets/icons/world.svg" alt="world">
-                    </button>
-                    <button class="material btnPrincipales" id="btn-axes">
-                        <img  class="options-sidebar monkey" src="../assets/icons/monkey.svg" alt="monkey">
-                    </button>
-                    <button class="magnet btnPrincipales" id="btn-material">
-                        <img class="options-sidebar linked" src="../assets/icons/linked.svg" alt="link">
-                    </button>
+                <aside id="sidebar" class="sidebar">
+                    <div id="toolbar" class="bg-dark text-white d-flex flex-lg-column flex-row p-1 gap-5 align-items-center justify-content-center">
+                        <button id="btn-SwitchViewer" class="btnPrincipales">
+                            <img class="options-sidebar area_swap" src="../assets/icons/area_swap.svg" alt="area_swap">
+                        </button>
+                        <button id="btn-world" class="btnPrincipales world">
+                            <img class="options-sidebar world" src="../assets/icons/world.svg" alt="world">
+                        </button>
+                        <button class="material btnPrincipales" id="btn-axes">
+                            <img class="options-sidebar monkey" src="../assets/icons/monkey.svg" alt="monkey">
+                        </button>
+                        <button class="magnet btnPrincipales" id="btn-material">
+                            <img class="options-sidebar linked" src="../assets/icons/linked.svg" alt="link">
+                        </button>
+                        <button class="info btnPrincipales">
+                            <img class="options-sidebar info" src="../assets/icons/info.svg" alt="info">
+                        </button>
+                    </div>
 
-                    <button class="info" class="btnPrincipales">
-                        <img class="options-sidebar info" src="../assets/icons/info.svg" alt="link">
-
-                    </button>
+                    <div id="menuPanel" class="menu-panel">
+                        <div id="menu-world" class="menu-content d-none">Menú Mundo</div>
+                        <div id="menu-modelo" class="menu-content d-none">Menú Modelo</div>
+                    </div>
                 </aside>
 
             </div>

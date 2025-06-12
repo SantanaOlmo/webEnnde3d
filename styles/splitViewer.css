@@ -168,3 +168,51 @@ body, html {
 .area_swap:hover {
   transform: scale(1.1);
 }
+.sidebar {
+  transition: transform 0.3s ease;
+  z-index: 100;
+}
+
+.menu-panel {
+  background-color: #1e1e1e;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Mostrar menú */
+.menu-panel.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Layout en horizontal (mobile) */
+@media (max-width: 991px) {
+  .sidebar {
+    flex-direction: column;
+  }
+  .menu-panel {
+    height: 200px;
+    width: 100vw;
+    transform: translateY(100%);
+  }
+  .menu-panel.show {
+    transform: translateY(0);
+  }
+}
+
+/* Layout en vertical (desktop) */
+@media (min-width: 992px) {
+  .sidebar {
+    flex-direction: row;
+  }
+  .menu-panel {
+    width: 200px;
+    height: 100vh;
+    transform: translateX(100%);
+  }
+  .menu-panel.show {
+    transform: translateX(0);
+  }
+}

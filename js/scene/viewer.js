@@ -1,6 +1,6 @@
 // js/viewer.js
 import { getFileFromIndexedDB } from './scene/db/db-utils.js';
-import { setupViewerScene } from './scene/index.js';
+import { setupViewerScene } from './scene/initIndex.js';
 
 const containerId = 'three-container';
 
