@@ -54,6 +54,12 @@
   transform: scale(1.1);
 }
 
+.compare:hover {
+  background-color: rgb(86, 0, 198);
+  transform: scale(1.1);
+}
+
+
 .area_swap:hover {
   transform: scale(1.1);
 }

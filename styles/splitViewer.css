@@ -41,8 +41,11 @@ body, html {
 }
 
 #back svg {
+  width: 57px;
+  height: 57px;
   fill: rgba(255, 255, 255, 0.733);
 }
+
 
 #back:hover {
   cursor: pointer;

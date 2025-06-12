@@ -1,10 +1,14 @@
+/* =========================== */
+/*         viewer.css          */
+/* =========================== */
+@import "bootstrap-icons/font/bootstrap-icons.css";
 
-body, html {
+html, body {
   margin: 0;
   padding: 0;
   overflow: hidden;
   height: 100vh;
-  background-color: rgb(48, 38, 38);
+  background-color: #121212;
 }
 
 #loader-container {
@@ -12,4 +16,84 @@ body, html {
   height: 100%;
   align-content: center;
   justify-content: center;
+}
+
+#visorWrapper {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  padding: 1em;
+  gap: 0.5em;
+  box-sizing: border-box;
+}
+
+#viewerContainer {
+  flex: 1;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Ajustes para mantener coherencia con visor doble */
+.container-fluid {
+  height: 100vh;
+  padding: 1em;
+}
+
+#back {
+  z-index: 2;
+  position: fixed;
+  top: 1.5em;
+  left: 1em;
+  background: none;
+  border: none;
+  width: 4em;
+  transition: all .1s ease-in-out;
+}
+
+#back svg {
+  margin-left: 0.5em;
+  width: 57px;
+  height: 57px;
+  fill: rgba(255, 255, 255, 0.733);
+}
+
+
+#back:hover {
+  cursor: pointer;
+  transform: scale(1.1);
+  transition: all .1s ease-in-out;
+}
+
+#back:hover svg {
+  fill: white;
+}
+
+#indexViewer1 {
+  background-color: rgb(0, 0, 0);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.menu-panel {
+  background-color: #1e1e1e;
+  pointer-events: none;
+  color: white;
+  height: 100px;
+  padding: 1em;
+  display: none;
+}
+
+.menu-panel.show {
+  display: block;
+  pointer-events: auto;
+}
+
+.menu-content {
+  background-color: #1e1e1e;
+  border-radius: 10px;
 }
