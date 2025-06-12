@@ -26,7 +26,6 @@ let helper1, sphere1, line1;
 let currentHDRI;
 let play = false;
 
-const container = document.getElementById('three-container');
 const drop_zone = document.getElementById('drop_zone');
 let cameraPositionX = document.getElementById('x');
 let cameraPositionY = document.getElementById('y');
@@ -197,6 +196,11 @@ export function loadModel(url, name) {
 
         escalarModelo(currentModel);
         scene.add(currentModel);
+        console.log('✅ Modelo GLTF añadido a la escena:', currentModel);
+        const bbox = new THREE.Box3().setFromObject(currentModel);
+        const size = bbox.getSize(new THREE.Vector3());
+        console.log('📏 Tamaño del modelo GLTF:', size);
+
         guardarVertices(currentModel);
         currentModel.traverse((c) => {
           if (c.isMesh) crearNubeDePuntos(c);
@@ -226,6 +230,11 @@ export function loadModel(url, name) {
 
         escalarModelo(currentModel);
         scene.add(currentModel);
+        console.log('✅ Modelo STL añadido a la escena:', currentModel);
+        const bbox = new THREE.Box3().setFromObject(currentModel);
+        const size = bbox.getSize(new THREE.Vector3());
+        console.log('📏 Tamaño del modelo STL:', size);
+
         guardarVertices(currentModel);
         currentModel.traverse((c) => {
           if (c.isMesh) crearNubeDePuntos(c);
@@ -258,6 +267,7 @@ function centerAndFitModel(model) {
   controls.target.set(0, 0, 0);
   controls.update();
 }
+
 
 //==================================================
 //             BUCLE DE RENDERIZADO
@@ -403,11 +413,16 @@ function getFileFromIndexedDB() {
 
 export async function autoLoadFromIndexedDB() {
   try {
-    const file      = await getFileFromIndexedDB();
+    const file = await getFileFromIndexedDB();
     const modelName = sessionStorage.getItem('uploadedModelName') || 'model.glb';
-    loadModel(URL.createObjectURL(file), modelName);
+    console.log('🟢 Archivo cargado desde IndexedDB:', modelName);
+
+    const url = URL.createObjectURL(file);
+    console.log('🔗 URL del modelo cargado:', url);
+
+    loadModel(url, modelName);
   } catch (e) {
-    console.error('IndexedDB:', e);
+    console.error('❌ IndexedDB:', e);
     alert('No se pudo cargar el modelo guardado. Sube uno nuevo.');
   }
 }

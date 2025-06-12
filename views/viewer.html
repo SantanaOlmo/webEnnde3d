@@ -7,14 +7,19 @@
   <link rel="icon" href="/assets/img/ennde3d_icon.png" type="image/png">
   <script defer type="module" src="/js/viewerStyle.js"></script>
 
-    <script defer type="module">
-      import { initScene } from '/js/scene.js';
-      document.addEventListener('DOMContentLoaded',() => {
-        const container = document.getElementById('three-container');
-        initScene(container);
-      });
+<script type="module">
+  import { initScene } from '/js/scene.js';
 
-    </script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('viewer1');
+    if (!container) {
+      console.error('❌ Contenedor viewer1 no encontrado');
+      return;
+    }
+    initScene(container);
+  });
+</script>
+
     <script defer src="/js/main.js"></script>
 
   <link rel="stylesheet" href="/styles/bootstrap.css">
