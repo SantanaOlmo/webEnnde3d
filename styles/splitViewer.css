@@ -103,7 +103,6 @@ body, html {
   left: 50%; /* al medio al inicio */
   transform: translateX(-50%);
 }
-
 /* Para móvil, cambia flex-direction a columna y resizer horizontal */
 @media (max-width: 991px) {
   .contenido {
@@ -119,38 +118,53 @@ body, html {
     transform: translateY(-50%);
   }
 }
-.sidebar{
-  button{
+
+.sidebar {
+  button {
     padding: 0%;
     border: none;
     background: none;
   }
 }
-.options-sidebar{
-  width: 28px;
+
+.options-sidebar {
+  border-radius: 5px;
+  width: 20px;
   fill: white;
   padding: 0;
 }
-.magnet:hover{
- width: 28px;
- fill: rgb(247, 64, 64);
+
+.btnPrincipales {
+  aspect-ratio: 1/1;
+  width: 30px;
+  border-radius: 15%;
 }
 
-.info:hover{
-  width: 28px;
+.linked:hover {
+  transform: scale(1.1);
+  fill: rgb(247, 64, 64);
+}
+
+.info:hover {
+  transform: scale(1.1);
   fill: rgb(115, 164, 255);
 }
-.light-bulb:hover{
+
+.light-bulb:hover {
   fill: rgb(243, 243, 17);
-   width: 28px;
-
+  transform: scale(1.1);
 }
-.wireframe:hover{
+
+.wireframe:hover {
   fill: rgb(255, 111, 0);
-  width: 28px;
+  transform: scale(1.1);
 }
 
-.environment:hover{
-  fill: green;
-  width: 28px;
+.world:hover {
+  background-color: red;
+  transform: scale(1.1);
+}
+
+.area_swap:hover {
+  transform: scale(1.1);
 }

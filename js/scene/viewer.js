@@ -1,32 +1,27 @@
 // js/viewer.js
-import { saveFileToIndexedDB, getFileFromIndexedDB } from './db-utils.js';
+import { getFileFromIndexedDB } from './scene/db/db-utils.js';
 import { setupViewerScene } from './scene/index.js';
 
 const containerId = 'three-container';
-const fileInput = document.getElementById('file-input');
-const dropArea = document.getElementById('drop-area');
 
-// Lógica común para iniciar escena con un archivo
-async function loadAndRenderFile(file) {
+async function init() {
+  const dbKey = sessionStorage.getItem('viewerFileName');
+  if (!dbKey) {
+    console.warn("⚠️ No hay archivo cargado para visualizar.");
+    return;
+  }
+
   try {
-    await saveFileToIndexedDB(file.name, file);
-    const fileFromDB = await getFileFromIndexedDB(file.name);
-    await setupViewerScene(containerId, fileFromDB);
+    const file = await getFileFromIndexedDB(dbKey);
+    if (!file) {
+      console.error("❌ Archivo no encontrado en IndexedDB:", dbKey);
+      return;
+    }
+
+    await setupViewerScene(containerId, file);
   } catch (err) {
-    console.error('Error al cargar el archivo en la escena:', err);
+    console.error("Error al iniciar visor:", err);
   }
 }
 
-// Evento: input file
-fileInput?.addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (file) loadAndRenderFile(file);
-});
-
-// Evento: drag & drop
-dropArea?.addEventListener('dragover', (e) => e.preventDefault());
-dropArea?.addEventListener('drop', (e) => {
-  e.preventDefault();
-  const file = e.dataTransfer.files[0];
-  if (file) loadAndRenderFile(file);
-});
+init();

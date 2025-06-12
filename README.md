@@ -12,6 +12,7 @@
 
 [loaders](https://css-loaders.com/)
 
+[repositorio con iconos de blender](https://github.com/blender/blender/tree/main/release/datafiles/icons_svg)
 
 
 ## POR QUÉ UTILIZAR THREE.JS
