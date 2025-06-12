@@ -5,29 +5,36 @@
 //==================================================
 
 import * as THREE from 'three';
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
-import { RGBELoader } from 'three/addons/loaders/RGBELoader.js';
-import { DragControls } from 'three/examples/jsm/controls/DragControls.js';
-import { STLLoader } from 'three/examples/jsm/Addons.js';
-import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
-import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
-import { contain } from 'three/src/extras/TextureUtils.js';
+import { OrbitControls }   from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader }      from 'three/addons/loaders/GLTFLoader.js';
+import { RGBELoader }      from 'three/addons/loaders/RGBELoader.js';
+import { DragControls }    from 'three/examples/jsm/controls/DragControls.js';
+import { STLLoader }       from 'three/examples/jsm/Addons.js';
+import { DRACOLoader }     from 'three/addons/loaders/DRACOLoader.js';
+import { MeshoptDecoder }  from 'three/addons/libs/meshopt_decoder.module.js';
+import { contain }         from 'three/src/extras/TextureUtils.js';
 
-//=============================
+import circlePNG           from '../assets/img/circle.png?url';  // Vite inyecta el hash
+
+//==================================================
 //    VARIABLES GLOBALES
-//=============================
+//==================================================
 
 let scene, camera, renderer, controls, loader, loaderSTL;
 let gridHelper, currentModel, axesHelper;
 let helper1, sphere1, line1;
 let currentHDRI;
 let play = false;
-const container   = document.getElementById('three-container');
-const drop_zone   = document.getElementById('drop_zone');
+
+const container = document.getElementById('three-container');
+const drop_zone = document.getElementById('drop_zone');
 let cameraPositionX = document.getElementById('x');
 let cameraPositionY = document.getElementById('y');
 let cameraPositionZ = document.getElementById('z');
+
+// 🔧 TEXTURA CIRCULAR — se crea SIN callback; el objeto existe en cuanto carga el módulo
+const circleTex = new THREE.TextureLoader().load(circlePNG);
+circleTex.wrapS = circleTex.wrapT = THREE.ClampToEdgeWrapping;
 
 //==================================================
 //           CONFIGURACIÓN HDRI Y FONDOS
@@ -525,24 +532,29 @@ function crearNubeDePuntos(mesh) {
   // Colores iniciales (rojo)
   const colors = new Float32Array(count * 3);
   for (let i = 0; i < colors.length; i += 3) {
-    colors[i] = 1; colors[i + 1] = 0; colors[i + 2] = 0;
+    colors[i]     = 1;   // R
+    colors[i + 1] = 0;   // G
+    colors[i + 2] = 0;   // B
   }
   geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
 
-const material = new THREE.PointsMaterial({
+  const matParams = {
     size: 0.08,
     sizeAttenuation: true,
     vertexColors: true,
     depthWrite: false,
-    transparent: true
-  });
+    transparent: true,
+    map: circleTex,      // ← siempre disponible
+    alphaTest: 0.5       // deja pasar solo el círculo
+  };
 
-  // 👇 guardamos el tamaño para el picker
-  material.userData.pickSize = material.size;
+  const material = new THREE.PointsMaterial(matParams);
+  material.userData.pickSize = material.size;   // para el raycaster
 
   const puntos = new THREE.Points(geometry, material);
-  puntos.name  = 'puntos_nube';
-  puntos.visible = true;
+  puntos.name     = 'puntos_nube';
+  puntos.visible  = true;
+
   mesh.add(puntos);
   mesh.userData.nubePuntos = puntos;
 }
