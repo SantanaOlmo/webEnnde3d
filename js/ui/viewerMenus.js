@@ -45,11 +45,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // NUEVO: redirige al visor comparativo
+  // NUEVO: redirige al visor comparativo guardando modelo actual
   if (btnGoToCompare) {
     btnGoToCompare.addEventListener('click', () => {
+      // Indicamos que el modelo actual proviene del visor individual
+      localStorage.setItem("modeloOrigen", "viewer1");
+
+      // Redirigimos al visor comparativo
       window.location.href = "/views/splitViewer.html?from=viewer";
     });
   }
 });
-

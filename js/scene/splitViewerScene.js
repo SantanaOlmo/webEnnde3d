@@ -1,4 +1,3 @@
-// js/splitViewerScene.js
 import { setOnFileProcessed } from './db/model-upload.js';
 import { getFileFromIndexedDB } from './db/db-utils.js';
 import { loadModel } from './model/modelLoader.js';
@@ -10,8 +9,31 @@ import { attachSceneToViewer } from './environment/backgroundManager.js';
 import { setupDragAndDrop } from '../utils/drag-drop-handler.js';
 import { handleFile } from './db/model-upload.js';
 
-//initViewerMenus();
 initViewerSwitchUI();
+
+// NUEVO BLOQUE: cargar modelo automáticamente si vienes del visor individual
+const modeloOrigen = localStorage.getItem("modeloOrigen");
+
+if (modeloOrigen) {
+  const key = `uploadedModel_${modeloOrigen}`;
+  const container = document.getElementById("viewer1");
+
+  (async () => {
+    const fileFromDB = await getFileFromIndexedDB(key);
+    if (!fileFromDB) return;
+
+    container.innerHTML = '';
+    const { scene, camera, renderer } = initScene("viewer1");
+    attachSceneToViewer("viewer1", scene);
+    const controls = addOrbitControls(camera, renderer);
+    await loadModel(scene, fileFromDB);
+    animate(renderer, scene, camera, controls);
+  })();
+
+  // Limpieza opcional del localStorage si quieres que no se quede guardado
+  // localStorage.removeItem("modeloOrigen");
+}
+
 setupDragAndDrop({
   dropArea: document.querySelector('.viewer1'),
   fileInput: document.querySelector('#inputFile1'),
@@ -38,10 +60,8 @@ setOnFileProcessed(async (file, viewerId) => {
   if (!fileFromDB) return;
 
   const { scene, camera, renderer } = initScene(viewerId);
-  
   attachSceneToViewer(viewerId, scene);
   const controls = addOrbitControls(camera, renderer);
   await loadModel(scene, fileFromDB);
   animate(renderer, scene, camera, controls);
 });
-
