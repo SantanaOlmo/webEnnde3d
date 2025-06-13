@@ -49,13 +49,31 @@
         const params = new URLSearchParams(window.location.search);
         const from = params.get('from');
 
-        document.getElementById("back").addEventListener("click", () => {
-            if (from === 'viewer') {
-            window.location.href = "/views/viewerNew.html";
-            } else {
-            window.location.href = "/index.html";
-            }
-        });
+
+                    // Botón de volver atrás en el visor comparativo
+            document.getElementById("back").addEventListener("click", () => {
+                // Recuperamos el origen desde localStorage (puede ser 'viewer' o 'index')
+                const from = localStorage.getItem("from");
+
+                if (from === 'viewer') {
+                    // Recuperamos el viewerId original guardado al venir desde viewer.html
+                    const viewerId = localStorage.getItem("modeloOrigen");
+
+                    if (viewerId) {
+                        // Redirigimos de vuelta al visor individual con el modelo cargado
+                        window.location.href = `/views/viewerNew.html?viewerId=${viewerId}`;
+                    } else {
+                        // Fallback: vuelve al visor sin identificador si no hay info
+                        window.location.href = "/views/viewerNew.html";
+                    }
+
+                } else {
+                    // Si no venías desde el visor, vuelve al index general
+                    window.location.href = "/index.html";
+                }
+            });
+
+
         </script>
 
                 

@@ -1,3 +1,5 @@
+// js/splitViewerScene.js
+
 import { setOnFileProcessed } from './db/model-upload.js';
 import { getFileFromIndexedDB } from './db/db-utils.js';
 import { loadModel } from './model/modelLoader.js';
@@ -11,11 +13,11 @@ import { handleFile } from './db/model-upload.js';
 
 initViewerSwitchUI();
 
-// NUEVO BLOQUE: cargar modelo automáticamente si vienes del visor individual
+// === CARGA AUTOMÁTICA EN viewer1 SI VIENES DEL VISOR INDIVIDUAL ===
 const modeloOrigen = localStorage.getItem("modeloOrigen");
 
 if (modeloOrigen) {
-  const key = `uploadedModel_${modeloOrigen}`;
+  const key = `uploadedModel_${modeloOrigen}`; // normalmente 'uploadedModel_indexViewer1'
   const container = document.getElementById("viewer1");
 
   (async () => {
@@ -30,17 +32,19 @@ if (modeloOrigen) {
     animate(renderer, scene, camera, controls);
   })();
 
-  // Limpieza opcional del localStorage si quieres que no se quede guardado
+  // OPCIONAL: Limpieza para evitar residuos
   // localStorage.removeItem("modeloOrigen");
 }
 
+// === ZONA DE DROP PARA viewer1 (vinculado al visor individual) ===
 setupDragAndDrop({
   dropArea: document.querySelector('.viewer1'),
   fileInput: document.querySelector('#inputFile1'),
   onFileDrop: handleFile,
-  viewerId: 'viewer1'
+  viewerId: 'indexViewer1'  // 🔁 clave sincronizada con visor individual
 });
 
+// === ZONA DE DROP PARA viewer2 (independiente) ===
 setupDragAndDrop({
   dropArea: document.querySelector('.viewer2'),
   fileInput: document.querySelector('#inputFile2'),
@@ -48,6 +52,7 @@ setupDragAndDrop({
   viewerId: 'viewer2'
 });
 
+// === CUANDO SE CARGA UN ARCHIVO EN CUALQUIER VISOR ===
 setOnFileProcessed(async (file, viewerId) => {
   console.log(`📥 Archivo soltado en ${viewerId}: ${file.name}`);
 
