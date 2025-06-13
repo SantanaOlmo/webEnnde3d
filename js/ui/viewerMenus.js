@@ -49,15 +49,15 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // NUEVO: redirige al visor comparativo guardando modelo actual
-if (btnGoToCompare) {
-  btnGoToCompare.addEventListener('click', () => {
-    // Guardamos el origen
-    localStorage.setItem("modeloOrigen", "viewer1");
+    if (btnGoToCompare) {
+      btnGoToCompare.addEventListener('click', () => {
+      // Guardamos la clave del visor actual y el origen
+      localStorage.setItem("modeloOrigen", "indexViewer1");
+      localStorage.setItem("from", "viewer"); // 👈 necesario para el botón "volver atrás"
 
-    // Esperamos 300ms antes de redirigir (ajustable)
-    setTimeout(() => {
+      // Redirige al visor comparativo
       window.location.href = "/views/splitViewer.html?from=viewer";
-    }, 300);
-  });
+    });
+
 }
 });
