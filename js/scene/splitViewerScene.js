@@ -1,5 +1,11 @@
 // js/splitViewerScene.js
 
+// Limpieza inicial si venimos desde el index (no debe haber modelo preasignado)
+const from = localStorage.getItem("from");
+if (from === 'index') {
+  localStorage.removeItem("modeloOrigen"); // solo lo borramos si venimos del index
+}
+
 import { setOnFileProcessed } from './db/model-upload.js';
 import { getFileFromIndexedDB } from './db/db-utils.js';
 import { loadModel } from './model/modelLoader.js';
@@ -16,24 +22,24 @@ initViewerSwitchUI();
 // === CARGA AUTOMÁTICA EN viewer1 SI VIENES DEL VISOR INDIVIDUAL ===
 const modeloOrigen = localStorage.getItem("modeloOrigen");
 
+// Detectamos si existe 'indexViewer1' o 'viewer1'
+const viewer1Id = document.getElementById("indexViewer1") ? "indexViewer1" : "viewer1";
+const viewer1Container = document.getElementById(viewer1Id);
+
 if (modeloOrigen) {
   const key = `uploadedModel_${modeloOrigen}`; // normalmente 'uploadedModel_indexViewer1'
-  const container = document.getElementById("viewer1");
 
   (async () => {
     const fileFromDB = await getFileFromIndexedDB(key);
     if (!fileFromDB) return;
 
-    container.innerHTML = '';
-    const { scene, camera, renderer } = initScene("viewer1");
-    attachSceneToViewer("viewer1", scene);
+    viewer1Container.innerHTML = '';
+    const { scene, camera, renderer } = initScene(viewer1Id);
+    attachSceneToViewer(viewer1Id, scene);
     const controls = addOrbitControls(camera, renderer);
     await loadModel(scene, fileFromDB);
     animate(renderer, scene, camera, controls);
   })();
-
-  // OPCIONAL: Limpieza para evitar residuos
-  // localStorage.removeItem("modeloOrigen");
 }
 
 // === ZONA DE DROP PARA viewer1 (vinculado al visor individual) ===
@@ -59,14 +65,18 @@ setOnFileProcessed(async (file, viewerId) => {
   const container = document.getElementById(viewerId);
   if (!container) return;
 
+  // Limpieza previa
   container.innerHTML = '';
 
-  const fileFromDB = await getFileFromIndexedDB(`uploadedModel_${viewerId}`);
-  if (!fileFromDB) return;
-
+  // ✅ Siempre se inicializa escena al cargar archivo
   const { scene, camera, renderer } = initScene(viewerId);
   attachSceneToViewer(viewerId, scene);
   const controls = addOrbitControls(camera, renderer);
+
+  // Cargamos el modelo desde IndexedDB (ya guardado)
+  const fileFromDB = await getFileFromIndexedDB(`uploadedModel_${viewerId}`);
+  if (!fileFromDB) return;
+
   await loadModel(scene, fileFromDB);
   animate(renderer, scene, camera, controls);
 });
