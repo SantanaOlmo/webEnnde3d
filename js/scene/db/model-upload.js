@@ -11,7 +11,8 @@ export function setOnFileProcessed(callback) {
 }
 
 // === Valida extensión, guarda y gestiona un archivo 3D subido ===
-export async function handleFile(file) {
+// Ahora acepta el `viewerId` como argumento para soportar múltiples visores
+export async function handleFile(file, viewerId = 'indexViewer1') {
   const name = file.name.toLowerCase();
   if (!name.match(/\.(glb|gltf|stl|stp)$/)) {
     alert("Solo se permiten archivos .glb, .gltf, .stl o .stp.");
@@ -19,19 +20,18 @@ export async function handleFile(file) {
   }
 
   try {
-    // ⚠️ Usamos siempre el ID fijo "indexViewer1" como identificador del visor
-    const viewerId = 'indexViewer1';
-
-    // 💾 Guardamos el archivo en IndexedDB con clave fija para su recuperación posterior
+    // 💾 Guardamos el archivo en IndexedDB con clave basada en el viewerId
     await saveFileToIndexedDB(file, `uploadedModel_${viewerId}`);
 
-    // 🧠 Guardamos el nombre del archivo subido para mostrarlo si hace falta
+    // 🧠 Guardamos el nombre del archivo subido (útil si lo quieres mostrar)
     sessionStorage.setItem(`uploadedModelName_${viewerId}`, name);
 
-    // 🔁 Guardamos el origen del visor para que splitViewer pueda cargarlo automáticamente
-    localStorage.setItem("modeloOrigen", viewerId);
+    // 🔁 Si se trata del visor individual, guarda el origen para splitViewer
+    if (viewerId === 'indexViewer1') {
+      localStorage.setItem("modeloOrigen", viewerId);
+    }
 
-    // ✅ Notificamos que se ha procesado el archivo (por si hay callbacks activos)
+    // ✅ Notificamos que se ha procesado el archivo (callback opcional)
     onFileProcessed(file, viewerId);
   } catch (e) {
     console.error("❌ Error al guardar archivo:", e);

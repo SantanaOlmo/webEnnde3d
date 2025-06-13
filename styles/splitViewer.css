@@ -106,3 +106,17 @@ body, html {
   }
 }
 
+/* Efecto visual cuando hay drag encima de un visor */
+.viewer1.drag-over,
+.viewer2.drag-over {
+  outline: 3px solid white;
+  transform: scale(1.02);
+  z-index: 2;
+}
+
+/* Oscurece el otro visor mientras se hace drag */
+.viewer1.drag-over ~ .viewer2,
+.viewer2.drag-over ~ .viewer1 {
+  background-color: rgba(255, 255, 255, 0.1);
+  filter: brightness(0.8);
+}

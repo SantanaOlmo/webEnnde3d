@@ -130,7 +130,22 @@
   <div class="footer-info">
     <p>© Copyright 2015 – 2025 | <span>ENNDE Corp</span> · Todos los derechos reservados. | Powered by <strong>ENNDE</strong></p>
     <div class="footer-links">
-      <a href="views/splitViewer.html">Política de Privacidad</a> |
+      <a href="#" onclick="goToSplitViewer()">Política de Privacidad</a>
+
+      <script>
+        function goToSplitViewer() {
+          // 🧹 Limpiamos el origen previo por si lo había
+          localStorage.removeItem("modeloOrigen");
+
+          // 🧭 Indicamos que venimos desde el index
+          localStorage.setItem("from", "index");
+
+          // 🔁 Vamos al visor comparativo
+          window.location.href = "views/splitViewer.html";
+        }
+      </script>
+
+ |
       <a href="#">Aviso Legal</a> |
       <a href="#">Política de calidad</a>
     </div>
