@@ -9,15 +9,19 @@
   <link rel="icon" href="../assets/img/ennde3d_icon.png" type="image/png">
 
   <!-- Estilos comunes y específicos -->
-  <link rel="stylesheet" href="/styles/bootstrap.css">       
+  <link rel="stylesheet" href="/styles/bootstrap.css">    
+  <link rel="stylesheet" href="/styles/scrollbar.css">   
   <link rel="stylesheet" href="/styles/loader.css">           
   <link rel="stylesheet" href="/styles/sidebar.css">          
-  <link rel="stylesheet" href="/styles/viewer.css">         
+  <link rel="stylesheet" href="/styles/viewer.css">      
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.css">
+
 
   <!-- Scripts principales -->
   <script type="module" src="/js/loader.js" defer></script>                      
   <script type="module" src="/js/scene/init/initSingleViewer.js" defer></script> 
-  <script type="module" src="/js/ui/viewerMenus.js" defer></script>              
+  <script type="module" src="/js/ui/viewerMenus.js" defer></script>     
+  <script type="module" src="/js/ui/loadHdriOptions.js" defer></script>         
 </head>
 
 <body class="bg-black">
@@ -47,14 +51,14 @@
   </button>
 
   <!-- CONTENEDOR PRINCIPAL DEL VISOR + SIDEBAR -->
-  <div id="visorWrapper">
-    <div id="viewerContainer">
+  <div id="visorWrapper" class="d-flex flex-column flex-lg-row">
+    <div id="viewerContainer" class="">
       <div id="indexViewer1" class="w-100 h-100 position-relative overflow-hidden"></div>
     </div>
 
     <!-- SIDEBAR CON ICONOS -->
     <aside id="sidebar" class="sidebar">
-      <div id="toolbar" class="d-flex flex-column align-items-center justify-content-center gap-5">
+      <div id="toolbar" class="d-flex flex-row flex-lg-column align-items-center justify-content-center gap-5">
         <button id="btn-world" class="btnPrincipales world">
           <img class="options-sidebar world" src="../assets/icons/world.svg" alt="world">
         </button>
@@ -71,14 +75,41 @@
         <img class="options-sidebar" src="../assets/icons/split_vertical.svg" alt="Comparar modelos">
         </button>
 
-
-
       </div>
 
       <!-- PANEL DE MENÚS (mismo comportamiento que visor doble) -->
-      <div id="menuPanel" class="menu-panel overflow-hidden">
-        <div id="menu-world" class="menu-content d-none h-100">Menú Mundo hola hola</div>
-        <div id="menu-modelo" class="menu-content d-none h-100">Menú Modelo</div>
+      <div id="menuPanel" class="menu-panel">
+        <div id="menu-world" class="menu-content d-none h-100 w-100">
+        <!-- <h2>Environment</h2>-->
+              <div id="bloqueHDRI" class="opcionesHDRI h-100 d-flex flex-row flex-lg-column ">
+                <div class="colorEnv tarjeta ">
+                  <input type="color" name="color" id="chooseColor" class="input color-picker envOption">
+                </div>
+                
+              </div>
+        </div>
+        <div id="menu-modelo" class="menu-content d-none h-100">
+          <h2>Modelo</h2>
+          <form id="formStyles">
+            <label for="color">Color:</label>
+            <input type="color" name="color" id="chooseColor" class="input">
+            <label for="roughness">Roughness:</label>
+            <input type="range" name="roughness" min="0" max="1000">  
+            <label for="metalness">Metalness:</label>
+            <input type="range" name="metalness" min="0" max="1000">
+            <div id="previewTexturas"></div>
+            <button type="button" id="resetEstilos">Restablecer</button>
+          </form>
+          <div id="mallas" class="d-flex ">
+            <button class="botonMalla" id="wireframe">malla</button>
+            <button class="botonMalla" id="solido">solido</button>
+            <button class="botonMalla" id="togglePuntos">puntos</button>
+          </div>
+            <div id="wireframeOptions" style="margin-top: 1em;">
+              <label for="wireframeColor" style="color: #eee;">Color de la malla:</label><br>
+              <input type="color" id="wireframeColor" value="#d95e7d">
+          </div>
+
       </div>
     </aside>
   </div>

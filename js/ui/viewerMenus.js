@@ -1,4 +1,7 @@
+
+
 document.addEventListener('DOMContentLoaded', () => {
+  
   const btnWorld = document.getElementById('btn-world');
   const btnModelo = document.getElementById('btn-axes');
   const btnGoToCompare = document.getElementById('btn-goToCompare');
