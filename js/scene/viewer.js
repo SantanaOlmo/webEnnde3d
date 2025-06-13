@@ -1,6 +1,12 @@
 // js/viewer.js
 import { getFileFromIndexedDB } from './scene/db/db-utils.js';
 import { setupViewerScene } from './scene/initIndex.js';
+import { loadHdriOptions } from '../../ui/loadHdriOptions.js';
+import { setHdriEnvironment } from '../environment/hdriManager.js';
+
+loadHdriOptions((path) => {
+  setHdriEnvironment(path, scene, renderer);
+});
 
 const containerId = 'three-container';
 

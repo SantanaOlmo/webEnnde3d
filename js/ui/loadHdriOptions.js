@@ -1,4 +1,5 @@
 // Ruta: ./js/ui/loadHdriOptions.js
+//GENERA AUTOTMATICAMENTE LAS IMAGENES DE LOS HDRI EN EL ASIDE
 const bloqueHDRI = document.getElementById('bloqueHDRI');
 
 async function loadHDRIOptions() {
@@ -11,6 +12,7 @@ async function loadHDRIOptions() {
       img.className = 'envOption';
       img.src = `/assets/hdri/hdr_img/${name}.png`;
       img.alt=`${name}`;
+      img.id=`${name}`;
       
 
       const div = document.createElement('div');
@@ -25,3 +27,4 @@ async function loadHDRIOptions() {
 }
 
 loadHDRIOptions();
+
