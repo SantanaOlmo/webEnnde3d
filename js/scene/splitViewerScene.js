@@ -35,7 +35,9 @@ if (modeloOrigen) {
     const fileFromDB = await getFileFromIndexedDB(key);
     if (!fileFromDB) return;
 
+    const viewer1Container = document.getElementById(viewer1Id); // ✅ ESTA LÍNEA FALTABA
     viewer1Container.innerHTML = '';
+
     const { scene, camera, renderer } = initScene(viewer1Id);
     attachSceneToViewer(viewer1Id, scene);
     const controls = addOrbitControls(camera, renderer);
@@ -43,6 +45,7 @@ if (modeloOrigen) {
     animate(renderer, scene, camera, controls);
   })();
 }
+
 
 // === ZONA DE DROP PARA viewer1 (vinculado al visor individual) ===
 setupDragAndDrop({
