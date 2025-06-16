@@ -1,8 +1,12 @@
 // Ruta: ./js/ui/loadHdriOptions.js
 //GENERA AUTOTMATICAMENTE LAS IMAGENES DE LOS HDRI EN EL ASIDE
-const bloqueHDRI = document.getElementById('bloqueHDRI');
+
 import { getSceneById } from '../scene/core/viewerRegistry';
 import { cambiarHDRI, quitarHDRI } from '../scene/environment/hdriManager';
+import { setBackgroundColor } from '../scene/environment/backgroundManager.js';
+
+import { getRendererById } from '../scene/core/viewerRegistry.js';
+const bloqueHDRI = document.getElementById('bloqueHDRI');
 const viewerId = new URLSearchParams(window.location.search).get('viewerId') || 'indexViewer1';
 
 
@@ -35,4 +39,16 @@ async function loadHDRIOptions() {
 }
 
 loadHDRIOptions();
+
+// 👇 Escucha el input del color
+const inputColor = document.getElementById('chooseBgColor');
+if (inputColor) {
+  inputColor.addEventListener('input', () => {
+    const scene = getSceneById(viewerId);
+    const renderer = getRendererById(viewerId);
+    const color = inputColor.value;
+
+    setBackgroundColor(scene, renderer, color);  // ✅ ESTA es la buena
+  });
+}
 
