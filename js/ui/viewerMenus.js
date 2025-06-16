@@ -1,5 +1,5 @@
-import * as THREE from 'three';
 import { getModelById } from '../scene/core/viewerRegistry.js';
+import { aplicarEstilos, restaurarMaterialesOriginales } from '../model/materials.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const btnWorld = document.getElementById('btn-world');
@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let activePanel = null;
   console.log("viewerMenus cargado");
+
+  // === GESTIÓN DE PANELES LATERALES ===
 
   const showPanel = (panel) => {
     menuPanel.style.display = 'block';
@@ -30,6 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
     activePanel = null;
   };
 
+  // Activación del panel correspondiente
   btnWorld?.addEventListener('click', () => {
     if (activePanel === panelWorld) {
       hideAllPanels();
@@ -53,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnGoToCompare) {
     btnGoToCompare.addEventListener('click', () => {
       localStorage.setItem("modeloOrigen", "indexViewer1");
-      localStorage.setItem("from", "viewer");
+      localStorage.setItem("from", "viewer"); // necesario para el botón "volver"
       window.location.href = "/views/splitViewer.html?from=viewer";
     });
   }
@@ -63,44 +66,33 @@ document.addEventListener('DOMContentLoaded', () => {
   const viewerId = new URLSearchParams(window.location.search).get('viewerId') || 'indexViewer1';
   const formModelo = document.getElementById('formStyles');
 
-  // Se ejecuta cada vez que el usuario cambia color, roughness o metalness
+  // Aplicación dinámica de estilos al mover sliders o cambiar color
   formModelo?.addEventListener('input', () => {
-    const model = getModelById(viewerId); // 👈 ahora se obtiene en el momento justo
+    const model = getModelById(viewerId); // se obtiene el modelo activo registrado
     if (!model) return;
 
+    // Captura de valores desde el formulario
     const datos = Object.fromEntries(new FormData(formModelo).entries());
     datos.roughness = parseFloat(datos.roughness) / 1000;
     datos.metalness = parseFloat(datos.metalness) / 1000;
+
+    // Guardamos los estilos para mantenerlos entre sesiones
     localStorage.setItem('estilos', JSON.stringify(datos));
 
-    const nuevoMaterial = new THREE.MeshStandardMaterial({
-      color: new THREE.Color(datos.color),
-      roughness: datos.roughness,
-      metalness: datos.metalness
-    });
-
-    model.traverse(child => {
-      if (child.isMesh) {
-        child.material = nuevoMaterial;
-      }
-    });
+    // Aplicamos el nuevo material
+    aplicarEstilos(model, datos);
   });
 
-  // Botón para restablecer estilos y materiales originales
+  // Botón para restablecer el material original del modelo
   const btnReset = document.getElementById('resetEstilos');
   btnReset?.addEventListener('click', () => {
-    const model = getModelById(viewerId); // 👈 también se obtiene dinámicamente aquí
+    const model = getModelById(viewerId);
     if (!model) return;
 
-    model.traverse(child => {
-      if (child.isMesh && child.userData.originalMaterial) {
-        child.material = child.userData.originalMaterial;
-      }
-    });
+    restaurarMaterialesOriginales(model); // aplica materiales originales
+    localStorage.removeItem("estilos");   // limpiamos estilos guardados
 
-    localStorage.removeItem("estilos");
-
-    // Restaurar valores en el formulario
+    // Restauramos también el estado visual del formulario
     if (formModelo) {
       formModelo.elements["color"].value = "#ffffff";
       formModelo.elements["roughness"].value = 500;
