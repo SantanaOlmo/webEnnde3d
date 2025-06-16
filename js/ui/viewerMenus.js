@@ -1,5 +1,5 @@
 import { getModelById } from '../scene/core/viewerRegistry.js';
-import { aplicarEstilos, restaurarMaterialesOriginales } from '../model/materials.js';
+import { aplicarEstilos, restaurarMaterialesOriginales } from '../scene/model/materials.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const btnWorld = document.getElementById('btn-world');
