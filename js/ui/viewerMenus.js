@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const viewerId = new URLSearchParams(window.location.search).get('viewerId') || 'indexViewer1';
   const formModelo = document.getElementById('formStyles');
 
+
   // Aplicación dinámica de estilos al mover sliders o cambiar color
   formModelo?.addEventListener('input', () => {
     const model = getModelById(viewerId); // se obtiene el modelo activo registrado

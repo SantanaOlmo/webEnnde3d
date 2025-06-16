@@ -1,6 +1,10 @@
 // Ruta: ./js/ui/loadHdriOptions.js
 //GENERA AUTOTMATICAMENTE LAS IMAGENES DE LOS HDRI EN EL ASIDE
 const bloqueHDRI = document.getElementById('bloqueHDRI');
+import { getSceneById } from '../scene/core/viewerRegistry';
+import { cambiarHDRI, quitarHDRI } from '../scene/environment/hdriManager';
+const viewerId = new URLSearchParams(window.location.search).get('viewerId') || 'indexViewer1';
+
 
 async function loadHDRIOptions() {
   try {
@@ -14,6 +18,10 @@ async function loadHDRIOptions() {
       img.alt=`${name}`;
       img.id=`${name}`;
       
+
+      img.addEventListener('click', () =>{
+        cambiarHDRI(getSceneById(viewerId),`${name}.hdr`);
+      })
 
       const div = document.createElement('div');
       div.className = 'tarjeta';
