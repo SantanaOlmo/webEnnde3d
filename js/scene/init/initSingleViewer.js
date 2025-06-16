@@ -10,7 +10,6 @@ import { attachSceneToViewer } from '../environment/backgroundManager.js';
 import { registerScene, updateModel } from '../core/viewerRegistry.js';
 import { initRotationInput } from '../interaction/rotationInput.js';
 
-
 console.log('📦 initSingleViewer.js cargado');
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -38,6 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const { scene, camera, renderer } = initScene(viewerId);
   registerScene(viewerId, { scene, camera, renderer });
   attachSceneToViewer(viewerId, scene);
+
   const controls = addOrbitControls(camera, renderer);
 
   // 🧱 Cargamos el modelo y lo añadimos a la escena
@@ -51,7 +51,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   localStorage.removeItem("modeloOrigen");
 
   initRotationInput(viewerId);
-
 
   // 🖱️ Puedes reactivar el drag & drop si lo deseas
   // handleDragDrop(viewerId);

@@ -4,6 +4,10 @@ import * as THREE from 'three';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import { getSceneById } from '../core/viewerRegistry';
 
+
+let currentHDRI = null; // ✅ Añade esto arriba
+
+
 // Cambiar HDRI desde un archivo
 export function cambiarHDRI(scene, nombreArchivo) {
   const rgbeLoader = new RGBELoader();
