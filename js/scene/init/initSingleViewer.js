@@ -7,6 +7,8 @@ import { initScene } from '../core/initScene.js';
 import { addOrbitControls } from '../core/cameraControls.js';
 import { animate } from '../core/animate.js';
 import { attachSceneToViewer } from '../environment/backgroundManager.js';
+import { registerScene, updateModel } from '../core/viewerRegistry.js';
+
 //import { handleDragDrop } from '../../utils/drag-drop-handler.js';
 
 
@@ -36,9 +38,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // ⚙️ Inicializamos escena y renderizado
   const { scene, camera, renderer } = initScene(viewerId);
+  registerScene(viewerId, { scene, camera, renderer });
   attachSceneToViewer(viewerId, scene);
   const controls = addOrbitControls(camera, renderer);
   await loadModel(scene, fileFromDB);
+  updateModel(viewerId, loadedModel);
   animate(renderer, scene, camera, controls);
 
   // 🧹 Limpiamos el modeloOrigen si lo hubiera

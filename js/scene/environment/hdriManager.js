@@ -2,6 +2,7 @@
 //recibe una ruta hdri, una escena y aplica el fondo
 import * as THREE from 'three';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
+import { getSceneById } from '../core/viewerRegistry';
 
 // Cambiar HDRI desde un archivo
 export function cambiarHDRI(scene, nombreArchivo) {
@@ -13,6 +14,7 @@ export function cambiarHDRI(scene, nombreArchivo) {
     currentHDRI = texture;
   });
 }
+
 
 // Quitar HDRI y dejar fondo blanco
 export function quitarHDRI(scene) {

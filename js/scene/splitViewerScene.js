@@ -82,3 +82,4 @@ setOnFileProcessed(async (file, viewerId) => {
   await loadModel(scene, fileFromDB);
   animate(renderer, scene, camera, controls);
 });
+
