@@ -9,14 +9,10 @@ import { animate } from '../core/animate.js';
 import { attachSceneToViewer } from '../environment/backgroundManager.js';
 import { registerScene, updateModel } from '../core/viewerRegistry.js';
 
-//import { handleDragDrop } from '../../utils/drag-drop-handler.js';
-
-
 console.log('📦 initSingleViewer.js cargado');
 
-// === Cuando el documento esté listo, se lanza la carga del visor ===
 document.addEventListener('DOMContentLoaded', async () => {
-  // 🧭 Obtenemos el viewerId desde la URL (por ejemplo, "indexViewer1")
+  // 🧭 Obtenemos el ID del visor desde la URL
   const viewerId = new URLSearchParams(window.location.search).get('viewerId');
   console.log('🧭 viewerId:', viewerId);
 
@@ -26,7 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  // 📤 Intentamos cargar archivo desde IndexedDB
+  // 📤 Obtenemos el archivo guardado en IndexedDB
   const key = `uploadedModel_${viewerId}`;
   const fileFromDB = await getFileFromIndexedDB(key);
   console.log(`📦 Archivo cargado desde IndexedDB (${key}):`, fileFromDB);
@@ -36,21 +32,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  // ⚙️ Inicializamos escena y renderizado
+  // ⚙️ Inicializamos la escena
   const { scene, camera, renderer } = initScene(viewerId);
   registerScene(viewerId, { scene, camera, renderer });
   attachSceneToViewer(viewerId, scene);
   const controls = addOrbitControls(camera, renderer);
-  await loadModel(scene, fileFromDB);
-  updateModel(viewerId, fileFromDB);
+
+  // 🧱 Cargamos el modelo y lo añadimos a la escena
+  const loadedModel = await loadModel(scene, fileFromDB);
+  updateModel(viewerId, loadedModel); // ✅ Este es el objeto 3D, no el archivo
+
+  // ▶️ Lanzamos la animación
   animate(renderer, scene, camera, controls);
 
-  // 🧹 Limpiamos el modeloOrigen si lo hubiera
+  // 🧹 Limpiamos el flag temporal
   localStorage.removeItem("modeloOrigen");
 
-  // 🖱️ Activamos el drag and drop para este visor (si quieres seguir cargando)
-  //handleDragDrop(IndexViewerId);
-
+  // 🖱️ Puedes reactivar el drag & drop si lo deseas
+  // handleDragDrop(viewerId);
 });
-
-
