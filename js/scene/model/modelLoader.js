@@ -6,6 +6,7 @@ import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { centerAndFitModel } from '../utils/centerFit.js';
 import { guardarVertices } from '../interaction/vertexUtils.js';
+import { crearNubeDePuntos } from '../interaction/vertexUtils.js';
 
 let gltfLoader, stlLoader;
 
@@ -55,9 +56,17 @@ export function loadModel(scene, file) {
       guardarVertices(obj);
       centerAndFitModel(obj, scene);
 
-      console.log("Modelo añadido a la escena correctamente.");
-      resolve(obj);
-    }
+      // === Generar y añadir nube de puntos ===
+      const nube = crearNubeDePuntos(obj);
+      if (nube) {
+        scene.add(nube);
+        scene.userData.nubeDePuntos = nube;
+        nube.visible = false; // Opcional: empieza oculta
+      }
+
+        console.log("Modelo añadido a la escena correctamente.");
+        resolve(obj);
+      }
 
     function onError(err) {
       console.error('Error cargando modelo:', err);

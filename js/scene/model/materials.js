@@ -28,3 +28,31 @@ export function restaurarMaterialesOriginales(model) {
     }
   });
 }
+
+// Cambia entre modo wireframe o sólido (alternativa rápida de visualización)
+export function cambiarMaterial(model, tipo, colorWireframeManual = '#000000') {
+  if (!model) return;
+
+  model.traverse((c) => {
+    if (!c.isMesh || c.isPoints) return;
+    if (!c.userData.originalMaterial) {
+      c.userData.originalMaterial = c.material.clone();
+    }
+
+    if (tipo === 'wireframe') {
+      c.material = new THREE.MeshBasicMaterial({
+        color: new THREE.Color(colorWireframeManual),
+        wireframe: true
+      });
+    } else if (tipo === 'solido') {
+      const datos = JSON.parse(localStorage.getItem('estilos'));
+      c.material = new THREE.MeshStandardMaterial({
+        color:     new THREE.Color(datos?.color || '#ffffff'),
+        roughness: datos?.roughness ?? 0.5,
+        metalness: datos?.metalness ?? 0.5
+      });
+    }
+
+    c.material.needsUpdate = true;
+  });
+}

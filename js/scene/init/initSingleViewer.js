@@ -8,6 +8,8 @@ import { addOrbitControls } from '../core/cameraControls.js';
 import { animate } from '../core/animate.js';
 import { attachSceneToViewer } from '../environment/backgroundManager.js';
 import { registerScene, updateModel } from '../core/viewerRegistry.js';
+import { initRotationInput } from '../interaction/rotationInput.js';
+
 
 console.log('📦 initSingleViewer.js cargado');
 
@@ -47,6 +49,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 🧹 Limpiamos el flag temporal
   localStorage.removeItem("modeloOrigen");
+
+  initRotationInput(viewerId);
+
 
   // 🖱️ Puedes reactivar el drag & drop si lo deseas
   // handleDragDrop(viewerId);
