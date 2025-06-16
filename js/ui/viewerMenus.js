@@ -1,5 +1,6 @@
 import { getModelById } from '../scene/core/viewerRegistry.js';
 import { aplicarEstilos, restaurarMaterialesOriginales, cambiarMaterial} from '../scene/model/materials.js';
+import { toggleNubeDePuntos } from '../scene/interaction/vertexToggle.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const btnWorld = document.getElementById('btn-world');
@@ -101,24 +102,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // === CONTROL DE VISUALIZACIÓN: MALLA / SÓLIDO ===
+  // === CONTROL DE VISUALIZACIÓN: MALLA / SÓLIDO / PUNTOS ===
 
-   const btnWireframe = document.getElementById('wireframe');
-   const btnSolido    = document.getElementById('solido');
+  const btnWireframe = document.getElementById('wireframe');
+  const btnSolido    = document.getElementById('solido');
+  const btnPuntos    = document.getElementById('togglePuntos'); // 👈 NUEVO
 
   btnWireframe?.addEventListener('click', () => {
     const model = getModelById(viewerId);
     if (!model) return;
-
-    // Aplicamos modo malla (wireframe)
     cambiarMaterial(model, 'wireframe', '#000000');
   });
 
-    btnSolido?.addEventListener('click', () => {
+  btnSolido?.addEventListener('click', () => {
     const model = getModelById(viewerId);
     if (!model) return;
-
-    // Volvemos al modo sólido con los estilos actuales
     cambiarMaterial(model, 'solido');
+  });
+
+  btnPuntos?.addEventListener('click', () => {  // 👈 NUEVO
+    const model = getModelById(viewerId);
+    if (!model) return;
+    toggleNubeDePuntos(model);
   });
 });
