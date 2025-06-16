@@ -1,15 +1,13 @@
 
 // js/scene/interaction/vertexToggle.js
 
-import { getSceneByViewerId } from '../core/viewerRegistry.js';
-
 /* Alterna la visibilidad de la nube de puntos en la escena.
  * @param {string} viewerId - ID del visor (por defecto: 'indexViewer1') */
 
-export function toggleNubeDePuntos(viewerId = 'indexViewer1') {
-  const scene = getSceneByViewerId(viewerId);
-  if (!scene) {
-    console.warn(`No se encontró la escena con ID ${viewerId}`);
+export function toggleNubeDePuntos(model) {
+  const scene = model?.parent;
+  if (!scene || !scene.userData) {
+    console.warn("No se pudo acceder a la escena desde el modelo.");
     return;
   }
 
@@ -21,3 +19,4 @@ export function toggleNubeDePuntos(viewerId = 'indexViewer1') {
     console.warn("No hay nube de puntos registrada en esta escena.");
   }
 }
+
