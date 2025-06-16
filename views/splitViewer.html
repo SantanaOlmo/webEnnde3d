@@ -5,15 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Comparacion de modelos</title>
     <link rel="icon" href="../assets/img/ennde3d_icon.png" type="image/png">
-    <link rel="stylesheet" href="/styles/bootstrap.css">
-    <link rel="stylesheet" href="/styles/splitViewer.css">
-    <script defer src="/js/resizer.js"></script>
-    <link rel="stylesheet" href="/styles/loader.css">
-    <script defer type="module" src="/js/scene/db/model-upload.js"></script>
-    <script defer type="module" src="/js/scene/splitViewerScene.js"></script>
-    <script defer type="module" src="/js/ui/viewerMenus.js"></script>
-    <script type="module" src="/js/loader.js" defer></script>
+    <link rel="stylesheet" href="../styles/bootstrap.css">
+    <link rel="stylesheet" href="../styles/splitViewer.css">
+    <script defer src="../js/resizer.js"></script>
+    <link rel="stylesheet" href="../styles/loader.css">
+    <script defer type="module" src="../js/scene/db/model-upload.js"></script>
+    <script defer type="module" src="../js/scene/splitViewerScene.js"></script>
+    <script defer type="module" src="../js/ui/viewerMenus.js"></script>
+    <script type="module" src="../js/loader.js" defer></script>
     <link rel="stylesheet" href="../styles/sidebar.css">
+    <script type="module" src="/js/ui/loadHdriOptions.js" defer></script>   
+
+    
 
 </head>
 <body class="bg-black">
@@ -109,10 +112,37 @@
                         </button>
                     </div>
                     <div id="menuPanel" class="menu-panel overflow-hidden ">
-                        <div id="menu-world" class="menu-content d-none h-100">Menú Mundo hola hola
+                        <div id="menu-world" class="menu-content d-none h-100 w-100">
+                        <!-- <h2>Environment</h2>-->
+                        <div id="bloqueHDRI" class="opcionesHDRI h-100 d-flex flex-row flex-lg-column ">
+                            <div class="colorEnv tarjeta ">
+                            <input type="color" name="color" id="chooseColor" class="input color-picker envOption">
+                            </div>
                             
                         </div>
-                        <div id="menu-modelo" class="menu-content d-none h-100">Menú Modelo</div>
+                    </div>
+                    <div id="menu-modelo" class="menu-content d-none h-100">
+                        <h2>Modelo</h2>
+                        <form id="formStyles">
+                            <label for="color">Color:</label>
+                            <input type="color" name="color" id="chooseColor" class="input">
+                            <label for="roughness">Roughness:</label>
+                            <input type="range" name="roughness" min="0" max="1000">  
+                            <label for="metalness">Metalness:</label>
+                            <input type="range" name="metalness" min="0" max="1000">
+                            <div id="previewTexturas"></div>
+                            <button type="button" id="resetEstilos">Restablecer</button>
+                        </form>
+                        <div id="mallas" class="d-flex ">
+                            <button class="botonMalla" id="wireframe">malla</button>
+                            <button class="botonMalla" id="solido">solido</button>
+                            <button class="botonMalla" id="togglePuntos">puntos</button>
+                        </div>
+                            <div id="wireframeOptions" style="margin-top: 1em;">
+                            <label for="wireframeColor" style="color: #eee;">Color de la malla:</label><br>
+                            <input type="color" id="wireframeColor" value="#d95e7d">
+                        </div>
+
                     </div>
                 </aside>
 
