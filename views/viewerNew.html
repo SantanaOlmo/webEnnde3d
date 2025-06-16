@@ -9,7 +9,7 @@
   <link rel="icon" href="../assets/img/ennde3d_icon.png" type="image/png">
 
   <!-- Estilos comunes y específicos -->
-  <link rel="stylesheet" href="/styles/bootstrap.css">    
+  <link rel="stylesheet" href="/styles/bootstrap.css"> 
   <link rel="stylesheet" href="/styles/scrollbar.css">   
   <link rel="stylesheet" href="/styles/loader.css">           
   <link rel="stylesheet" href="/styles/sidebar.css">          
@@ -21,7 +21,9 @@
   <script type="module" src="/js/loader.js" defer></script>                      
   <script type="module" src="/js/scene/init/initSingleViewer.js" defer></script> 
   <script type="module" src="/js/ui/viewerMenus.js" defer></script>     
-  <script type="module" src="/js/ui/loadHdriOptions.js" defer></script>         
+  <script type="module" src="/js/ui/loadHdriOptions.js" defer></script>    
+  <script type="module" src="/js/utils/tooltips.js"></script>     
+  <script type="module" src="/js/bootstrap.bundle.js"></script>
 </head>
 
 <body class="bg-black">
@@ -59,21 +61,26 @@
     <!-- SIDEBAR CON ICONOS -->
     <aside id="sidebar" class="sidebar">
       <div id="toolbar" class="d-flex flex-row flex-lg-column align-items-center justify-content-center gap-5">
-        <button id="btn-world" class="btnPrincipales world">
+        <button id="btn-world" class="btnPrincipales world" data-bs-toggle="tooltip" title="Personaliza la escena">
           <img class="options-sidebar world" src="../assets/icons/world.svg" alt="world">
         </button>
-        <button class="material btnPrincipales" id="btn-axes">
+
+        <button id="btn-axes" class="btnPrincipales material" data-bs-toggle="tooltip" title="Personaliza el modelo">
           <img class="options-sidebar monkey" src="../assets/icons/monkey.svg" alt="monkey">
         </button>
-        <button class="magnet btnPrincipales" id="btn-material">
+
+        <button id="btn-material" class="btnPrincipales magnet" data-bs-toggle="tooltip" title="Contrólalo todo a la vez">
           <img class="options-sidebar linked" src="../assets/icons/linked.svg" alt="link">
         </button>
-        <button class="info btnPrincipales">
+
+        <button id="btn-info" class="btnPrincipales info">
           <img class="options-sidebar info" src="../assets/icons/info.svg" alt="info">
         </button>
-        <button id="btn-goToCompare" class="btnPrincipales compare">
-        <img class="options-sidebar" src="../assets/icons/split_vertical.svg" alt="Comparar modelos">
+
+        <button id="btn-goToCompare" class="btnPrincipales compare" data-bs-toggle="tooltip" title="Compara dos modelos 3D">
+          <img class="options-sidebar" src="../assets/icons/split_vertical.svg" alt="Comparar modelos">
         </button>
+
 
       </div>
 

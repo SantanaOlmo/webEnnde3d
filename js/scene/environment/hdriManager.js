@@ -3,14 +3,29 @@
 import * as THREE from 'three';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 
-export async function setHdriEnvironment(path, scene, renderer) {
-  const pmremGenerator = new THREE.PMREMGenerator(renderer);
-  const texture = await new RGBELoader().loadAsync(path);
-  const envMap = pmremGenerator.fromEquirectangular(texture).texture;
+// Cambiar HDRI desde un archivo
+export function cambiarHDRI(scene, nombreArchivo) {
+  const rgbeLoader = new RGBELoader();
+  rgbeLoader.load(`/assets/hdri/${nombreArchivo}`, (texture) => {
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+    scene.background  = texture;
+    scene.environment = texture;
+    currentHDRI = texture;
+  });
+}
 
-  scene.environment = envMap;
-  scene.background = envMap;
+// Quitar HDRI y dejar fondo blanco
+export function quitarHDRI(scene) {
+  scene.background  = new THREE.Color(0xffffff);
+  scene.environment = null;
+  currentHDRI = null;
+}
 
-  texture.dispose();
-  pmremGenerator.dispose();
+// Cambiar color de fondo sólido
+export function cambiarColorFondo(scene, renderer, colorHex) {
+  if (scene && renderer) {
+    const color = new THREE.Color(colorHex);
+    scene.background = color;
+    renderer.setClearColor(color);
+  }
 }

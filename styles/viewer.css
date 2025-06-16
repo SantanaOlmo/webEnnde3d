@@ -88,7 +88,6 @@ html, body {
   pointer-events: none;
   height: 100px;
   display: none;  
-  border: 2px solid red;
   padding: 5px;
 }
 
@@ -174,4 +173,5 @@ input[type=color]{
 .menu-content{
   padding: 0px;
 }
+
 }

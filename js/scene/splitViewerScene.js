@@ -17,14 +17,16 @@ import { attachSceneToViewer } from './environment/backgroundManager.js';
 import { setupDragAndDrop } from '../utils/drag-drop-handler.js';
 import { handleFile } from './db/model-upload.js';
 
-initViewerSwitchUI();
+
 
 // === CARGA AUTOMÁTICA EN viewer1 SI VIENES DEL VISOR INDIVIDUAL ===
 const modeloOrigen = localStorage.getItem("modeloOrigen");
 
 // Detectamos si existe 'indexViewer1' o 'viewer1'
 const viewer1Id = document.getElementById("indexViewer1") ? "indexViewer1" : "viewer1";
-const viewer1Container = document.getElementById(viewer1Id);
+console.log("🎯 viewer1Id detectado:", viewer1Id);
+initViewerSwitchUI(viewer1Id); // <--- PASAMOS EL ID CORRECTO
+
 
 if (modeloOrigen) {
   const key = `uploadedModel_${modeloOrigen}`; // normalmente 'uploadedModel_indexViewer1'
