@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   attachSceneToViewer(viewerId, scene);
   const controls = addOrbitControls(camera, renderer);
   await loadModel(scene, fileFromDB);
-  updateModel(viewerId, loadedModel);
+  updateModel(viewerId, fileFromDB);
   animate(renderer, scene, camera, controls);
 
   // 🧹 Limpiamos el modeloOrigen si lo hubiera
