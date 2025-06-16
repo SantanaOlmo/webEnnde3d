@@ -17,7 +17,7 @@ export function toggleSyncMode() {
 
 export function initViewerSwitchUI(viewer1Id = 'viewer1') {
   const button = document.getElementById('btn-SwitchViewer');
-
+  
   function updateUI() {
 
     button.style.backgroundColor = activeViewer === 1 ? 'green' : 'blue';
