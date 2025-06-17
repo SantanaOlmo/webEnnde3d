@@ -1,3 +1,4 @@
+// ./js/resizer.js
 const contenido = document.querySelector('.contenido');
 const leftPanel = document.querySelector('.c-viewer1');
 const rightPanel = document.querySelector('.c-viewer2');

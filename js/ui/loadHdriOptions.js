@@ -1,12 +1,4 @@
-// js/ui/loadHdriOptions.js
-// Genera automáticamente las imágenes de los HDRI en el aside
-
-
-import {
-  getSceneById,
-  getRendererById
-} from '../scene/core/viewerRegistry.js';
-
+// Ruta: js/ui/loadHdriOptions.js
 import {
   cambiarHDRI,
   quitarHDRI
@@ -14,8 +6,9 @@ import {
 
 import { setBackgroundColor } from '../scene/environment/backgroundManager.js';
 
+import { applyToRelevantViewers } from '../scene/core/sceneSyncUtils.js';
+
 const bloqueHDRI = document.getElementById('bloqueHDRI');
-const viewerId = new URLSearchParams(window.location.search).get('viewerId') || 'indexViewer1';
 
 async function loadHDRIOptions() {
   try {
@@ -29,9 +22,13 @@ async function loadHDRIOptions() {
       img.alt = name;
       img.id = name;
 
-      img.addEventListener('click', () => {
-        cambiarHDRI(getSceneById(viewerId), `${name}.hdr`);
-      });
+    img.addEventListener('click', () => {
+      console.log("🧪 Click en HDRI:", name);
+        applyToRelevantViewers(({ viewerId, scene }) => {
+          console.log("➡️ [split] Aplicando HDRI a:", viewerId, scene);
+          cambiarHDRI(scene, `${name}.hdr`);
+        });
+    });
 
       const div = document.createElement('div');
       div.className = 'tarjeta';
@@ -46,16 +43,14 @@ async function loadHDRIOptions() {
 
 loadHDRIOptions();
 
-// 👇 Escucha el input del color
 const inputColor = document.getElementById('chooseBgColor');
 if (inputColor) {
   inputColor.addEventListener('input', () => {
-    const scene = getSceneById(viewerId);
-    const renderer = getRendererById(viewerId);
     const color = inputColor.value;
 
-    quitarHDRI(scene); // ✅ Esto desactiva el HDR activo
-    setBackgroundColor(scene, renderer, color); // ✅ Y ahora el color se ve
+    applyToRelevantViewers(({ scene, renderer }) => {
+      quitarHDRI(scene);
+      setBackgroundColor(scene, renderer, color);
+    });
   });
 }
-

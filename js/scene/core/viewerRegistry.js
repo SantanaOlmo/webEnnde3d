@@ -1,18 +1,20 @@
-// js/scene/core/viewerRegistry.js
+// Ruta: js/scene/core/viewerRegistry.js
 
 const scenes = new Map();
 
-export function registerScene(viewerId, { scene, camera, renderer, model = null }) {
-  scenes.set(viewerId, { scene, camera, renderer, model });
+export function registerScene(viewerId, { scene, camera, renderer, model = null, controls = null }) {
+  scenes.set(viewerId, { scene, camera, renderer, model, controls });
 }
 
-// Setters
+export function registerViewer(id, scene, camera, renderer, model, controls) {
+  scenes.set(id, { scene, camera, renderer, model, controls });
+}
+
 export function updateModel(viewerId, model) {
   const entry = scenes.get(viewerId);
   if (entry) entry.model = model;
 }
 
-// Getters
 export function getSceneById(viewerId) {
   return scenes.get(viewerId)?.scene || null;
 }
@@ -29,5 +31,6 @@ export function getModelById(viewerId) {
   return scenes.get(viewerId)?.model || null;
 }
 
-
-
+export function getControlsById(viewerId) {
+  return scenes.get(viewerId)?.controls || null;
+}

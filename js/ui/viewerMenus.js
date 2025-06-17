@@ -1,6 +1,18 @@
-import { getSceneById, getModelById } from '../scene/core/viewerRegistry.js';
-import { aplicarEstilos, restaurarMaterialesOriginales, cambiarMaterial } from '../scene/model/materials.js';
+// Ruta: js/ui/viewerMenus.js
+import {
+  getSceneById,
+  getModelById
+} from '../scene/core/viewerRegistry.js';
+
+import {
+  aplicarEstilos,
+  restaurarMaterialesOriginales,
+  cambiarMaterial
+} from '../scene/model/materials.js';
+
 import { toggleNubeDePuntos } from '../scene/interaction/vertexToggle.js';
+
+import { applyToRelevantViewers } from '../scene/core/sceneSyncUtils.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const btnWorld = document.getElementById('btn-world');
@@ -14,9 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
   menuPanel.style.display = 'none';
 
   let activePanel = null;
-  console.log("viewerMenus cargado");
 
-  // === GESTIÓN DE PANELES LATERALES ===
   const showPanel = (panel) => {
     menuPanel.style.display = 'block';
     menuPanel.classList.add('show');
@@ -33,25 +43,13 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   btnWorld?.addEventListener('click', () => {
-    if (activePanel === panelWorld) {
-      hideAllPanels();
-    } else {
-      hideAllPanels();
-      showPanel(panelWorld);
-    }
+    activePanel === panelWorld ? hideAllPanels() : (hideAllPanels(), showPanel(panelWorld));
   });
 
   btnModelo?.addEventListener('click', () => {
-    if (activePanel === panelModelo) {
-      hideAllPanels();
-      showPanel(panelModelo);
-    } else {
-      hideAllPanels();
-      showPanel(panelModelo);
-    }
+    activePanel === panelModelo ? hideAllPanels() : (hideAllPanels(), showPanel(panelModelo));
   });
 
-  // Redirección al visor comparativo
   if (btnGoToCompare) {
     btnGoToCompare.addEventListener('click', () => {
       localStorage.setItem("modeloOrigen", "indexViewer1");
@@ -60,28 +58,25 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // === CONTROL DE ESTILO DEL MODELO ===
-  const viewerId = new URLSearchParams(window.location.search).get('viewerId') || 'indexViewer1';
   const formModelo = document.getElementById('formStyles');
-
   formModelo?.addEventListener('input', () => {
-    const model = getModelById(viewerId);
-    if (!model) return;
-
     const datos = Object.fromEntries(new FormData(formModelo).entries());
     datos.roughness = parseFloat(datos.roughness) / 1000;
     datos.metalness = parseFloat(datos.metalness) / 1000;
-
     localStorage.setItem('estilos', JSON.stringify(datos));
-    aplicarEstilos(model, datos);
+
+    applyToRelevantViewers(({ model }) => {
+      if (model) aplicarEstilos(model, datos);
+    });
   });
 
   const btnReset = document.getElementById('resetEstilos');
   btnReset?.addEventListener('click', () => {
-    const model = getModelById(viewerId);
-    if (!model) return;
+    applyToRelevantViewers(({ model }) => {
+      if (!model) return;
+      restaurarMaterialesOriginales(model);
+    });
 
-    restaurarMaterialesOriginales(model);
     localStorage.removeItem("estilos");
 
     if (formModelo) {
@@ -91,53 +86,50 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // === CONTROL DE VISUALIZACIÓN: MALLA / SÓLIDO / PUNTOS ===
   const btnWireframe = document.getElementById('wireframe');
-  const btnSolido    = document.getElementById('solido');
-  const btnPuntos    = document.getElementById('togglePuntos');
+  const btnSolido = document.getElementById('solido');
+  const btnPuntos = document.getElementById('togglePuntos');
 
   btnWireframe?.addEventListener('click', () => {
-    const model = getModelById(viewerId);
-    if (!model) return;
-    cambiarMaterial(model, 'wireframe', '#000000');
+    applyToRelevantViewers(({ model }) => {
+      if (model) cambiarMaterial(model, 'wireframe', '#000000');
+    });
   });
 
   btnSolido?.addEventListener('click', () => {
-    const model = getModelById(viewerId);
-    if (!model) return;
-    cambiarMaterial(model, 'solido');
+    applyToRelevantViewers(({ model }) => {
+      if (model) cambiarMaterial(model, 'solido');
+    });
   });
 
   btnPuntos?.addEventListener('click', () => {
-    const model = getModelById(viewerId);
-    if (!model) return;
-    toggleNubeDePuntos(model);
+    applyToRelevantViewers(({ model }) => {
+      if (model) toggleNubeDePuntos(model);
+    });
   });
 
-  // Al final del mismo bloque
-    const scene = getSceneById(viewerId);
+  const btnEjes = document.getElementById('toggleAxes');
+  const btnGrid = document.getElementById('toggleGrid');
 
-    const btnEjes = document.getElementById('toggleAxes');
-    const btnGrid = document.getElementById('toggleGrid');
-
-  // Esperar unos milisegundos hasta que la escena se registre
   setTimeout(() => {
-    const scene = getSceneById(viewerId);
-    if (!scene) {
-      console.warn("⚠️ La escena aún no está disponible.");
-      return;
-    }
+    applyToRelevantViewers(({ scene }) => {
+      btnEjes?.addEventListener('click', () => {
+        const ejes = scene.getObjectByName('helper_ejes');
+        if (ejes) ejes.visible = !ejes.visible;
+      });
 
-    btnEjes?.addEventListener('click', () => {
-      const ejes = scene.getObjectByName('helper_ejes');
-      if (ejes) ejes.visible = !ejes.visible;
+      btnGrid?.addEventListener('click', () => {
+        const grid = scene.getObjectByName('helper_grid');
+        if (grid) grid.visible = !grid.visible;
+      });
     });
+  }, 200);
+});
 
-    btnGrid?.addEventListener('click', () => {
-      const grid = scene.getObjectByName('helper_grid');
-      if (grid) grid.visible = !grid.visible;
-    });
-  }, 200); // Puedes ajustar este valor si hiciera falta
+import { toggleSyncMode } from './viewerSwitch.js';
 
-
+const btnSync = document.getElementById('btn-material');
+btnSync?.addEventListener('click', () => {
+  const sync = toggleSyncMode();
+  btnSync.style.backgroundColor = sync ? 'green' : '';
 });
