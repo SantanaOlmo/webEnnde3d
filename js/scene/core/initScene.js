@@ -1,5 +1,6 @@
 // js/scene/core/initScene.js
 import * as THREE from 'three';
+import { crearEjes, crearGrid } from './helpers.js';
 
 export function initScene(containerId) {
   const container = document.getElementById(containerId);
@@ -22,8 +23,17 @@ export function initScene(containerId) {
   directionalLight.position.set(5, 10, 7.5);
   scene.add(directionalLight);
 
-const ambientLight = new THREE.AmbientLight(0x404040, 1.5); 
+  const ambientLight = new THREE.AmbientLight(0x404040, 1.5); 
   scene.add(ambientLight);
+
+  // ✅ Añadir ejes y cuadrícula solo si es un visor principal
+  if (containerId === 'indexViewer1' || containerId === 'viewer1' || containerId === 'viewer2') {
+    const ejes = crearEjes();
+    const grid = crearGrid();
+
+    scene.add(ejes);
+    scene.add(grid);
+  }
 
   // ResizeObserver para actualizar el render si cambia el tamaño del contenedor
   const observer = new ResizeObserver(() => {
@@ -36,3 +46,4 @@ const ambientLight = new THREE.AmbientLight(0x404040, 1.5);
 
   return { scene, camera, renderer };
 }
+
