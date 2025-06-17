@@ -1,8 +1,12 @@
 /* =========================== */
 /*         viewer.css          */
 /* =========================== */
+
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
+*{
+  --ennde-:#a84a64;
+}
 html, body {
   margin: 0;
   padding: 0;
@@ -98,6 +102,14 @@ html, body {
   padding: 0.4rem;
   border-radius: 8px;
   cursor: pointer;
+  transition: all  .1s ease-in-out;
+
+}
+.helper-icons button:hover {
+  background: var(--ennde-);
+  border: none;
+  transform: scale(1.1);
+  transition:all .1s ease-in-out;
 }
 
 .helper-icons button img {
