@@ -1,5 +1,6 @@
 import { getModelById } from '../scene/core/viewerRegistry.js';
-import { aplicarEstilos, restaurarMaterialesOriginales } from '../scene/model/materials.js';
+import { aplicarEstilos, restaurarMaterialesOriginales, cambiarMaterial } from '../scene/model/materials.js';
+import { toggleNubeDePuntos } from '../scene/interaction/vertexToggle.js';
 
 document.addEventListener('DOMContentLoaded', () => {
   const btnWorld = document.getElementById('btn-world');
@@ -16,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
   console.log("viewerMenus cargado");
 
   // === GESTIÓN DE PANELES LATERALES ===
-
   const showPanel = (panel) => {
     menuPanel.style.display = 'block';
     menuPanel.classList.add('show');
@@ -32,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
     activePanel = null;
   };
 
-  // Activación del panel correspondiente
   btnWorld?.addEventListener('click', () => {
     if (activePanel === panelWorld) {
       hideAllPanels();
@@ -52,52 +51,66 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Redirección al visor comparativo desde botón lateral
+  // Redirección al visor comparativo
   if (btnGoToCompare) {
     btnGoToCompare.addEventListener('click', () => {
       localStorage.setItem("modeloOrigen", "indexViewer1");
-      localStorage.setItem("from", "viewer"); // necesario para el botón "volver"
+      localStorage.setItem("from", "viewer");
       window.location.href = "/views/splitViewer.html?from=viewer";
     });
   }
 
   // === CONTROL DE ESTILO DEL MODELO ===
-
   const viewerId = new URLSearchParams(window.location.search).get('viewerId') || 'indexViewer1';
   const formModelo = document.getElementById('formStyles');
 
-
-  // Aplicación dinámica de estilos al mover sliders o cambiar color
   formModelo?.addEventListener('input', () => {
-    const model = getModelById(viewerId); // se obtiene el modelo activo registrado
+    const model = getModelById(viewerId);
     if (!model) return;
 
-    // Captura de valores desde el formulario
     const datos = Object.fromEntries(new FormData(formModelo).entries());
     datos.roughness = parseFloat(datos.roughness) / 1000;
     datos.metalness = parseFloat(datos.metalness) / 1000;
 
-    // Guardamos los estilos para mantenerlos entre sesiones
     localStorage.setItem('estilos', JSON.stringify(datos));
-
-    // Aplicamos el nuevo material
     aplicarEstilos(model, datos);
   });
 
-  // Botón para restablecer el material original del modelo
   const btnReset = document.getElementById('resetEstilos');
   btnReset?.addEventListener('click', () => {
     const model = getModelById(viewerId);
     if (!model) return;
 
-    restaurarMaterialesOriginales(model); // aplica materiales originales
-    localStorage.removeItem("estilos");   // limpiamos estilos guardados
+    restaurarMaterialesOriginales(model);
+    localStorage.removeItem("estilos");
 
-    // Restauramos también el estado visual del formulario
     if (formModelo) {
       formModelo.elements["color"].value = "#ffffff";
       formModelo.elements["roughness"].value = 500;
       formModelo.elements["metalness"].value = 500;
     }
+  });
+
+  // === CONTROL DE VISUALIZACIÓN: MALLA / SÓLIDO / PUNTOS ===
+  const btnWireframe = document.getElementById('wireframe');
+  const btnSolido    = document.getElementById('solido');
+  const btnPuntos    = document.getElementById('togglePuntos');
+
+  btnWireframe?.addEventListener('click', () => {
+    const model = getModelById(viewerId);
+    if (!model) return;
+    cambiarMaterial(model, 'wireframe', '#000000');
+  });
+
+  btnSolido?.addEventListener('click', () => {
+    const model = getModelById(viewerId);
+    if (!model) return;
+    cambiarMaterial(model, 'solido');
+  });
+
+  btnPuntos?.addEventListener('click', () => {
+    const model = getModelById(viewerId);
+    if (!model) return;
+    toggleNubeDePuntos(model);
   });
 });
