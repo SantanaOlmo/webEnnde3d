@@ -1,21 +1,17 @@
-/* Firefox */
-* {
-  scrollbar-width: thin;              
-  scrollbar-color: #a7a7a7 transparent;  /* thumb | track */
-}
 
 /* WebKit (Chrome, Edge, Safari) */
 *::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 0px;
+  height: 0px;
+  display: none;
 }
 
 *::-webkit-scrollbar-track {
-  background: transparent;  /* Track completamente invisible */
+  background: transparent;  
 }
 
 *::-webkit-scrollbar-thumb {
-  background-color: #814b4b;
+  background-color: #afafaf;
   border-radius: 0px;
   border: 2px solid transparent;
   background-clip: border-box;
@@ -29,5 +25,4 @@
   display: none;
   height: 0;
   width: 0;
-}
-
+} 
