@@ -7,6 +7,7 @@ import { initScene } from '../core/initScene.js';
 import { addOrbitControls } from '../core/cameraControls.js';
 import { animate } from '../core/animate.js';
 import { attachSceneToViewer } from '../environment/backgroundManager.js';
+import { cambiarHDRI } from '../environment/hdriManager.js';
 import { registerScene, updateModel } from '../core/viewerRegistry.js';
 import { initRotationInput } from '../interaction/rotationInput.js';
 
@@ -39,6 +40,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   attachSceneToViewer(viewerId, scene);
 
   const controls = addOrbitControls(camera, renderer);
+
+  // 🖼️ Cambiamos el HDRI de fondo inicialmente
+  cambiarHDRI(scene, 'campo.hdr');
 
   // 🧱 Cargamos el modelo y lo añadimos a la escena
   const loadedModel = await loadModel(scene, fileFromDB);
