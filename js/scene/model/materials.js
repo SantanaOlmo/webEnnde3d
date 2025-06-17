@@ -56,3 +56,12 @@ export function cambiarMaterial(model, tipo, colorWireframeManual = '#000000') {
     c.material.needsUpdate = true;
   });
 }
+
+export function actualizarColorWireframe(modelo, nuevoColor) {
+  modelo.traverse((c) => {
+    if (c.isMesh && c.material.wireframe) {
+      c.material.color = new THREE.Color(nuevoColor);
+      c.material.needsUpdate = true;
+    }
+  });
+}

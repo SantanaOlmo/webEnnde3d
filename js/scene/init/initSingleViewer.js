@@ -13,7 +13,7 @@ import { cambiarHDRI } from '../environment/hdriManager.js';
 import { registerScene, updateModel } from '../core/viewerRegistry.js';
 import { initRotationInput } from '../interaction/rotationInput.js';
 import { initVertexRaycast } from '../interaction/vertexRaycast.js';
-
+import { actualizarColorWireframe } from '../model/materials.js';
 
 console.log('📦 initSingleViewer.js cargado');
 
@@ -53,6 +53,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   updateModel(viewerId, loadedModel); // ✅ Este es el objeto 3D, no el archivo
   initVertexRaycast(renderer, camera, loadedModel);
 
+// 🎨 Color de la malla
+const colorInput = document.getElementById('wireframeColor');
+if (colorInput) {
+  colorInput.addEventListener('input', () => {
+    actualizarColorWireframe(loadedModel, colorInput.value);
+  });
+}
 
 
   // Mostrar controles de helpers tras cargar modelo
