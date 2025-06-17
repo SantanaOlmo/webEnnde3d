@@ -1,4 +1,4 @@
-import { getModelById } from '../scene/core/viewerRegistry.js';
+import { getSceneById, getModelById } from '../scene/core/viewerRegistry.js';
 import { aplicarEstilos, restaurarMaterialesOriginales, cambiarMaterial } from '../scene/model/materials.js';
 import { toggleNubeDePuntos } from '../scene/interaction/vertexToggle.js';
 
@@ -113,4 +113,31 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!model) return;
     toggleNubeDePuntos(model);
   });
+
+  // Al final del mismo bloque
+    const scene = getSceneById(viewerId);
+
+    const btnEjes = document.getElementById('toggleAxes');
+    const btnGrid = document.getElementById('toggleGrid');
+
+  // Esperar unos milisegundos hasta que la escena se registre
+  setTimeout(() => {
+    const scene = getSceneById(viewerId);
+    if (!scene) {
+      console.warn("⚠️ La escena aún no está disponible.");
+      return;
+    }
+
+    btnEjes?.addEventListener('click', () => {
+      const ejes = scene.getObjectByName('helper_ejes');
+      if (ejes) ejes.visible = !ejes.visible;
+    });
+
+    btnGrid?.addEventListener('click', () => {
+      const grid = scene.getObjectByName('helper_grid');
+      if (grid) grid.visible = !grid.visible;
+    });
+  }, 200); // Puedes ajustar este valor si hiciera falta
+
+
 });

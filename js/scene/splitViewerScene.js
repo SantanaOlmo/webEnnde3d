@@ -63,26 +63,30 @@ setupDragAndDrop({
   viewerId: 'viewer2'
 });
 
-// === CUANDO SE CARGA UN ARCHIVO EN CUALQUIER VISOR ===
+// CUANDO SE CARGA UN ARCHIVO EN CUALQUIER VISOR
 setOnFileProcessed(async (file, viewerId) => {
   console.log(`📥 Archivo soltado en ${viewerId}: ${file.name}`);
+
+  // Mostrar helper-icons del visor correspondiente
+  const helperIcons = document.querySelector(`#${viewerId} .helper-icons`);
+  if (helperIcons) {
+    helperIcons.style.display = "flex";  // Aquí activamos los botones
+  }
 
   const container = document.getElementById(viewerId);
   if (!container) return;
 
-  // Limpieza previa
   container.innerHTML = '';
 
-  // ✅ Siempre se inicializa escena al cargar archivo
   const { scene, camera, renderer } = initScene(viewerId);
   attachSceneToViewer(viewerId, scene);
   const controls = addOrbitControls(camera, renderer);
 
-  // Cargamos el modelo desde IndexedDB (ya guardado)
   const fileFromDB = await getFileFromIndexedDB(`uploadedModel_${viewerId}`);
   if (!fileFromDB) return;
 
   await loadModel(scene, fileFromDB);
   animate(renderer, scene, camera, controls);
 });
+
 

@@ -1,157 +1,160 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comparacion de modelos</title>
-    <link rel="icon" href="../assets/img/ennde3d_icon.png" type="image/png">
-    <link rel="stylesheet" href="../styles/bootstrap.css">
-    <link rel="stylesheet" href="../styles/splitViewer.css">
-    <script defer src="../js/resizer.js"></script>
-    <link rel="stylesheet" href="../styles/loader.css">
-    <script defer type="module" src="../js/scene/db/model-upload.js"></script>
-    <script defer type="module" src="../js/scene/splitViewerScene.js"></script>
-    <script defer type="module" src="../js/ui/viewerMenus.js"></script>
-    <script type="module" src="../js/loader.js" defer></script>
-    <link rel="stylesheet" href="../styles/sidebar.css">
-    <script type="module" src="/js/ui/loadHdriOptions.js" defer></script>   
-
-    
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Comparacion de modelos</title>
+  <link rel="icon" href="../assets/img/ennde3d_icon.png" type="image/png" />
+  <link rel="stylesheet" href="../styles/bootstrap.css" />
+  <link rel="stylesheet" href="../styles/splitViewer.css" />
+  <link rel="stylesheet" href="../styles/loader.css" />
+  <link rel="stylesheet" href="../styles/sidebar.css" />
+  <script defer src="../js/resizer.js"></script>
+  <script defer type="module" src="../js/scene/db/model-upload.js"></script>
+  <script defer type="module" src="../js/scene/splitViewerScene.js"></script>
+  <script defer type="module" src="../js/ui/viewerMenus.js"></script>
+  <script defer type="module" src="../js/loader.js"></script>
+  <script defer type="module" src="/js/ui/loadHdriOptions.js"></script>
 </head>
+
 <body class="bg-black">
-    <div id="loader-container">
-       <div class="scene">
-            <div class="cube-wrapper">
-                <div class="cube">
-                    <div class="cube-faces">
-                        <div class="cube-face shadow"></div>
-                        <div class="cube-face bottom"></div>
-                        <div class="cube-face top"></div>
-                        <div class="cube-face left"></div>
-                        <div class="cube-face right"></div>
-                        <div class="cube-face back"></div>
-                        <div class="cube-face front"></div>
-                    </div>
-                </div>
+  <!-- LOADER INICIAL CON CUBO -->
+  <div id="loader-container">
+    <div class="scene">
+      <div class="cube-wrapper">
+        <div class="cube">
+          <div class="cube-faces">
+            <div class="cube-face shadow"></div>
+            <div class="cube-face bottom"></div>
+            <div class="cube-face top"></div>
+            <div class="cube-face left"></div>
+            <div class="cube-face right"></div>
+            <div class="cube-face back"></div>
+            <div class="cube-face front"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENEDOR GENERAL -->
+  <div id="container">
+    <input type="file" id="inputFile" style="display: none" />
+
+    <!-- BOTÓN DE RETORNO -->
+    <button id="back">
+      <svg fill="#000000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M15 18l-6-6 6-6" />
+      </svg>
+    </button>
+
+    <script>
+      document.getElementById("back").addEventListener("click", () => {
+        const from = localStorage.getItem("from");
+        if (from === "viewer") {
+          const viewerId = localStorage.getItem("modeloOrigen");
+          window.location.href = `/views/viewerNew.html${viewerId ? `?viewerId=${viewerId}` : ""}`;
+        } else {
+          window.location.href = "/index.html";
+        }
+      });
+    </script>
+    <div class="d-flex flex-column flex-lg-row h-100">
+    <div class="flex-grow-1 d-flex flex-column flex-lg-row flex-wrap">
+        <!-- VISOR IZQUIERDO -->
+        <div class="c-viewer1 col-12 col-lg-6 p-1">
+            <div class="viewer1 rounded-2 position-relative" id="indexViewer1">
+                <!-- Icono "+" -->
+                    +
+                    <input class="d-none" id="inputFile1" type="file"/>
+                    <!-- Botones de ejes y cuadrícula -->
+                    <div class="helper-icons" style="display: none;">
+                    <button class="toggleAxes" title="Mostrar/ocultar ejes">
+                           <img alt="ejes" src="../assets/icons/empty_arrows.svg"/>
+                    </button>
+                        <button class="toggleGrid" title="Mostrar/ocultar cuadrícula">
+                        <img alt="cuadrícula" src="../assets/icons/grid.svg"/>
+                    </button>
             </div>
         </div>
     </div>
-    
-    <div id="container">
-        <input type="file" id="inputFile" style="display: none;">
-        <div class="contenido row visible b ">
-            <button id="back">
-        <svg fill="#000000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
-        </button>
-
-        <script>
-        // Detectar parámetro en la URL
-        const params = new URLSearchParams(window.location.search);
-        const from = params.get('from');
-
-
-                    // Botón de volver atrás en el visor comparativo
-            document.getElementById("back").addEventListener("click", () => {
-                // Recuperamos el origen desde localStorage (puede ser 'viewer' o 'index')
-                const from = localStorage.getItem("from");
-
-                if (from === 'viewer') {
-                    // Recuperamos el viewerId original guardado al venir desde viewer.html
-                    const viewerId = localStorage.getItem("modeloOrigen");
-
-                    if (viewerId) {
-                        // Redirigimos de vuelta al visor individual con el modelo cargado
-                        window.location.href = `/views/viewerNew.html?viewerId=${viewerId}`;
-                    } else {
-                        // Fallback: vuelve al visor sin identificador si no hay info
-                        window.location.href = "/views/viewerNew.html";
-                    }
-
-                } else {
-                    // Si no venías desde el visor, vuelve al index general
-                    window.location.href = "/index.html";
-                }
-            });
-
-
-        </script>
-
-                
-            <div class="d-flex flex-column flex-lg-row h-100">
-                <div class="flex-grow-1 d-flex flex-column flex-lg-row flex-wrap">
-                   <div class="c-viewer1 col-12 col-lg-6 p-1">
-                        <div id="indexViewer1" class="viewer1 rounded-2 position-relative">
-                            +
-                            <input type="file" id="inputFile1" class="d-none"></div>
-                        </div>
-
-                        <div class="c-viewer2 col-12 col-lg-6 p-1">
-                        <div id="viewer2" class="viewer2 rounded-2 position-relative">
-                            +
-                            <input type="file" id="inputFile2" class="d-none"></div>
-                        </div>
-                    </div>
-
-                <aside id="sidebar" class="sidebar rounded-2 overflow-hidden">
-                    <div id="toolbar" class=" text-white d-flex flex-lg-column flex-row gap-5 align-items-center justify-content-center">
-                        <button id="btn-SwitchViewer" class="btnPrincipales">
-                            <img class="options-sidebar area_swap" src="../assets/icons/area_swap.svg" alt="area_swap">
-                        </button>
-                        <button id="btn-world" class="btnPrincipales world">
-                            <img class="options-sidebar world" src="../assets/icons/world.svg" alt="world">
-                        </button>
-                        <button class="material btnPrincipales" id="btn-axes">
-                            <img class="options-sidebar monkey" src="../assets/icons/monkey.svg" alt="monkey">
-                        </button>
-                        <button class="magnet btnPrincipales" id="btn-material">
-                            <img class="options-sidebar linked" src="../assets/icons/linked.svg" alt="link">
-                        </button>
-                        <button class="info btnPrincipales">
-                            <img class="options-sidebar info" src="../assets/icons/info.svg" alt="info">
-                        </button>
-                    </div>
-                    <div id="menuPanel" class="menu-panel overflow-hidden ">
-                        <div id="menu-world" class="menu-content d-none h-100 w-100">
-                        <!-- <h2>Environment</h2>-->
-                        <div id="bloqueHDRI" class="opcionesHDRI h-100 d-flex flex-row flex-lg-column ">
-                            <div class="colorEnv tarjeta ">
-                            <input type="color" name="color" id="chooseColor" class="input color-picker envOption">
-                            </div>
-                            
-                        </div>
-                    </div>
-                    <div id="menu-modelo" class="menu-content d-none h-100">
-                        <h2>Modelo</h2>
-                        <form id="formStyles">
-                            <label for="color">Color:</label>
-                            <input type="color" name="color" id="chooseColor" class="input">
-                            <label for="roughness">Roughness:</label>
-                            <input type="range" name="roughness" min="0" max="1000">  
-                            <label for="metalness">Metalness:</label>
-                            <input type="range" name="metalness" min="0" max="1000">
-                            <div id="previewTexturas"></div>
-                            <button type="button" id="resetEstilos">Restablecer</button>
-                        </form>
-                        <div id="mallas" class="d-flex ">
-                            <button class="botonMalla" id="wireframe">malla</button>
-                            <button class="botonMalla" id="solido">solido</button>
-                            <button class="botonMalla" id="togglePuntos">puntos</button>
-                        </div>
-                            <div id="wireframeOptions" style="margin-top: 1em;">
-                            <label for="wireframeColor" style="color: #eee;">Color de la malla:</label><br>
-                            <input type="color" id="wireframeColor" value="#d95e7d">
-                        </div>
-
-                    </div>
-                </aside>
-
+        <!-- VISOR DERECHO -->
+        <div class="c-viewer2 col-12 col-lg-6 p-1">
+            <div class="viewer2 rounded-2 position-relative" id="viewer2">
+                <!-- Icono "+" -->
+                    +
+                    <input class="d-none" id="inputFile2" type="file"/>
+                    <!-- Botones de ejes y cuadrícula -->
+                    <div class="helper-icons" style="display: none;">
+                    <button class="toggleAxes" title="Mostrar/ocultar ejes">
+                        <img alt="ejes" src="../assets/icons/empty_arrows.svg"/>
+                    </button>
+                    <button class="toggleGrid" title="Mostrar/ocultar cuadrícula">
+                        <img alt="cuadrícula" src="../assets/icons/grid.svg"/>
+                    </button>
             </div>
         </div>
     </div>
+</div>
+      <!-- SIDEBAR DERECHO -->
+      <aside id="sidebar" class="sidebar rounded-2 overflow-hidden">
+        <div id="toolbar" class="text-white d-flex flex-lg-column flex-row gap-5 align-items-center justify-content-center">
+          <button id="btn-SwitchViewer" class="btnPrincipales">
+            <img class="options-sidebar area_swap" src="../assets/icons/area_swap.svg" alt="area_swap" />
+          </button>
+          <button id="btn-world" class="btnPrincipales world">
+            <img class="options-sidebar world" src="../assets/icons/world.svg" alt="world" />
+          </button>
+          <button class="material btnPrincipales" id="btn-axes">
+            <img class="options-sidebar monkey" src="../assets/icons/monkey.svg" alt="monkey" />
+          </button>
+          <button class="magnet btnPrincipales" id="btn-material">
+            <img class="options-sidebar linked" src="../assets/icons/linked.svg" alt="link" />
+          </button>
+          <button class="info btnPrincipales">
+            <img class="options-sidebar info" src="../assets/icons/info.svg" alt="info" />
+          </button>
+        </div>
 
-  
+        <!-- PANELES DE CONFIGURACIÓN -->
+        <div id="menuPanel" class="menu-panel overflow-hidden">
+          <!-- Menú Mundo -->
+          <div id="menu-world" class="menu-content d-none h-100 w-100">
+            <div id="bloqueHDRI" class="opcionesHDRI h-100 d-flex flex-row flex-lg-column">
+              <div class="colorEnv tarjeta">
+                <input type="color" name="color" id="chooseColor" class="input color-picker envOption" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Menú Modelo -->
+          <div id="menu-modelo" class="menu-content d-none h-100">
+            <h2>Modelo</h2>
+            <form id="formStyles">
+              <label for="color">Color:</label>
+              <input type="color" name="color" id="chooseColor" class="input" />
+              <label for="roughness">Roughness:</label>
+              <input type="range" name="roughness" min="0" max="1000" />
+              <label for="metalness">Metalness:</label>
+              <input type="range" name="metalness" min="0" max="1000" />
+              <div id="previewTexturas"></div>
+              <button type="button" id="resetEstilos">Restablecer</button>
+            </form>
+
+            <div id="mallas" class="d-flex">
+              <button class="botonMalla" id="wireframe">malla</button>
+              <button class="botonMalla" id="solido">sólido</button>
+              <button class="botonMalla" id="togglePuntos">puntos</button>
+            </div>
+
+            <div id="wireframeOptions" style="margin-top: 1em;">
+              <label for="wireframeColor" style="color: #eee;">Color de la malla:</label><br />
+              <input type="color" id="wireframeColor" value="#d95e7d" />
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
 </body>
-
-
 </html>

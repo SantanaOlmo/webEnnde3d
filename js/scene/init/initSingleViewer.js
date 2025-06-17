@@ -50,6 +50,12 @@ document.addEventListener('DOMContentLoaded', async () => {
   const loadedModel = await loadModel(scene, fileFromDB);
   updateModel(viewerId, loadedModel); // ✅ Este es el objeto 3D, no el archivo
 
+  // Mostrar controles de helpers tras cargar modelo
+  const helperPanel = document.getElementById('helperToggles');
+  if (helperPanel) {
+    helperPanel.style.display = 'flex'; // o 'block', según tu estilo
+  }
+
   // ▶️ Lanzamos la animación
   animate(renderer, scene, camera, controls);
 

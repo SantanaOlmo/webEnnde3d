@@ -54,9 +54,19 @@
 
   <!-- CONTENEDOR PRINCIPAL DEL VISOR + SIDEBAR -->
   <div id="visorWrapper" class="d-flex flex-column flex-lg-row">
-    <div id="viewerContainer" class="">
-      <div id="indexViewer1" class="w-100 h-100 position-relative overflow-hidden"></div>
-    </div>
+    <div id="viewerContainer" class="position-relative">
+  <div id="indexViewer1" class="w-100 h-100 position-relative overflow-hidden"></div>
+
+  <!-- Botones para helpers -->
+  <div id="helperToggles" class="helper-icons" style="display: none;">
+    <button id="toggleAxes" title="Mostrar/ocultar ejes">
+      <img src="../assets/icons/empty_arrows.svg" alt="ejes">
+    </button>
+    <button id="toggleGrid" title="Mostrar/ocultar cuadrícula">
+      <img src="../assets/icons/grid.svg" alt="cuadrícula">
+    </button>
+  </div>
+</div>
 
     <!-- SIDEBAR CON ICONOS -->
     <aside id="sidebar" class="sidebar">
