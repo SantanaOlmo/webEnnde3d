@@ -1,5 +1,7 @@
 // js/scene/init/initSingleViewer.js
 
+// TODO: Guardar el HDR seleccionado en localStorage y aplicarlo también en el visor comparativo.
+
 // === Importaciones necesarias para cargar y visualizar el modelo ===
 import { getFileFromIndexedDB } from '../db/db-utils.js';
 import { loadModel } from '../model/modelLoader.js';

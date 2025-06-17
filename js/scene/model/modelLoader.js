@@ -7,6 +7,7 @@ import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 import { centerAndFitModel } from '../utils/centerFit.js';
 import { guardarVertices } from '../interaction/vertexUtils.js';
 import { crearNubeDePuntos } from '../interaction/vertexUtils.js';
+import { escalarModelo } from '../model/scaleModel.js';
 
 let gltfLoader, stlLoader;
 
@@ -54,6 +55,7 @@ export function loadModel(scene, file) {
       scene.userData.currentModel = obj;
 
       guardarVertices(obj);
+      escalarModelo(obj);  
       centerAndFitModel(obj, scene);
 
       // === Generar y añadir nube de puntos ===
