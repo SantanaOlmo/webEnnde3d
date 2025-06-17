@@ -11,8 +11,9 @@ import {
 } from '../scene/model/materials.js';
 
 import { toggleNubeDePuntos } from '../scene/interaction/vertexToggle.js';
-
 import { applyToRelevantViewers } from '../scene/core/sceneSyncUtils.js';
+import { actualizarColorWireframe } from '../scene/model/materials.js';
+
 
 document.addEventListener('DOMContentLoaded', () => {
   const btnWorld = document.getElementById('btn-world');
@@ -70,6 +71,36 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+    // ================================================
+    // 🟡 CAMBIO DE COLOR DE LA MALLA (wireframeColor)
+    // ================================================
+    const wireframeColorInput = document.getElementById('wireframeColor');
+
+    wireframeColorInput?.addEventListener("input", () => {
+      const color = wireframeColorInput.value;
+      const sincronizar = document.getElementById("btn-material")?.classList.contains("active");
+
+      if (sincronizar) {
+        // 🔁 MODO SINCRONIZADO: aplica a ambos modelos
+        const modelo1 = getModelById("indexViewer1");
+        const modelo2 = getModelById("viewer2");
+
+        if (modelo1) actualizarColorWireframe(modelo1, color);  // ✅ Función ya implementada
+        if (modelo2) actualizarColorWireframe(modelo2, color);
+
+      } else {
+        // 🧩 MODO INDEPENDIENTE: detecta cuál visor está activo (con clase 'selected')
+        const seleccionado = document.querySelector('.viewer-container.selected');
+        if (!seleccionado) return;
+
+        const id = seleccionado.id;
+        const modelo = getModelById(id);
+        if (modelo) actualizarColorWireframe(modelo, color);
+      }
+    });
+
+  });
+
   const btnReset = document.getElementById('resetEstilos');
   btnReset?.addEventListener('click', () => {
     applyToRelevantViewers(({ model }) => {
@@ -123,8 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (grid) grid.visible = !grid.visible;
       });
     });
-  }, 200);
-});
+}, 200);
 
 import { toggleSyncMode } from './viewerSwitch.js';
 
