@@ -27,19 +27,33 @@ export function crearNubeDePuntos(modelo) {
 
   modelo.traverse((child) => {
     if (child.isMesh && child.geometry?.attributes?.position) {
-      const geometry = child.geometry.clone();
-      geometry.computeBoundingSphere();
+      const posAttr = child.geometry.attributes.position;
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', posAttr);
+
+      // === ASIGNAR COLORES INDIVIDUALES (RGB blanco por defecto) ===
+      const numVertices = posAttr.count;
+      const colorArray = new Float32Array(numVertices * 3);
+      for (let i = 0; i < numVertices; i++) {
+      colorArray[i * 3 + 0] = 1.0; // R
+      colorArray[i * 3 + 1] = 0.0; // G
+      colorArray[i * 3 + 2] = 1.0; // B
+}
+      geometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
 
       const material = new THREE.PointsMaterial({
-        color: 0xff00ff,
-        size: 0.002
+        size: 0.02,
+        vertexColors: true // Activar colores por vértice
       });
+
+      // Tamaño para el raycaster
+      material.userData.pickSize = 0.03;
 
       const puntos = new THREE.Points(geometry, material);
       puntos.name = 'puntos_nube';
       puntos.visible = false;
 
-      // ✅ Añadir directamente al mesh original
+      // Añadir al mesh original
       child.add(puntos);
       child.userData.nubePuntos = puntos;
 
@@ -51,4 +65,5 @@ export function crearNubeDePuntos(modelo) {
     console.warn("⚠️ No se pudo generar la nube de puntos: no se encontró ninguna malla válida.");
   }
 }
+
 

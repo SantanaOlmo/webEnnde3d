@@ -12,6 +12,8 @@ import { attachSceneToViewer } from '../environment/backgroundManager.js';
 import { cambiarHDRI } from '../environment/hdriManager.js';
 import { registerScene, updateModel } from '../core/viewerRegistry.js';
 import { initRotationInput } from '../interaction/rotationInput.js';
+import { initVertexRaycast } from '../interaction/vertexRaycast.js';
+
 
 console.log('📦 initSingleViewer.js cargado');
 
@@ -49,6 +51,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   // 🧱 Cargamos el modelo y lo añadimos a la escena
   const loadedModel = await loadModel(scene, fileFromDB);
   updateModel(viewerId, loadedModel); // ✅ Este es el objeto 3D, no el archivo
+  initVertexRaycast(renderer, camera, loadedModel);
+
+
 
   // Mostrar controles de helpers tras cargar modelo
   const helperPanel = document.getElementById('helperToggles');
