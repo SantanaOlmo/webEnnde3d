@@ -16,6 +16,16 @@ import { toggleNubeDePuntos } from '../scene/interaction/vertexToggle.js';
 import { applyToRelevantViewers } from '../scene/core/sceneSyncUtils.js';
 import { toggleSyncMode } from './viewerSwitch.js';
 
+function debounce(callback, delay) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      callback(...args);
+    }, delay);
+  };
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   // --- BOTONES Y ELEMENTOS PRINCIPALES ---
   const btnWorld = document.getElementById('btn-world');
@@ -24,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const panelWorld = document.getElementById('menu-world');
   const panelModelo = document.getElementById('menu-modelo');
   const menuPanel = document.getElementById('menuPanel');
+  const formModelo = document.getElementById('formStyles');
   const btnReset = document.getElementById('resetEstilos');
 
   menuPanel.classList.remove('show');
@@ -37,6 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
     panel.classList.remove('d-none');
     activePanel = panel;
   };
+
   const hideAllPanels = () => {
     panelWorld.classList.add('d-none');
     panelModelo.classList.add('d-none');
@@ -44,12 +56,15 @@ document.addEventListener('DOMContentLoaded', () => {
     menuPanel.style.display = 'none';
     activePanel = null;
   };
+
   btnWorld?.addEventListener('click', () => {
     activePanel === panelWorld ? hideAllPanels() : (hideAllPanels(), showPanel(panelWorld));
   });
+
   btnModelo?.addEventListener('click', () => {
     activePanel === panelModelo ? hideAllPanels() : (hideAllPanels(), showPanel(panelModelo));
   });
+
   if (btnGoToCompare) {
     btnGoToCompare.addEventListener('click', () => {
       localStorage.setItem("modeloOrigen", "indexViewer1");
@@ -58,7 +73,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  formModelo?.addEventListener('input', () => {
+  // --- FORMULARIO DE ESTILOS (CON TRANSPARENCIA, GROSOR Y REFLEJO) ---
+  const debouncedUpdateMaterial = debounce(() => {
     const datos = Object.fromEntries(new FormData(formModelo).entries());
 
     datos.roughness = parseFloat(datos.roughness) / 1000;
@@ -68,24 +84,25 @@ document.addEventListener('DOMContentLoaded', () => {
     datos.envMapIntensity = parseFloat(formModelo.elements["envMapSlider"].value);
 
     localStorage.setItem('estilos', JSON.stringify(datos));
+
     applyToRelevantViewers(({ model }) => {
       if (model) aplicarEstilos(model, datos);
     });
-  });
+  }, 200);
 
-  // ===============================
-  //   CAMBIO DE COLOR DE LA MALLA
-  // ===============================
-wireframeColorInput?.addEventListener("input", () => {
-  const color = wireframeColorInput.value;
-  applyToRelevantViewers(({ model }) => {
-    if (model) {
-      cambiarMaterial(model, "wireframe", color);
-      actualizarColorWireframe(model, color);
-    }
-  });
-});
+  formModelo?.addEventListener('input', debouncedUpdateMaterial);
 
+  // --- CAMBIO DE COLOR DE LA MALLA ---
+  const wireframeColorInput = document.getElementById('wireframeColor');
+  wireframeColorInput?.addEventListener("input", () => {
+    const color = wireframeColorInput.value;
+    applyToRelevantViewers(({ model }) => {
+      if (model) {
+        cambiarMaterial(model, "wireframe", color);
+        actualizarColorWireframe(model, color);
+      }
+    });
+  });
 
   // --- RESET ESTILOS ---
   btnReset?.addEventListener('click', () => {
@@ -93,27 +110,36 @@ wireframeColorInput?.addEventListener("input", () => {
       if (!model) return;
       restaurarMaterialesOriginales(model);
     });
+
     localStorage.removeItem("estilos");
+
     if (formModelo) {
       formModelo.elements["color"].value = "#ffffff";
       formModelo.elements["roughness"].value = 500;
       formModelo.elements["metalness"].value = 500;
+      formModelo.elements["transmissionSlider"].value = 0;
+      formModelo.elements["thicknessSlider"].value = 0;
+      formModelo.elements["envMapSlider"].value = 1.5;
     }
   });
 
+  // --- BOTONES VISUALES ---
   const btnWireframe = document.getElementById('wireframe');
   const btnSolido = document.getElementById('solido');
   const btnPuntos = document.getElementById('togglePuntos');
+
   btnWireframe?.addEventListener('click', () => {
     applyToRelevantViewers(({ model }) => {
       if (model) cambiarMaterial(model, 'wireframe', '#000000');
     });
   });
+
   btnSolido?.addEventListener('click', () => {
     applyToRelevantViewers(({ model }) => {
       if (model) cambiarMaterial(model, 'solido');
     });
   });
+
   btnPuntos?.addEventListener('click', () => {
     applyToRelevantViewers(({ model }) => {
       if (model) toggleNubeDePuntos(model);
@@ -123,23 +149,25 @@ wireframeColorInput?.addEventListener("input", () => {
   // --- EJES Y GRID ---
   const btnEjes = document.getElementById('toggleAxes');
   const btnGrid = document.getElementById('toggleGrid');
+
   setTimeout(() => {
     applyToRelevantViewers(({ scene }) => {
       btnEjes?.addEventListener('click', () => {
         const ejes = scene.getObjectByName('helper_ejes');
         if (ejes) ejes.visible = !ejes.visible;
       });
+
       btnGrid?.addEventListener('click', () => {
         const grid = scene.getObjectByName('helper_grid');
         if (grid) grid.visible = !grid.visible;
       });
     });
-}, 200);
+  }, 200);
 
-import { toggleSyncMode } from './viewerSwitch.js';
-
-const btnSync = document.getElementById('btn-material');
-btnSync?.addEventListener('click', () => {
-  const sync = toggleSyncMode();
-  btnSync.style.backgroundColor = sync ? 'green' : '';
+  // --- SYNC BOTÓN ---
+  const btnSync = document.getElementById('btn-material');
+  btnSync?.addEventListener('click', () => {
+    const sync = toggleSyncMode();
+    btnSync.style.backgroundColor = sync ? 'green' : '';
+  });
 });

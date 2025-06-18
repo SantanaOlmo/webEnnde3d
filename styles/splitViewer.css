@@ -1,5 +1,7 @@
 @import "bootstrap-icons/font/bootstrap-icons.css";
-
+*{
+  --ennde-:#a84a64;
+}
 body, html {
   margin: 0;
   padding: 0;

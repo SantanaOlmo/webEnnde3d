@@ -5,8 +5,8 @@
 @import "bootstrap-icons/font/bootstrap-icons.css";
 
 *{
-  --ennde-:#a84a64;
-}
+}  --ennde-:#a84a64;
+
 html, body {
   margin: 0;
   padding: 0;
