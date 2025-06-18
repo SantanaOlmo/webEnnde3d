@@ -1,5 +1,4 @@
 // js/ui/viewerMenus.js
-
 import {
   getSceneById,
   getModelById
@@ -9,7 +8,8 @@ import {
   aplicarEstilos,
   restaurarMaterialesOriginales,
   cambiarMaterial,
-  actualizarColorWireframe
+  actualizarColorWireframe,
+  aplicarToonShading
 } from '../scene/model/materials.js';
 
 import { toggleNubeDePuntos } from '../scene/interaction/vertexToggle.js';
@@ -152,5 +152,21 @@ document.addEventListener('DOMContentLoaded', () => {
   btnSync?.addEventListener('click', () => {
     const sync = toggleSyncMode();
     btnSync.style.backgroundColor = sync ? 'green' : '';
+  });
+
+  // --- TOON SHADING: Listener del panel ---
+  const toonPanel = document.getElementById('toonShadingPanel');
+
+  toonPanel?.addEventListener('input', () => {
+    const colorInputs = [...toonPanel.querySelectorAll('.toon-color')];
+    const rangeInputs = [...toonPanel.querySelectorAll('.toon-range')];
+
+    const colors = colorInputs.map(input => input.value);
+    const thresholds = rangeInputs.map(input => parseInt(input.value));
+
+    applyToRelevantViewers(({ model }) => {
+      if (!model) return;
+      aplicarToonShading(model, colors, thresholds);
+    });
   });
 });

@@ -72,3 +72,38 @@ export function actualizarColorWireframe(modelo, nuevoColor) {
     }
   });
 }
+
+export function aplicarToonShading(model, colores, thresholds) {
+  if (!model || !colores || !thresholds) return;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 256;
+  canvas.height = 1;
+  const ctx = canvas.getContext('2d');
+
+  for (let i = 0; i < colores.length; i++) {
+    const xStart = i === 0 ? 0 : (thresholds[i - 1] / 100) * canvas.width;
+    const xEnd = (thresholds[i] / 100) * canvas.width;
+    ctx.fillStyle = colores[i];
+    ctx.fillRect(xStart, 0, xEnd - xStart, 1);
+  }
+
+  const gradientMap = new THREE.CanvasTexture(canvas);
+  gradientMap.minFilter = THREE.NearestFilter;
+  gradientMap.magFilter = THREE.NearestFilter;
+
+  const toonMaterial = new THREE.MeshToonMaterial({
+    color: 0xffffff, // base, pero el sombreado lo da el gradientMap
+    gradientMap
+  });
+
+  model.traverse(child => {
+    if (child.isMesh) {
+      if (!child.userData.originalMaterial) {
+        child.userData.originalMaterial = child.material.clone();
+      }
+      child.material = toonMaterial;
+      child.material.needsUpdate = true;
+    }
+  });
+}

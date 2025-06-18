@@ -24,6 +24,7 @@
   <script type="module" src="/js/ui/loadHdriOptions.js" defer></script>    
   <script type="module" src="/js/utils/tooltips.js"></script>     
   <script type="module" src="/js/bootstrap.bundle.js"></script>
+  <script type="module" src="/js/ui/toonShadingMenu.js"></script>
 </head>
 
 <body class="bg-dark">
@@ -151,6 +152,26 @@
                 <div class="botonMallaInfo">Vértices</div>
               </button>
             </div>
+            <div id="toonShadingPanel" class="d-none">
+              <h3>Toon Shading</h3>
+
+              <div class="toon-color-block">
+                <label>Color base (luz):</label>
+                <input type="color" class="toon-color" value="#ffffff">
+                <input type="range" class="toon-range" min="0" max="100" value="60">
+              </div>
+
+              <div class="toon-color-block">
+                <label>Color sombra:</label>
+                <input type="color" class="toon-color" value="#000000">
+                <input type="range" class="toon-range" min="0" max="100" value="100">
+              </div>
+
+              <button id="addToonRange">Añadir rango</button>
+            </div>
+
+            <button id="btnToonShading">Toon Shading</button>
+
             <div id="previewTexturas"></div>
             <button type="button" id="resetEstilos">Restablecer</button>
           </div>
