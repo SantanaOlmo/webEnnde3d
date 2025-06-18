@@ -61,7 +61,6 @@ if (colorInput) {
   });
 }
 
-
   // Mostrar controles de helpers tras cargar modelo
   const helperPanel = document.getElementById('helperToggles');
   if (helperPanel) {
