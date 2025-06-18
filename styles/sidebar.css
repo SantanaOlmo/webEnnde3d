@@ -312,3 +312,10 @@ input[type="range"]:hover::-webkit-slider-thumb {
   width:fit-content;
   align-self:flex-end;
 }
+
+.toon-color-block {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  margin-bottom: 8px;
+}
