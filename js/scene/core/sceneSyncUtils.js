@@ -21,7 +21,7 @@ export function applyToRelevantViewers(callback) {
       renderer: getRendererById(viewerId),
       model: getModelById(viewerId),
     };
-    console.log("📡 applyToRelevantViewers →", viewerId, context.scene);
+    /*console.log("📡 applyToRelevantViewers →", viewerId, context.scene);*/
     if (context.scene) callback(context);
   };
 

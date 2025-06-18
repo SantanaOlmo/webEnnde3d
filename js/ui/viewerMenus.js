@@ -14,7 +14,6 @@ import { toggleNubeDePuntos } from '../scene/interaction/vertexToggle.js';
 import { applyToRelevantViewers } from '../scene/core/sceneSyncUtils.js';
 import { actualizarColorWireframe } from '../scene/model/materials.js';
 
-
 document.addEventListener('DOMContentLoaded', () => {
   const btnWorld = document.getElementById('btn-world');
   const btnModelo = document.getElementById('btn-axes');
@@ -23,6 +22,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const panelWorld = document.getElementById('menu-world');
   const panelModelo = document.getElementById('menu-modelo');
   const menuPanel = document.getElementById('menuPanel');
+  const formModelo = document.getElementById('formStyles');
+  const btnReset = document.getElementById('resetEstilos');
+
   menuPanel.classList.remove('show');
   menuPanel.style.display = 'none';
 
@@ -59,11 +61,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  const formModelo = document.getElementById('formStyles');
   formModelo?.addEventListener('input', () => {
     const datos = Object.fromEntries(new FormData(formModelo).entries());
+
     datos.roughness = parseFloat(datos.roughness) / 1000;
     datos.metalness = parseFloat(datos.metalness) / 1000;
+    datos.transmission = parseFloat(formModelo.elements["transmissionSlider"].value);
+    datos.thickness = parseFloat(formModelo.elements["thicknessSlider"].value);
+    datos.envMapIntensity = parseFloat(formModelo.elements["envMapSlider"].value);
+
     localStorage.setItem('estilos', JSON.stringify(datos));
 
     applyToRelevantViewers(({ model }) => {
@@ -71,37 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-    // ================================================
-    // 🟡 CAMBIO DE COLOR DE LA MALLA (wireframeColor)
-    // ================================================
-    const wireframeColorInput = document.getElementById('wireframeColor');
-
-    wireframeColorInput?.addEventListener("input", () => {
-      const color = wireframeColorInput.value;
-      const sincronizar = document.getElementById("btn-material")?.classList.contains("active");
-
-      if (sincronizar) {
-        // 🔁 MODO SINCRONIZADO: aplica a ambos modelos
-        const modelo1 = getModelById("indexViewer1");
-        const modelo2 = getModelById("viewer2");
-
-        if (modelo1) actualizarColorWireframe(modelo1, color);  // ✅ Función ya implementada
-        if (modelo2) actualizarColorWireframe(modelo2, color);
-
-      } else {
-        // 🧩 MODO INDEPENDIENTE: detecta cuál visor está activo (con clase 'selected')
-        const seleccionado = document.querySelector('.viewer-container.selected');
-        if (!seleccionado) return;
-
-        const id = seleccionado.id;
-        const modelo = getModelById(id);
-        if (modelo) actualizarColorWireframe(modelo, color);
-      }
-    });
-
-  });
-
-  const btnReset = document.getElementById('resetEstilos');
   btnReset?.addEventListener('click', () => {
     applyToRelevantViewers(({ model }) => {
       if (!model) return;
@@ -114,6 +89,30 @@ document.addEventListener('DOMContentLoaded', () => {
       formModelo.elements["color"].value = "#ffffff";
       formModelo.elements["roughness"].value = 500;
       formModelo.elements["metalness"].value = 500;
+      formModelo.elements["transmissionSlider"].value = 0;
+      formModelo.elements["thicknessSlider"].value = 0;
+      formModelo.elements["envMapSlider"].value = 1.5;
+    }
+  });
+
+  // 🟡 CAMBIO DE COLOR DE LA MALLA (wireframeColor)
+  const wireframeColorInput = document.getElementById('wireframeColor');
+
+  wireframeColorInput?.addEventListener("input", () => {
+    const color = wireframeColorInput.value;
+    const sincronizar = document.getElementById("btn-material")?.classList.contains("active");
+
+    if (sincronizar) {
+      const modelo1 = getModelById("indexViewer1");
+      const modelo2 = getModelById("viewer2");
+      if (modelo1) actualizarColorWireframe(modelo1, color);
+      if (modelo2) actualizarColorWireframe(modelo2, color);
+    } else {
+      const seleccionado = document.querySelector('.viewer-container.selected');
+      if (!seleccionado) return;
+      const id = seleccionado.id;
+      const modelo = getModelById(id);
+      if (modelo) actualizarColorWireframe(modelo, color);
     }
   });
 
@@ -154,7 +153,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (grid) grid.visible = !grid.visible;
       });
     });
-}, 200);
+  }, 200);
+});
 
 import { toggleSyncMode } from './viewerSwitch.js';
 

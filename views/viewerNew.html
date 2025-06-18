@@ -108,25 +108,53 @@
         </div>
         <div id="menu-modelo" class="menu-content d-none h-100">
           <h2>Modelo</h2>
-          <form id="formStyles">
-            <label for="color">Color:</label>
-            <input type="color" name="color" id="chooseColor" class="input">
-            <label for="roughness">Roughness:</label>
-            <input type="range" name="roughness" min="0" max="1000">  
-            <label for="metalness">Metalness:</label>
-            <input type="range" name="metalness" min="0" max="1000">
+          <div class="containerModeloSettings">
+            <form id="formStyles">
+              <label for="color">Color:</label>
+              <input type="color" name="color" id="chooseColor" class="input">
+              <label for="roughness">Roughness:</label>
+              <input type="range" name="roughness" min="0" max="1000">  
+              <label for="metalness">Metalness:</label>
+              <input type="range" name="metalness" min="0" max="1000">
+              <label for="transmissionSlider">Transparencia:</label>
+              <input type="range" id="transmissionSlider" min="0" max="1" step="0.01" value="1">
+              <label for="thicknessSlider">Grosor:</label>
+              <input type="range" id="thicknessSlider" min="0" max="5" step="0.1" value="0.5">
+              <label for="envMapSlider">Reflejo:</label>
+              <input type="range" id="envMapSlider" min="0" max="5" step="0.1" value="1.5">
+              
+            </form>
+            <div id="mallas" class="d-flex ">
+              <div class="MallaOption">
+                <button class="botonMalla" id="wireframe">
+                  <div class="ImgFondo">
+                    <img src="../assets/icons/mod_wireframe.svg" alt="">
+                  </div>
+                  <div class="botonMallaInfo">Malla</div>
+                </button>
+                <div id="wireframeOptions" >
+                  <input type="color" id="wireframeColor" value="#d95e7d">
+                </div>
+              </div>
+  
+              <button class="botonMalla" id="solido">
+                <div class="ImgFondo">
+                  <img src="../assets/icons/mod_solidify.svg" alt="">
+                </div>
+                <div class="botonMallaInfo">Sólido</div>
+              </button>
+  
+              <button class="botonMalla" id="togglePuntos">
+                <div class="ImgFondo">
+                  <img src="../assets/icons/vertexsel.svg" alt="">
+                </div>
+                <div class="botonMallaInfo">Vértices</div>
+              </button>
+            </div>
             <div id="previewTexturas"></div>
             <button type="button" id="resetEstilos">Restablecer</button>
-          </form>
-          <div id="mallas" class="d-flex ">
-            <button class="botonMalla" id="wireframe">malla</button>
-            <button class="botonMalla" id="solido">solido</button>
-            <button class="botonMalla" id="togglePuntos">puntos</button>
           </div>
-            <div id="wireframeOptions" style="margin-top: 1em;">
-              <label for="wireframeColor" style="color: #eee;">Color de la malla:</label><br>
-              <input type="color" id="wireframeColor" value="#d95e7d">
-          </div>
+
 
       </div>
     </aside>

@@ -5,18 +5,25 @@ import * as THREE from 'three';
 export function aplicarEstilos(model, estilos) {
   if (!model || !estilos) return;
 
-  const nuevoMaterial = new THREE.MeshStandardMaterial({
+  const nuevoMaterial = new THREE.MeshPhysicalMaterial({
     color: new THREE.Color(estilos.color),
     roughness: estilos.roughness,
-    metalness: estilos.metalness
+    metalness: estilos.metalness,
+    transmission: estilos.transmission ?? 0,
+    thickness: estilos.thickness ?? 0,
+    envMapIntensity: estilos.envMapIntensity ?? 1,
+    transparent: estilos.transmission > 0 // importante
   });
 
   model.traverse(child => {
     if (child.isMesh) {
       child.material = nuevoMaterial;
+      child.material.needsUpdate = true; // 👈 añade esto
+
     }
   });
 }
+
 
 // Restaura el material original de cada malla
 export function restaurarMaterialesOriginales(model) {

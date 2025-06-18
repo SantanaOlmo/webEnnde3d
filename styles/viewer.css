@@ -103,8 +103,8 @@ html, body {
   border-radius: 8px;
   cursor: pointer;
   transition: all .1s ease-in-out;
-
 }
+
 .helper-icons button:hover {
   background: var(--ennde-);
   border: none;
@@ -115,4 +115,26 @@ html, body {
 .helper-icons button img {
   width: 20px;
   height: 20px;
+}
+#wireframeOptions{
+  width: 25px;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+  position: relative;
+  border-radius: 100%;
+}
+#wireframeColor{
+  width: 80px;
+  height: 80px;
+  position: absolute;
+  right: -5px;
+  top: -5px;
+}
+#wireframeColor:hover{
+  cursor: pointer;
+}
+
+.MallaOption{
+  display: flex;
+  gap: 20px;
 }
