@@ -119,67 +119,37 @@ body, html {
   transition: all .1s ease-in-out;
 }
 
-/* === Botones de ayuda (Ejes y Cuadrícula) === */
-/* Estilo para los botones helper-icons dentro de cada visor */
-#viewer2 .helper-icons,
-#indexViewer1 .helper-icons {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* Estilo individual para los botones de iconos */
-.helper-icons button {
-  background-color: rgba(0, 0, 0, 0.6);
-  border: none;
-  border-radius: 8px;
-  padding: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.helper-icons button:hover {
-  background-color: rgba(255, 255, 255, 0.2);
-}
-
-.helper-icons img {
-  width: 20px;
-  height: 20px;
-  pointer-events: none;
-}
-
-
-/* === ESTILOS PARA BOTONES DENTRO DE CADA VISOR === */
+/* Botones helper en cada visor */
 .viewer1 .helper-icons,
 .viewer2 .helper-icons {
   position: absolute;
-  top: 8px;
-  right: 8px;
+  top: 10px;
+  right: 10px;
   display: flex;
-  gap: 8px;
+  flex-direction: row;  /* Cambia a row para que se vean en fila, o column para columna */
+  gap: 10px;
   z-index: 10;
+  width: auto;      /* Asegura que no ocupan todo el alto */
+  height: auto;
 }
 
+/* Individual para cada botón */
 .helper-icons button {
-  background: rgba(255, 255, 255, 0.1);
+  width: 42px;
+  height: 42px;
+  background: rgba(30,30,30,0.85);
   border: none;
-  padding: 0.4rem;
-  border-radius: 8px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
   cursor: pointer;
-  transition: all  .1s ease-in-out;
-
+  transition: background 0.2s;
 }
 .helper-icons button:hover {
-  background: var(--ennde-);
-  border: none;
-  transform: scale(1.1);
-  transition:all .1s ease-in-out;
+  background: #333;
 }
-
 .helper-icons img {
   width: 20px;
   height: 20px;

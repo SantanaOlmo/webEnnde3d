@@ -14,6 +14,8 @@ import { registerScene, updateModel } from '../core/viewerRegistry.js';
 import { initRotationInput } from '../interaction/rotationInput.js';
 import { initVertexRaycast } from '../interaction/vertexRaycast.js';
 import { actualizarColorWireframe } from '../model/materials.js';
+import { setupAllHelperIcons } from '../core/helpers.js';
+import { crearEjes, crearGrid } from '../core/helpers.js'; 
 
 console.log('📦 initSingleViewer.js cargado');
 
@@ -42,6 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const { scene, camera, renderer } = initScene(viewerId);
   registerScene(viewerId, { scene, camera, renderer });
   attachSceneToViewer(viewerId, scene);
+  window.scene = scene; // <- Esto SOLO para depuración
 
   const controls = addOrbitControls(camera, renderer);
 
@@ -53,22 +56,30 @@ document.addEventListener('DOMContentLoaded', async () => {
   updateModel(viewerId, loadedModel); // ✅ Este es el objeto 3D, no el archivo
   initVertexRaycast(renderer, camera, loadedModel);
 
-// 🎨 Color de la malla
-const colorInput = document.getElementById('wireframeColor');
-if (colorInput) {
-  colorInput.addEventListener('input', () => {
-    actualizarColorWireframe(loadedModel, colorInput.value);
-  });
-}
-
-  // Mostrar controles de helpers tras cargar modelo
-  const helperPanel = document.getElementById('helperToggles');
-  if (helperPanel) {
-    helperPanel.style.display = 'flex'; // o 'block', según tu estilo
+  if (scene && !scene.getObjectByName('helper_ejes')) {
+    scene.add(crearEjes());
+  }
+  if (scene && !scene.getObjectByName('helper_grid')) {
+    scene.add(crearGrid());
   }
 
-  // ▶️ Lanzamos la animación
+  // 🎨 Color de la malla
+  const colorInput = document.getElementById('wireframeColor');
+  if (colorInput) {
+    colorInput.addEventListener('input', () => {
+      actualizarColorWireframe(loadedModel, colorInput.value);
+    });
+  }
+
+  // ▶️ Lanzamos la animación (¡primero!)
   animate(renderer, scene, camera, controls);
+
+  // Ahora sí: Mostrar controles de helpers tras cargar modelo Y tras arrancar la animación
+  const helperPanel = document.getElementById('helperToggles');
+  if (helperPanel) {
+    helperPanel.style.display = 'flex';
+    setupAllHelperIcons();
+  }
 
   // 🧹 Limpiamos el flag temporal
   localStorage.removeItem("modeloOrigen");

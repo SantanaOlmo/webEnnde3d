@@ -15,6 +15,7 @@ import {
 import { toggleNubeDePuntos } from '../scene/interaction/vertexToggle.js';
 import { applyToRelevantViewers } from '../scene/core/sceneSyncUtils.js';
 import { toggleSyncMode } from './viewerSwitch.js';
+import { setupAllHelperIcons } from '../scene/core/helpers.js'; // ¡Ahora sí!
 
 function debounce(callback, delay) {
   let timeout;
@@ -145,24 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (model) toggleNubeDePuntos(model);
     });
   });
-
-  // --- EJES Y GRID ---
-  const btnEjes = document.getElementById('toggleAxes');
-  const btnGrid = document.getElementById('toggleGrid');
-
-  setTimeout(() => {
-    applyToRelevantViewers(({ scene }) => {
-      btnEjes?.addEventListener('click', () => {
-        const ejes = scene.getObjectByName('helper_ejes');
-        if (ejes) ejes.visible = !ejes.visible;
-      });
-
-      btnGrid?.addEventListener('click', () => {
-        const grid = scene.getObjectByName('helper_grid');
-        if (grid) grid.visible = !grid.visible;
-      });
-    });
-  }, 200);
 
   // --- SYNC BOTÓN ---
   const btnSync = document.getElementById('btn-material');

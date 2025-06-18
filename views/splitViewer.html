@@ -64,37 +64,37 @@
       <div class="contenido flex-grow-1 d-flex flex-column flex-lg-row flex-wrap">
         <!-- VISOR IZQUIERDO -->
         <div class="c-viewer1 col-12 col-lg-6 p-1">
-            <div class="viewer1 rounded-2 position-relative" id="indexViewer1">
-                <!-- Icono "+" -->
-                    +
-                    <input class="d-none" id="inputFile1" type="file"/>
-                    <!-- Botones de ejes y cuadrícula -->
-                    <div class="helper-icons" style="display: none;">
-                    <button class="toggleAxes" title="Mostrar/ocultar ejes">
-                           <img alt="ejes" src="../assets/icons/empty_arrows.svg"/>
-                    </button>
-                        <button class="toggleGrid" title="Mostrar/ocultar cuadrícula">
-                        <img alt="cuadrícula" src="../assets/icons/grid.svg"/>
-                    </button>
+          <div class="viewer1 rounded-2 position-relative" id="indexViewer1">
+            <span class="plus-sign">+</span>
+            <input class="d-none" id="inputFile1" type="file"/>
+
+            <!-- Botones de ejes y cuadrícula (helpers) SOLO CLASE, SIN ID DUPLICADO -->
+            <div class="helper-icons" style="display: none;">
+              <button class="toggleAxes" title="Mostrar/ocultar ejes">
+                <img alt="ejes" src="../assets/icons/empty_arrows.svg"/>
+              </button>
+              <button class="toggleGrid" title="Mostrar/ocultar cuadrícula">
+                <img alt="cuadrícula" src="../assets/icons/grid.svg"/>
+              </button>
             </div>
-        </div>
+          </div>
         </div>
         <!-- VISOR DERECHO -->
         <div class="c-viewer2 col-12 col-lg-6 p-1">
-            <div class="viewer2 rounded-2 position-relative" id="viewer2">
-                <!-- Icono "+" -->
-                    +
-                    <input class="d-none" id="inputFile2" type="file"/>
-                    <!-- Botones de ejes y cuadrícula -->
-                    <div class="helper-icons" style="display: none;">
-                    <button class="toggleAxes" title="Mostrar/ocultar ejes">
-                        <img alt="ejes" src="../assets/icons/empty_arrows.svg"/>
-                    </button>
-                    <button class="toggleGrid" title="Mostrar/ocultar cuadrícula">
-                        <img alt="cuadrícula" src="../assets/icons/grid.svg"/>
-                    </button>
+          <div class="viewer2 rounded-2 position-relative" id="viewer2">
+            <span class="plus-sign">+</span>
+            <input class="d-none" id="inputFile2" type="file"/>
+            
+            <!-- Botones de ejes y cuadrícula (helpers) SOLO CLASE, SIN ID DUPLICADO -->
+            <div class="helper-icons" style="display: none;">
+              <button class="toggleAxes" title="Mostrar/ocultar ejes">
+                <img alt="ejes" src="../assets/icons/empty_arrows.svg"/>
+              </button>
+              <button class="toggleGrid" title="Mostrar/ocultar cuadrícula">
+                <img alt="cuadrícula" src="../assets/icons/grid.svg"/>
+              </button>
             </div>
-        </div>
+          </div>
         </div>
       </div>
       <!-- SIDEBAR DERECHO -->
@@ -129,57 +129,54 @@
           </div>
 
           <!-- Menú Modelo -->
-  <div id="menu-modelo" class="menu-content d-none h-100">
-          <h2>Modelo</h2>
-          <div class="containerModeloSettings">
-            <form id="formStyles">
-              <label for="color">Color:</label>
-              <input type="color" name="color" id="chooseColor" class="input">
-              <label for="roughness">Roughness:</label>
-              <input type="range" name="roughness" min="0" max="1000">  
-              <label for="metalness">Metalness:</label>
-              <input type="range" name="metalness" min="0" max="1000">
-              <label for="transmissionSlider">Transparencia:</label>
-              <input type="range" id="transmissionSlider" min="0" max="1" step="0.01" value="1">
-              <label for="thicknessSlider">Grosor:</label>
-              <input type="range" id="thicknessSlider" min="0" max="5" step="0.1" value="0.5">
-              <label for="envMapSlider">Reflejo:</label>
-              <input type="range" id="envMapSlider" min="0" max="5" step="0.1" value="1.5">
-              
-            </form>
-            <div id="mallas" class="d-flex ">
-              <div class="MallaOption">
-                <button class="botonMalla" id="wireframe">
-                  <div class="ImgFondo">
-                    <img src="../assets/icons/mod_wireframe.svg" alt="">
+          <div id="menu-modelo" class="menu-content d-none h-100">
+            <h2>Modelo</h2>
+            <div class="containerModeloSettings">
+              <form id="formStyles">
+                <label for="color">Color:</label>
+                <input type="color" name="color" id="chooseColor" class="input">
+                <label for="roughness">Roughness:</label>
+                <input type="range" name="roughness" min="0" max="1000">  
+                <label for="metalness">Metalness:</label>
+                <input type="range" name="metalness" min="0" max="1000">
+                <label for="transmissionSlider">Transparencia:</label>
+                <input type="range" id="transmissionSlider" min="0" max="1" step="0.01" value="1">
+                <label for="thicknessSlider">Grosor:</label>
+                <input type="range" id="thicknessSlider" min="0" max="5" step="0.1" value="0.5">
+                <label for="envMapSlider">Reflejo:</label>
+                <input type="range" id="envMapSlider" min="0" max="5" step="0.1" value="1.5">
+              </form>
+              <div id="mallas" class="d-flex ">
+                <div class="MallaOption">
+                  <button class="botonMalla" id="wireframe">
+                    <div class="ImgFondo">
+                      <img src="../assets/icons/mod_wireframe.svg" alt="">
+                    </div>
+                    <div class="botonMallaInfo">Malla</div>
+                  </button>
+                  <div id="wireframeOptions" >
+                    <input type="color" id="wireframeColor" value="#d95e7d">
                   </div>
-                  <div class="botonMallaInfo">Malla</div>
+                </div>
+
+                <button class="botonMalla" id="solido">
+                  <div class="ImgFondo">
+                    <img src="../assets/icons/mod_solidify.svg" alt="">
+                  </div>
+                  <div class="botonMallaInfo">Sólido</div>
                 </button>
-                <div id="wireframeOptions" >
-                  <input type="color" id="wireframeColor" value="#d95e7d">
-                </div>
+
+                <button class="botonMalla" id="togglePuntos">
+                  <div class="ImgFondo">
+                    <img src="../assets/icons/vertexsel.svg" alt="">
+                  </div>
+                  <div class="botonMallaInfo">Vértices</div>
+                </button>
               </div>
-  
-              <button class="botonMalla" id="solido">
-                <div class="ImgFondo">
-                  <img src="../assets/icons/mod_solidify.svg" alt="">
-                </div>
-                <div class="botonMallaInfo">Sólido</div>
-              </button>
-  
-              <button class="botonMalla" id="togglePuntos">
-                <div class="ImgFondo">
-                  <img src="../assets/icons/vertexsel.svg" alt="">
-                </div>
-                <div class="botonMallaInfo">Vértices</div>
-              </button>
+              <div id="previewTexturas"></div>
+              <button type="button" id="resetEstilos">Restablecer</button>
             </div>
-            <div id="previewTexturas"></div>
-            <button type="button" id="resetEstilos">Restablecer</button>
           </div>
-
-
-        </div>
         </div>
       </aside>
     </div>

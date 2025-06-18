@@ -1,5 +1,6 @@
 // scene/core/helpers.js
 import * as THREE from 'three';
+import { getSceneById } from './viewerRegistry.js';
 
 export function crearEjes(tamaño = 3) {
   const axesHelper = new THREE.AxesHelper(tamaño);
@@ -18,3 +19,64 @@ export function crearGrid(size = 50, divisions = 100) {
   return gridHelper;
 }
 
+
+/* Modular: listeners para todos los bloques .helper-icons */
+export function setupAllHelperIcons() {
+  document.querySelectorAll('.helper-icons').forEach(helperBlock => {
+    const btnAxes = helperBlock.querySelector('.toggleAxes, #toggleAxes');
+    const btnGrid = helperBlock.querySelector('.toggleGrid, #toggleGrid');
+
+    // Evita duplicidad de listeners: Clona los botones y reemplaza
+    if (btnAxes) {
+      const newBtnAxes = btnAxes.cloneNode(true);
+      btnAxes.parentNode.replaceChild(newBtnAxes, btnAxes);
+    }
+    if (btnGrid) {
+      const newBtnGrid = btnGrid.cloneNode(true);
+      btnGrid.parentNode.replaceChild(newBtnGrid, btnGrid);
+    }
+
+    // Recupera los nuevos nodos tras clonar
+    const btnAxesClean = helperBlock.querySelector('.toggleAxes, #toggleAxes');
+    const btnGridClean = helperBlock.querySelector('.toggleGrid, #toggleGrid');
+
+    let parentViewer = helperBlock.closest('.viewer1, .viewer2, #indexViewer1, #viewer2');
+    let viewerId = parentViewer?.id;
+
+    if (!viewerId && document.getElementById('indexViewer1')) {
+      viewerId = 'indexViewer1';
+    }
+
+    btnAxesClean?.addEventListener('click', () => {
+      console.log('[HELPERS] Pulso botón eje', viewerId);
+      const scene = getSceneById(viewerId);
+      if (!scene) {
+        console.warn('[HELPERS] No se encontró la escena para', viewerId);
+        return;
+      }
+      const axesHelper = scene.getObjectByName('helper_ejes');
+      if (axesHelper) {
+        axesHelper.visible = !axesHelper.visible;
+        console.log('[HELPERS] Estado axesHelper.visible:', axesHelper.visible);
+      } else {
+        console.warn('[HELPERS] No se encontró el eje en la escena', viewerId);
+      }
+    });
+
+    btnGridClean?.addEventListener('click', () => {
+      console.log('[HELPERS] Pulso botón grid', viewerId);
+      const scene = getSceneById(viewerId);
+      if (!scene) {
+        console.warn('[HELPERS] No se encontró la escena para', viewerId);
+        return;
+      }
+      const gridHelper = scene.getObjectByName('helper_grid');
+      if (gridHelper) {
+        gridHelper.visible = !gridHelper.visible;
+        console.log('[HELPERS] Estado gridHelper.visible:', gridHelper.visible);
+      } else {
+        console.warn('[HELPERS] No se encontró la grid en la escena', viewerId);
+      }
+    });
+  });
+}

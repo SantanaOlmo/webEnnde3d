@@ -16,12 +16,17 @@ import { attachSceneToViewer } from './environment/backgroundManager.js';
 import { setupDragAndDrop } from '../utils/drag-drop-handler.js';
 import { handleFile } from './db/model-upload.js';
 import { registerViewer } from './core/viewerRegistry.js';
+import { setupAllHelperIcons } from './core/helpers.js';
+
 
 const modeloOrigen = localStorage.getItem("modeloOrigen");
 const viewer1Id = document.getElementById("indexViewer1") ? "indexViewer1" : "viewer1";
 console.log("🎯 viewer1Id detectado:", viewer1Id);
 initViewerSwitchUI(viewer1Id);
 
+// ==================
+// Carga automática en viewer1 si vienes del visor individual
+// ==================
 if (modeloOrigen) {
   const key = `uploadedModel_${modeloOrigen}`;
 
@@ -30,7 +35,15 @@ if (modeloOrigen) {
     if (!fileFromDB) return;
 
     const viewer1Container = document.getElementById(viewer1Id);
-    viewer1Container.innerHTML = '';
+
+    // Elimina solo el canvas viejo (si existe), NO el contenido HTML (helpers y +)
+    const oldCanvas = viewer1Container.querySelector('canvas');
+    if (oldCanvas) oldCanvas.remove();
+
+    // Elimina el "+"
+    const plusSign = viewer1Container.querySelector('.plus-sign');
+    if (plusSign) plusSign.remove();
+
 
     const { scene, camera, renderer } = initScene(viewer1Id);
     attachSceneToViewer(viewer1Id, scene);
@@ -40,10 +53,19 @@ if (modeloOrigen) {
     console.log(`✅ Modelo cargado en ${viewer1Id}`);
     registerViewer(viewer1Id, scene, camera, renderer, model);
 
+    // Muestra los helpers
+    const helperIcons = viewer1Container.querySelector('.helper-icons');
+    if (helperIcons) helperIcons.style.display = "flex";
+
+    setupAllHelperIcons();
+
     animate(renderer, scene, camera, controls);
   })();
 }
 
+// ==========
+// Zonas de drop
+// ==========
 setupDragAndDrop({
   dropArea: document.querySelector('.viewer1'),
   fileInput: document.querySelector('#inputFile1'),
@@ -58,16 +80,22 @@ setupDragAndDrop({
   viewerId: 'viewer2'
 });
 
+// ==================
+// Procesado tras soltar archivo en visor 1 o 2
+// ==================
 setOnFileProcessed(async (file, viewerId) => {
   console.log(`📥 Archivo soltado en ${viewerId}: ${file.name}`);
 
-  const helperIcons = document.querySelector(`#${viewerId} .helper-icons`);
-  if (helperIcons) helperIcons.style.display = "flex";
-
   const container = document.getElementById(viewerId);
-  if (!container) return;
 
-  container.innerHTML = '';
+  // Elimina SOLO el canvas viejo, no el contenido html
+  const oldCanvas = container.querySelector('canvas');
+  if (oldCanvas) oldCanvas.remove();
+
+  // Elimina el "+"
+  const plusSign = container.querySelector('.plus-sign');
+  if (plusSign) plusSign.remove();
+
 
   const { scene, camera, renderer } = initScene(viewerId);
   attachSceneToViewer(viewerId, scene);
@@ -80,5 +108,12 @@ setOnFileProcessed(async (file, viewerId) => {
   console.log(`✅ Modelo cargado en ${viewerId}`);
   registerViewer(viewerId, scene, camera, renderer, model);
 
+  // Muestra los helpers SOLO cuando hay modelo
+  const helperIcons = container.querySelector('.helper-icons');
+  if (helperIcons) helperIcons.style.display = "flex";
+
+  setupAllHelperIcons();
+
   animate(renderer, scene, camera, controls);
 });
+
