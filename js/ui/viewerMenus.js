@@ -15,7 +15,7 @@ import {
 import { toggleNubeDePuntos } from '../scene/interaction/vertexToggle.js';
 import { applyToRelevantViewers } from '../scene/core/sceneSyncUtils.js';
 import { toggleSyncMode } from './viewerSwitch.js';
-import { setupAllHelperIcons } from '../scene/core/helpers.js'; // ¡Ahora sí!
+import { setupAllHelperIcons } from '../scene/core/helpers.js';
 
 function debounce(callback, delay) {
   let timeout;
