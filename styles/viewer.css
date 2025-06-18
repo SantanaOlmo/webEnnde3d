@@ -97,12 +97,12 @@ html, body {
 }
 
 .helper-icons button {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.185);
   border: none;
   padding: 0.4rem;
   border-radius: 8px;
   cursor: pointer;
-  transition: all  .1s ease-in-out;
+  transition: all .1s ease-in-out;
 
 }
 .helper-icons button:hover {
