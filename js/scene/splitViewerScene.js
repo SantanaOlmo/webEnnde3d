@@ -18,7 +18,7 @@ import { handleFile } from './db/model-upload.js';
 import { registerViewer } from './core/viewerRegistry.js';
 import { setupAllHelperIcons } from './core/helpers.js';
 import { setupPointSelection } from '../scene/interaction/pointSelectionManager.js';
-
+import { cambiarHDRI } from './environment/hdriManager.js';
 
 
 const modeloOrigen = localStorage.getItem("modeloOrigen");
@@ -48,6 +48,9 @@ if (modeloOrigen) {
 
 
     const { scene, camera, renderer } = initScene(viewer1Id);
+
+    cambiarHDRI(scene, 'campo.hdr');
+
     attachSceneToViewer(viewer1Id, scene);
     const controls = addOrbitControls(camera, renderer);
 
@@ -104,6 +107,8 @@ setOnFileProcessed(async (file, viewerId) => {
 
 
   const { scene, camera, renderer } = initScene(viewerId);
+  cambiarHDRI(scene, 'campo.hdr');
+
   attachSceneToViewer(viewerId, scene);
   const controls = addOrbitControls(camera, renderer);
 

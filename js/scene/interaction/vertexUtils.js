@@ -40,7 +40,7 @@ export function crearNubeDePuntos(modelo) {
       geometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
 
       const material = new THREE.PointsMaterial({
-        size: 0.02,
+        size: 0.01,
         vertexColors: true // Activar colores por vértice
       });
 
