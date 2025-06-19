@@ -29,9 +29,15 @@ export function setupDragAndDrop({ dropArea, fileInput = null, onFileDrop, viewe
     dropArea.classList.remove("drag-over");
 
     const file = ev.dataTransfer.files[0];
+    // === FIX ROBUSTO: Fuerza viewerId correcto ===
+    const realViewerId = activeViewer || viewerId || dropArea.id;
+    if (!realViewerId) {
+      console.error('❌ No se puede determinar el viewerId para este drop. Comprueba el DOM y el setup.');
+      return;
+    }
     if (file) {
-      console.log(`📦 Archivo soltado en ${viewerId || dropArea.id}: ${file.name}`);
-      await onFileDrop(file, activeViewer);
+      console.log(`📦 Archivo soltado en ${realViewerId}: ${file.name}`);
+      await onFileDrop(file, realViewerId);
     }
   });
 

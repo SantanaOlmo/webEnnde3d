@@ -19,7 +19,7 @@ import { registerViewer } from './core/viewerRegistry.js';
 import { setupAllHelperIcons } from './core/helpers.js';
 import { setupPointSelection } from '../scene/interaction/pointSelectionManager.js';
 import { cambiarHDRI } from './environment/hdriManager.js';
-
+import { isSyncMode } from '../ui/viewerSwitch.js';  // <--- IMPORTANTE PARA LA SINCRO DE CÁMARAS
 
 const modeloOrigen = localStorage.getItem("modeloOrigen");
 const viewer1Id = document.getElementById("indexViewer1") ? "indexViewer1" : "viewer1";
@@ -46,13 +46,16 @@ if (modeloOrigen) {
     const plusSign = viewer1Container.querySelector('.plus-sign');
     if (plusSign) plusSign.remove();
 
-
     const { scene, camera, renderer } = initScene(viewer1Id);
 
     cambiarHDRI(scene, 'campo.hdr');
 
     attachSceneToViewer(viewer1Id, scene);
     const controls = addOrbitControls(camera, renderer);
+
+    // --- GUARDAR CONTROL PARA SINCRO ---
+    window.controlsIndexViewer1 = controls;
+    setupCameraSyncIfReady();
 
     const model = await loadModel(scene, fileFromDB);
     console.log(`✅ Modelo cargado en ${viewer1Id}`);
@@ -105,12 +108,19 @@ setOnFileProcessed(async (file, viewerId) => {
   const plusSign = container.querySelector('.plus-sign');
   if (plusSign) plusSign.remove();
 
-
   const { scene, camera, renderer } = initScene(viewerId);
   cambiarHDRI(scene, 'campo.hdr');
 
   attachSceneToViewer(viewerId, scene);
   const controls = addOrbitControls(camera, renderer);
+
+  // --- GUARDAR CONTROL PARA SINCRO ---
+  if (viewerId === 'indexViewer1' || viewerId === 'viewer1') {
+    window.controlsIndexViewer1 = controls;
+  } else if (viewerId === 'viewer2') {
+    window.controlsViewer2 = controls;
+  }
+  setupCameraSyncIfReady();
 
   const fileFromDB = await getFileFromIndexedDB(`uploadedModel_${viewerId}`);
   if (!fileFromDB) return;
@@ -134,3 +144,32 @@ setOnFileProcessed(async (file, viewerId) => {
   animate(renderer, scene, camera, controls);
 });
 
+
+// ================
+// SINCRO DE CÁMARAS ENTRE VISORES (al final del archivo)
+// ================
+let syncingCamera = false;
+let syncSetupDone = false;
+
+function syncCamera(source, target) {
+  if (syncingCamera) return;
+  syncingCamera = true;
+  target.object.position.copy(source.object.position);
+  target.target.copy(source.target);
+  target.update();
+  syncingCamera = false;
+}
+
+function setupCameraSyncIfReady() {
+  if (syncSetupDone) return;
+  if (window.controlsIndexViewer1 && window.controlsViewer2) {
+    window.controlsIndexViewer1.addEventListener('change', () => {
+      if (isSyncMode()) syncCamera(window.controlsIndexViewer1, window.controlsViewer2);
+    });
+    window.controlsViewer2.addEventListener('change', () => {
+      if (isSyncMode()) syncCamera(window.controlsViewer2, window.controlsIndexViewer1);
+    });
+    syncSetupDone = true;
+    console.log('🟢 Sincronización de cámaras activada');
+  }
+}
