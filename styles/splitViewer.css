@@ -197,6 +197,7 @@ body, html {
   background: var(--ennde-, #a84a64);
   color: #fff;
 }
+
 .btnSuperponer{
   background-color: var(--ennde-);
   border-radius: 9px;
@@ -213,9 +214,30 @@ body, html {
 .btnSuperponer:hover {
   animation: pulse 1s infinite;
 }
-/* Parpadeo por punto */
-.blinking-1 { background: #2b8108 !important; /* verde menta */ }
-.blinking-2 { background: #0086ec !important; /* azul claro */ }
-.blinking-3 { background: #fff200 !important; /* amarillo suave */ }
 
-/* Puedes cambiar los colores a tu gusto */
+.blinking-1 {
+  animation: pulse-green-bg 1s infinite;
+
+}
+.blinking-2 {
+  animation: pulse-blue-bg 1s infinite;
+}
+.blinking-3 {
+  animation: pulse-yellow-bg 1s infinite;
+}
+
+@keyframes pulse-green-bg {
+  0%   { transform: scale(1);   background-color: #2b810800; }
+  50%  { transform: scale(1.07); background-color: #2b8108bf; }
+  100% { transform: scale(1);   background-color: #2b810800; }
+}
+@keyframes pulse-blue-bg {
+  0%   { transform: scale(1);   background-color: #0086ec00; }
+  50%  { transform: scale(1.07); background-color: #0086ecbf; }
+  100% { transform: scale(1);   background-color: #0086ec00; }
+}
+@keyframes pulse-yellow-bg {
+  0%   { transform: scale(1);   background-color: #fff20000; }
+  50%  { transform: scale(1.07); background-color: #fff200bf; }
+  100% { transform: scale(1);   background-color: #fff20000; }
+}
