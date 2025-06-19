@@ -17,6 +17,8 @@ import { setupDragAndDrop } from '../utils/drag-drop-handler.js';
 import { handleFile } from './db/model-upload.js';
 import { registerViewer } from './core/viewerRegistry.js';
 import { setupAllHelperIcons } from './core/helpers.js';
+import { setupPointSelection } from '../scene/interaction/pointSelectionManager.js';
+
 
 
 const modeloOrigen = localStorage.getItem("modeloOrigen");
@@ -58,6 +60,10 @@ if (modeloOrigen) {
     if (helperIcons) helperIcons.style.display = "flex";
 
     setupAllHelperIcons();
+
+    // Selección de puntos para este visor:
+    const visorNum = viewer1Id === 'indexViewer1' ? 1 : 2;
+    setupPointSelection({ renderer, camera, model, visor: visorNum });
 
     animate(renderer, scene, camera, controls);
   })();
@@ -113,6 +119,12 @@ setOnFileProcessed(async (file, viewerId) => {
   if (helperIcons) helperIcons.style.display = "flex";
 
   setupAllHelperIcons();
+
+  // Selección de puntos para el visor correspondiente:
+  let visorNum;
+  if (viewerId === 'indexViewer1' || viewerId === 'viewer1') visorNum = 1;
+  else if (viewerId === 'viewer2') visorNum = 2;
+  setupPointSelection({ renderer, camera, model, visor: visorNum });
 
   animate(renderer, scene, camera, controls);
 });
