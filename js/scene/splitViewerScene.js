@@ -20,6 +20,11 @@ import { setupAllHelperIcons } from './core/helpers.js';
 import { setupPointSelection } from '../scene/interaction/pointSelectionManager.js';
 import { cambiarHDRI } from './environment/hdriManager.js';
 import { isSyncMode } from '../ui/viewerSwitch.js';  // <--- IMPORTANTE PARA LA SINCRO DE CÁMARAS
+import { initRotationInputComparativo } from '../scene/interaction/rotationInput.js';
+import { resetAutoRotate } from '../scene/interaction/rotationInput.js';
+
+// ✅ SOLO UNA VEZ, NUNCA dentro de callbacks:
+initRotationInputComparativo();
 
 const modeloOrigen = localStorage.getItem("modeloOrigen");
 const viewer1Id = document.getElementById("indexViewer1") ? "indexViewer1" : "viewer1";
@@ -53,9 +58,11 @@ if (modeloOrigen) {
     attachSceneToViewer(viewer1Id, scene);
     const controls = addOrbitControls(camera, renderer);
 
-    // --- GUARDAR CONTROL PARA SINCRO ---
+    // --- GUARDAR CONTROL PARA SINCRO DE CÁMARAS ---
     window.controlsIndexViewer1 = controls;
     setupCameraSyncIfReady();
+
+    // ROTACIÓN AUTOMÁTICA: NO LLAMES initRotationInputComparativo() aquí
 
     const model = await loadModel(scene, fileFromDB);
     console.log(`✅ Modelo cargado en ${viewer1Id}`);
@@ -120,7 +127,11 @@ setOnFileProcessed(async (file, viewerId) => {
   } else if (viewerId === 'viewer2') {
     window.controlsViewer2 = controls;
   }
+
   setupCameraSyncIfReady();
+
+  // ✅ SOLO resetAutoRotate aquí, NO initRotationInputComparativo
+  resetAutoRotate(viewerId);
 
   const fileFromDB = await getFileFromIndexedDB(`uploadedModel_${viewerId}`);
   if (!fileFromDB) return;
@@ -143,7 +154,6 @@ setOnFileProcessed(async (file, viewerId) => {
 
   animate(renderer, scene, camera, controls);
 });
-
 
 // ================
 // SINCRO DE CÁMARAS ENTRE VISORES (al final del archivo)
