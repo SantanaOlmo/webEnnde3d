@@ -45,7 +45,7 @@ export function crearNubeDePuntos(modelo) {
       });
 
       // Tamaño para el raycaster
-      material.userData.pickSize = 0.03;
+      material.userData.pickSize = 0.005;
 
       const puntos = new THREE.Points(geometry, material);
       puntos.name = 'puntos_nube';
