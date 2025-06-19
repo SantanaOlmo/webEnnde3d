@@ -27,6 +27,7 @@ export function initVertexRaycast(renderer, camera, model) {
     const hits = [];
     model.traverse((pt) => {
       if (!pt.isPoints) return;
+      if (pt.name !== 'puntos_nube') return;
 
       pt.getWorldPosition(TEMP_VEC);
       const dist = TEMP_VEC.distanceTo(camera.position);
@@ -42,6 +43,16 @@ export function initVertexRaycast(renderer, camera, model) {
     const { object, index, point } = hits[0];
 
     const colors = object.geometry.attributes.color;
+    if (!colors) {
+      console.warn('❌ El objeto Points NO tiene atributo color', object);
+      return;
+    }
+
+    console.log("Objeto clicado:", object);
+console.log("Tiene atributo color?", !!object.geometry.attributes.color);
+console.log("Material vertexColors?", object.material.vertexColors);
+console.log("Material userData.pickSize:", object.material.userData.pickSize);
+
     colors.setXYZ(index, 1, 1, 0); // amarillo
     colors.needsUpdate = true;
 

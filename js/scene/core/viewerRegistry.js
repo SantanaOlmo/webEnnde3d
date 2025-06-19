@@ -34,3 +34,6 @@ export function getModelById(viewerId) {
 export function getControlsById(viewerId) {
   return scenes.get(viewerId)?.controls || null;
 }
+
+window.getCameraById = getCameraById;
+window.getControlsById = getControlsById;

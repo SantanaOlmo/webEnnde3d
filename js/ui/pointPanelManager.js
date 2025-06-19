@@ -56,7 +56,6 @@ let selectionStep = 0;
 function pedirSeleccionModelo(step) {
   if (step >= selectionOrder.length) return;
   const { visor, punto } = selectionOrder[step];
-  // Avisar al sistema de selección de puntos para que active el raycast para ese visor y punto
   window.dispatchEvent(new CustomEvent('activarSeleccionPunto', { detail: { visor, index: punto-1 } }));
 }
 

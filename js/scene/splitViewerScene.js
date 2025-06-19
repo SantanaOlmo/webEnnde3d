@@ -76,7 +76,7 @@ if (modeloOrigen) {
 
     // Selección de puntos para este visor:
     const visorNum = viewer1Id === 'indexViewer1' ? 1 : 2;
-    setupPointSelection({ renderer, camera, model, visor: visorNum });
+    setupPointSelection({ renderer, camera, model, scene, visor: visorNum });
 
     animate(renderer, scene, camera, controls);
   })();
@@ -150,7 +150,7 @@ setOnFileProcessed(async (file, viewerId) => {
   let visorNum;
   if (viewerId === 'indexViewer1' || viewerId === 'viewer1') visorNum = 1;
   else if (viewerId === 'viewer2') visorNum = 2;
-  setupPointSelection({ renderer, camera, model, visor: visorNum });
+  setupPointSelection({ renderer, camera, model, scene, visor: visorNum });
 
   animate(renderer, scene, camera, controls);
 });
