@@ -5,12 +5,20 @@ import * as THREE from 'three';
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 const TEMP_VEC = new THREE.Vector3();
-let puntosSeleccionados = [];
 
+// Nota: Ahora puntosSeleccionados es por visor, no global.
 export function initVertexRaycast(renderer, camera, model) {
-  window.addEventListener('click', (e) => {
+  if (!renderer || !camera || !model) return;
+
+  // Array de puntos seleccionados para este visor
+  const puntosSeleccionados = [];
+
+  // Usamos el canvas del renderer para el evento (así solo afecta a clicks en ese visor)
+  renderer.domElement.addEventListener('click', (e) => {
+    // Solo actúa si el modelo está definido
     if (!model) return;
 
+    // Calcula el ratón respecto al canvas
     const rect = renderer.domElement.getBoundingClientRect();
     mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
     mouse.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
