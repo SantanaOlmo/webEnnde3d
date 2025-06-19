@@ -15,6 +15,7 @@
   <script defer type="module" src="../js/ui/viewerMenus.js"></script>
   <script defer type="module" src="../js/loader.js"></script>
   <script defer type="module" src="/js/ui/loadHdriOptions.js"></script>
+  <script defer type="module" src="/js/ui/SelectPointsMenu.js"></script>
 </head>
 
 <body class="bg-black">
@@ -68,6 +69,12 @@
             <span class="plus-sign">+</span>
             <input class="d-none" id="inputFile1" type="file"/>
 
+            <!-- Menú de puntos para el visor 1 -->
+            <div class="points-bar" id="pointsBar1" style="display: none;">
+              <div class="point-label" id="point1-1">Punto 1</div>
+              <div class="point-label" id="point1-2">Punto 2</div>
+              <div class="point-label" id="point1-3">Punto 3</div>
+            </div>
             <!-- Botones de ejes y cuadrícula (helpers) SOLO CLASE, SIN ID DUPLICADO -->
             <div class="helper-icons" style="display: none;">
               <button class="toggleAxes" title="Mostrar/ocultar ejes">
@@ -84,7 +91,12 @@
           <div class="viewer2 rounded-2 position-relative" id="viewer2">
             <span class="plus-sign">+</span>
             <input class="d-none" id="inputFile2" type="file"/>
-            
+            <!-- Menú de puntos para el visor 2 -->
+              <div class="points-bar" id="pointsBar2" style="display: none;">
+                <div class="point-label" id="point2-1">Punto 1</div>
+                <div class="point-label" id="point2-2">Punto 2</div>
+                <div class="point-label" id="point2-3">Punto 3</div>
+              </div>
             <!-- Botones de ejes y cuadrícula (helpers) SOLO CLASE, SIN ID DUPLICADO -->
             <div class="helper-icons" style="display: none;">
               <button class="toggleAxes" title="Mostrar/ocultar ejes">
@@ -99,6 +111,7 @@
       </div>
       <!-- SIDEBAR DERECHO -->
       <aside id="sidebar" class="sidebar rounded-2 overflow-hidden">
+        
         <div id="toolbar" class="text-white d-flex flex-lg-column flex-row gap-5 align-items-center justify-content-center">
           <button id="btn-SwitchViewer" class="btnPrincipales">
             <img class="options-sidebar area_swap" src="../assets/icons/area_swap.svg" alt="area_swap" />
@@ -111,6 +124,9 @@
           </button>
           <button class="magnet btnPrincipales" id="btn-material">
             <img class="options-sidebar linked" src="../assets/icons/linked.svg" alt="link" />
+          </button>
+          <button id="btn-selectPoints" class="btnPrincipales selectPoints" data-bs-toggle="tooltip" title="Vincula puntos para superponer">
+            <img class="options-sidebar" src="../assets/icons/pointcloud_point.svg" alt="vincula Puntos">
           </button>
           <button class="info btnPrincipales">
             <img class="options-sidebar info" src="../assets/icons/info.svg" alt="info" />

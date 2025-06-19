@@ -1,6 +1,4 @@
 // js/scene/interaction/vertexUtils.js
-
-
 import * as THREE from 'three';
 
 export function guardarVertices(model) {
