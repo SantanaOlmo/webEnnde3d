@@ -172,17 +172,19 @@ body, html {
   pointer-events: auto;
   min-width: 270px;
   max-width: 90%;
+  font-size: .2em;
+  color: #fff;
+
+
 }
 
 /* Estilo base */
 .point-label {
   background: rgba(255,255,255,0.10);
-  color: #fff;
   border-radius: 9px;
   padding: 10px 22px;
   min-width: 78px;
   text-align: center;
-  font-size: .2em;
   font-weight: 500;
   box-shadow: 0 2px 6px rgba(0,0,0,.18);
   cursor: pointer;
@@ -195,7 +197,22 @@ body, html {
   background: var(--ennde-, #a84a64);
   color: #fff;
 }
+.btnSuperponer{
+  background-color: var(--ennde-);
+  border-radius: 9px;
+  border: none;
+  color:white;
+  transition: transform .8s ease-in-out;
+}
+@keyframes pulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
 
+.btnSuperponer:hover {
+  animation: pulse 1s infinite;
+}
 /* Parpadeo por punto */
 .blinking-1 { background: #2b8108 !important; /* verde menta */ }
 .blinking-2 { background: #0086ec !important; /* azul claro */ }
