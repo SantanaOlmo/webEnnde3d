@@ -13,6 +13,12 @@ h3 {
 #toolbar {
   background-color: rgb(12, 12, 12);
   padding: .2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* Justifica arriba: */
+  justify-content: flex-start;
+  border-radius: 0 0 15px 15px;
 }
 
 .options-sidebar {
@@ -318,4 +324,21 @@ input[type="range"]:hover::-webkit-slider-thumb {
   gap: 1rem;
   align-items: center;
   margin-bottom: 8px;
+}
+
+.ennde-logo-toolbar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 44px; /* Separa solo por abajo */
+}
+
+
+.ennde-logo-toolbar img {
+  max-width: 30px; 
+  width: 90%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 1px 2px #3336);
 }
