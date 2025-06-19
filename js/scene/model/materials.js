@@ -107,3 +107,15 @@ export function aplicarToonShading(model, colores, thresholds) {
     }
   });
 }
+
+// Aplica una matriz de transformación 4x4 a todo el modelo (incluyendo jerarquías)
+export function aplicarMatrizTransformacion(model, matriz) {
+  if (!model || !matriz) return;
+
+  model.traverse(child => {
+    if (child.isMesh) {
+      child.applyMatrix4(matriz);
+      child.updateMatrixWorld(true); // Asegura que la transformación se propaga correctamente
+    }
+  });
+}

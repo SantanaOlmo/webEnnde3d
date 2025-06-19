@@ -48,6 +48,7 @@ function alignPoints(A, B) {
   return m;
 }
 
+//ESTO SON LAS DOS COSAS QUE HAY QUE HACER PARA PARA RELOCALIZAR EL MODELO EN CUESTION
 // Luego simplemente:
 const matrix = alignPoints(A, B);
 meshA.applyMatrix4(matrix);
