@@ -15,7 +15,7 @@
   <script defer type="module" src="../js/ui/viewerMenus.js"></script>
   <script defer type="module" src="../js/loader.js"></script>
   <script defer type="module" src="/js/ui/loadHdriOptions.js"></script>
-  <script defer type="module" src="/js/ui/SelectPointsMenu.js"></script>
+  <script defer type="module" src="/js/ui/pointPanelManager.js"></script>
 </head>
 
 <body class="bg-black">
@@ -71,9 +71,9 @@
 
             <!-- Menú de puntos para el visor 1 -->
             <div class="points-bar" id="pointsBar1" style="display: none;">
-              <div class="point-label" id="point1-1">Punto 1</div>
-              <div class="point-label" id="point1-2">Punto 2</div>
-              <div class="point-label" id="point1-3">Punto 3</div>
+              <div class="point-label 1" id="point1-1">Punto 1</div>
+              <div class="point-label 2" id="point1-2">Punto 2</div>
+              <div class="point-label 3" id="point1-3">Punto 3</div>
             </div>
             <!-- Botones de ejes y cuadrícula (helpers) SOLO CLASE, SIN ID DUPLICADO -->
             <div class="helper-icons" style="display: none;">
@@ -93,9 +93,10 @@
             <input class="d-none" id="inputFile2" type="file"/>
             <!-- Menú de puntos para el visor 2 -->
               <div class="points-bar" id="pointsBar2" style="display: none;">
-                <div class="point-label" id="point2-1">Punto 1</div>
-                <div class="point-label" id="point2-2">Punto 2</div>
-                <div class="point-label" id="point2-3">Punto 3</div>
+                <div class="point-label 1" id="point2-1">Punto 1</div>
+                <div class="point-label 2" id="point2-2">Punto 2</div>
+                <div class="point-label 3" id="point2-3">Punto 3</div>
+                <button id="btnSuperponerModelos" class="btnSuperponer d-none">Superponer Modelos</button>
               </div>
             <!-- Botones de ejes y cuadrícula (helpers) SOLO CLASE, SIN ID DUPLICADO -->
             <div class="helper-icons" style="display: none;">

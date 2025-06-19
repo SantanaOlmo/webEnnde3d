@@ -92,3 +92,73 @@ export function loadModel(scene, file) {
     }
   });
 }
+
+
+// PARA CAMBIAR LOS DOS MODELOS AL VISOR : 
+// Ruta: js/scene/model/modelLoader.js
+export function loadModels(scene, files) {
+  // files: array de archivos
+  // Devuelve una promesa que resuelve con un array de modelos cargados
+  const models = [];
+  return Promise.all(
+    files.map((file, i) => {
+      return loadModelNoRemove(scene, file, i)
+        .then(obj => {
+          models.push(obj);
+          return obj;
+        });
+    })
+  ).then(() => models);
+}
+
+// Variante interna que NO elimina el modelo anterior, solo añade
+function loadModelNoRemove(scene, file, idx) {
+  return new Promise((resolve, reject) => {
+    initLoaders();
+    const name = file.name.toLowerCase();
+    const url = URL.createObjectURL(file);
+
+    function onLoad(obj) {
+      obj.userData.url = url;
+      obj.userData.modelId = idx; // Puedes usar esto para identificar modelo1, modelo2, etc.
+      obj.traverse(child => {
+        if (child.isMesh && child.material) {
+          child.userData.originalMaterial = child.material.clone();
+        }
+      });
+
+      scene.add(obj);
+
+      guardarVertices(obj);
+      escalarModelo(obj);  
+      centerAndFitModel(obj, scene);
+
+      // === Nube de puntos
+      const nube = crearNubeDePuntos(obj);
+      if (nube) {
+        scene.add(nube);
+        nube.visible = false;
+      }
+      resolve(obj);
+    }
+
+    function onError(err) {
+      console.error('Error cargando modelo:', err);
+      reject(err);
+    }
+
+    if (name.endsWith('.glb') || name.endsWith('.gltf')) {
+      gltfLoader.load(url, gltf => onLoad(gltf.scene), undefined, onError);
+    } else if (name.endsWith('.stl')) {
+      stlLoader.load(url, geometry => {
+        geometry.rotateX(-Math.PI / 2);
+        const material = new THREE.MeshStandardMaterial();
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.userData.originalMaterial = material.clone();
+        onLoad(mesh);
+      }, undefined, onError);
+    } else {
+      reject(new Error(`Formato no soportado: ${file.name}`));
+    }
+  });
+}

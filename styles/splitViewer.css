@@ -172,23 +172,72 @@ body, html {
   pointer-events: auto;
   min-width: 270px;
   max-width: 90%;
+  font-size: .2em;
+  color: #fff;
+
+
 }
 
+/* Estilo base */
 .point-label {
   background: rgba(255,255,255,0.10);
-  color: #fff;
   border-radius: 9px;
   padding: 10px 22px;
   min-width: 78px;
   text-align: center;
-  font-size: .2em;
   font-weight: 500;
   box-shadow: 0 2px 6px rgba(0,0,0,.18);
   cursor: pointer;
   transition: background .14s, color .14s;
   user-select: none;
+  transition: background 0.2s ease-in-out;
 }
+
 .point-label:hover {
   background: var(--ennde-, #a84a64);
   color: #fff;
+}
+
+.btnSuperponer{
+  background-color: var(--ennde-);
+  border-radius: 9px;
+  border: none;
+  color:white;
+  transition: transform .8s ease-in-out;
+}
+@keyframes pulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.btnSuperponer:hover {
+  animation: pulse 1s infinite;
+}
+
+.blinking-1 {
+  animation: pulse-green-bg 1s infinite;
+
+}
+.blinking-2 {
+  animation: pulse-blue-bg 1s infinite;
+}
+.blinking-3 {
+  animation: pulse-yellow-bg 1s infinite;
+}
+
+@keyframes pulse-green-bg {
+  0%   { transform: scale(1);   background-color: #2b810800; }
+  50%  { transform: scale(1.07); background-color: #2b8108bf; }
+  100% { transform: scale(1);   background-color: #2b810800; }
+}
+@keyframes pulse-blue-bg {
+  0%   { transform: scale(1);   background-color: #0086ec00; }
+  50%  { transform: scale(1.07); background-color: #0086ecbf; }
+  100% { transform: scale(1);   background-color: #0086ec00; }
+}
+@keyframes pulse-yellow-bg {
+  0%   { transform: scale(1);   background-color: #fff20000; }
+  50%  { transform: scale(1.07); background-color: #fff200bf; }
+  100% { transform: scale(1);   background-color: #fff20000; }
 }
