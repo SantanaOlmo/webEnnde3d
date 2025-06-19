@@ -174,6 +174,7 @@ body, html {
   max-width: 90%;
 }
 
+/* Estilo base */
 .point-label {
   background: rgba(255,255,255,0.10);
   color: #fff;
@@ -187,8 +188,17 @@ body, html {
   cursor: pointer;
   transition: background .14s, color .14s;
   user-select: none;
+  transition: background 0.2s ease-in-out;
 }
+
 .point-label:hover {
   background: var(--ennde-, #a84a64);
   color: #fff;
 }
+
+/* Parpadeo por punto */
+.blinking-1 { background: #2b8108 !important; /* verde menta */ }
+.blinking-2 { background: #0086ec !important; /* azul claro */ }
+.blinking-3 { background: #fff200 !important; /* amarillo suave */ }
+
+/* Puedes cambiar los colores a tu gusto */
