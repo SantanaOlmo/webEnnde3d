@@ -1,5 +1,11 @@
 // Ruta: ./js/ui/pointPanelManager.js
+import * as THREE from 'three';
 import { puntosSeleccionados } from '../scene/interaction/pointSelectionManager.js';
+import { alignPoints } from '../scene/model/alignModel.js';   // <-- IMPORTA AQUÍ TU FUNCIÓN
+import { getModelById } from '../scene/core/viewerRegistry.js';
+import { exportGLB } from '../scene/model/modelLoader.js';
+import { saveFileToIndexedDB } from '../scene/db/db-utils.js';
+
 
 // -- Elementos base y referencias
 const pointsBarIds = ['pointsBar1', 'pointsBar2'];
@@ -148,7 +154,6 @@ window.addEventListener('actualizarPuntosSeleccionados', () => {
   checkShowSuperponer();
 });
 
-const btnSuperponer = document.querySelector('.btnSuperponer');
 function checkShowSuperponer() {
   const todos = [...puntosSeleccionados[1], ...puntosSeleccionados[2]];
   const btnSuperponer = document.getElementById('btnSuperponerModelos');
@@ -165,11 +170,81 @@ function checkShowSuperponer() {
   }
 }
 
+const btnSuperponer = document.getElementById('btnSuperponerModelos');
 if (btnSuperponer) {
-  btnSuperponer.addEventListener('click', () => {
-    localStorage.setItem('fusionPoints', JSON.stringify(puntosSeleccionados));
-    window.location.href = '/views/viewerNew.html?from=splitviewer';
+  btnSuperponer.addEventListener('click', async () => {
+    // --- Recoge los 6 puntos seleccionados ---
+    let puntosA = puntosSeleccionados[1];
+    let puntosB = puntosSeleccionados[2];
+
+    // Seguridad: comprobamos que hay 3 puntos de cada
+    if (!puntosA || !puntosB || puntosA.length < 3 || puntosB.length < 3 || puntosA.includes(null) || puntosB.includes(null)) {
+      alert('Debes seleccionar 3 puntos en cada modelo antes de superponer.');
+      return;
+    }
+
+    // --- Limpieza forzada: asegura que TODOS los campos son numbers ---
+    function sanitizePointsArray(arr) {
+      return arr.map(p => ({
+        x: Number(p.x),
+        y: Number(p.y),
+        z: Number(p.z)
+      }));
+    }
+    puntosA = sanitizePointsArray(puntosA);
+    puntosB = sanitizePointsArray(puntosB);
+
+    // --- CONVIERTE a Vector3 siempre con numbers ---
+    function toVector3Array(arr) {
+      return arr.map(p =>
+        (p instanceof THREE.Vector3)
+          ? p
+          : new THREE.Vector3(Number(p.x), Number(p.y), Number(p.z))
+      );
+    }
+    puntosA = toVector3Array(puntosA);
+    puntosB = toVector3Array(puntosB);
+
+    // LOG de depuración: ahora SIEMPRE serán numbers
+    console.log('Puntos A:', puntosA);
+    console.log('Puntos B:', puntosB);
+    puntosA.forEach((p, i) => {
+      console.log("DEBUG PUNTO", i, p, typeof p.x, typeof p.y, typeof p.z);
+    });
+
+    // --- Calcula la matriz de alineación ---
+    const matrix = alignPoints(puntosA, puntosB);
+
+    // --- Guarda la matriz serializada en localStorage ---
+    console.log('Guardando matriz en localStorage:', matrix.elements);
+    localStorage.setItem('matrix', JSON.stringify(matrix.elements));
+
+    // --- Exporta y guarda ambos modelos antes de cambiar de pantalla ---
+    const model1 = getModelById('indexViewer1');
+    const model2 = getModelById('viewer2');
+    if (!model1 || !model2) {
+      alert('No se han encontrado ambos modelos en memoria.');
+      return;
+    }
+
+    try {
+      const blob1 = await exportGLB(model1);
+      const blob2 = await exportGLB(model2);
+      await saveFileToIndexedDB(blob1, 'finalModel_1');
+      await saveFileToIndexedDB(blob2, 'finalModel_2');
+    } catch (err) {
+      alert('Error al exportar y guardar los modelos: ' + err);
+      return;
+    }
+
+    // --- Ahora sí, redirige ---
+    console.log("Redirigiendo en 15 segundos...");
+    setTimeout(() => {
+      window.location.href = '/views/viewerFinal.html?from=splitviewer';
+    }, 15000);
   });
 }
+
+
 
 checkShowSuperponer();

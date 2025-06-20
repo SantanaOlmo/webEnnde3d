@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Visor Único</title>
+
+  <!-- Favicon del proyecto -->
+  <link rel="icon" href="../assets/img/ennde3d_icon.png" type="image/png">
+
+  <!-- Estilos comunes y específicos -->
+  <link rel="stylesheet" href="/styles/bootstrap.css"> 
+  <link rel="stylesheet" href="/styles/scrollbar.css">   
+  <link rel="stylesheet" href="/styles/loader.css">           
+  <link rel="stylesheet" href="/styles/sidebar.css">          
+  <link rel="stylesheet" href="/styles/viewer.css">      
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.css">
+
+
+  <!-- Scripts principales -->
+  <script type="module" src="/js/loader.js" defer></script>                      
+  <script type="module" src="/js/scene/init/initFinalViewer.js" defer></script> 
+  <script type="module" src="/js/ui/viewerMenus.js" defer></script>     
+  <script type="module" src="/js/ui/loadHdriOptions.js" defer></script>    
+  <script type="module" src="/js/utils/tooltips.js"></script>     
+  <script type="module" src="/js/bootstrap.bundle.js"></script>
+  <script type="module" src="/js/ui/toonShadingMenu.js"></script>
+</head>
+
+<body class="bg-dark">
+
+  <!-- LOADER DE INICIO (animación de cubo) -->
+  <div id="loader-container">
+    <div class="scene">
+      <div class="cube-wrapper">
+        <div class="cube">
+          <div class="cube-faces">
+            <div class="cube-face shadow"></div>
+            <div class="cube-face bottom"></div>
+            <div class="cube-face top"></div>
+            <div class="cube-face left"></div>
+            <div class="cube-face right"></div>
+            <div class="cube-face back"></div>
+            <div class="cube-face front"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTÓN DE RETORNO A INDEX -->
+  <button id="back" onclick="window.location.href = '/index.html'">
+    <svg fill="#000000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+
+    <!-- CONTENEDOR PRINCIPAL DEL VISOR + SIDEBAR -->
+  <div id="visorWrapper" class="d-flex flex-column flex-lg-row">
+    <div id="viewerContainer" class="position-relative">
+      <!-- === CAMBIO: AHORA LOS BOTONES ESTÁN DENTRO DE indexViewer1 === -->
+      <div id="indexViewer1" class="w-100 h-100 position-relative overflow-hidden">
+        <!-- Botones para helpers -->
+        <div id="helperToggles" class="helper-icons" style="display: none;">
+          <button id="toggleAxes" class="btnhelper" title="Mostrar/ocultar ejes">
+            <img src="../assets/icons/empty_arrows.svg" alt="ejes">
+          </button>
+          <button id="toggleGrid" class="btnhelper" title="Mostrar/ocultar cuadrícula">
+            <img src="../assets/icons/grid.svg" alt="cuadrícula">
+          </button>
+        </div>
+      </div>
+    </div>
+    <!-- SIDEBAR CON ICONOS -->
+  <aside id="sidebar" class="sidebar">
+      <div id="toolbar" class="d-flex flex-row flex-lg-column align-items-center justify-content-center gap-5">
+        <button id="btn-world" class="btnPrincipales world" data-bs-toggle="tooltip" title="Personaliza la escena">
+          <img class="options-sidebar world" src="../assets/icons/world.svg" alt="world">
+        </button>
+
+        <button id="btn-axes" class="btnPrincipales material" data-bs-toggle="tooltip" title="Personaliza el modelo">
+          <img class="options-sidebar monkey" src="../assets/icons/monkey.svg" alt="monkey">
+        </button>
+
+        <button id="btn-material" class="btnPrincipales magnet" data-bs-toggle="tooltip" title="Contrólalo todo a la vez">
+          <img class="options-sidebar linked" src="../assets/icons/linked.svg" alt="link">
+        </button>
+
+        <button id="btn-info" class="btnPrincipales info">
+          <img class="options-sidebar info" src="../assets/icons/info.svg" alt="info">
+        </button>
+
+        <button id="btn-goToCompare" class="btnPrincipales compare" data-bs-toggle="tooltip" title="Compara dos modelos 3D">
+          <img class="options-sidebar" src="../assets/icons/split_vertical.svg" alt="Comparar modelos">
+        </button>
+
+
+      </div>
+
+      <!-- PANEL DE MENÚS (mismo comportamiento que visor doble) -->
+      <div id="menuPanel" class="menu-panel">
+        <div id="menu-world" class="menu-content d-none h-100 w-100">
+            <!-- <h2>Environment</h2>-->
+             <h3>hdri</h3>
+          <div id="bloqueHDRI" class="opcionesHDRI h-100 d-flex flex-row flex-lg-column ">
+            <div class="colorEnv tarjeta ">
+              <input type="color" name="bgcolor" id="chooseBgColor" class="input color-picker envOption">
+            </div> 
+          </div>
+
+        </div>
+        <div id="menu-modelo" class="menu-content d-none h-100">
+          <h2>Modelo</h2>
+          <div class="containerModeloSettings">
+            <form id="formStyles">
+              <label for="color">Color:</label>
+              <input type="color" name="color" id="chooseColor" class="input">
+              <label for="roughness">Roughness:</label>
+              <input type="range" name="roughness" min="0" max="1000">  
+              <label for="metalness">Metalness:</label>
+              <input type="range" name="metalness" min="0" max="1000">
+              <label for="transmissionSlider">Transparencia:</label>
+              <input type="range" id="transmissionSlider" min="0" max="1" step="0.01" value="1">
+              <label for="thicknessSlider">Grosor:</label>
+              <input type="range" id="thicknessSlider" min="0" max="5" step="0.1" value="0.5">
+              <label for="envMapSlider">Reflejo:</label>
+              <input type="range" id="envMapSlider" min="0" max="5" step="0.1" value="1.5">
+              
+            </form>
+            <div id="mallas" class="d-flex ">
+              <div class="MallaOption">
+                <button class="botonMalla" id="wireframe">
+                  <div class="ImgFondo">
+                    <img src="../assets/icons/mod_wireframe.svg" alt="">
+                  </div>
+                  <div class="botonMallaInfo">Malla</div>
+                </button>
+                <div id="wireframeOptions" >
+                  <input type="color" id="wireframeColor" value="#d95e7d">
+                </div>
+              </div>
+  
+              <button class="botonMalla" id="solido">
+                <div class="ImgFondo">
+                  <img src="../assets/icons/mod_solidify.svg" alt="">
+                </div>
+                <div class="botonMallaInfo">Sólido</div>
+              </button>
+  
+              <button class="botonMalla" id="togglePuntos">
+                <div class="ImgFondo">
+                  <img src="../assets/icons/vertexsel.svg" alt="">
+                </div>
+                <div class="botonMallaInfo">Vértices</div>
+              </button>
+            </div>
+            <div id="toonShadingPanel" class="d-none">
+              <h3>Toon Shading</h3>
+
+              <div class="toon-color-block">
+                <label>Color base (luz):</label>
+                <input type="color" class="toon-color" value="#ffffff">
+                <input type="range" class="toon-range" min="0" max="100" value="60">
+              </div>
+
+              <div class="toon-color-block">
+                <label>Color sombra:</label>
+                <input type="color" class="toon-color" value="#000000">
+                <input type="range" class="toon-range" min="0" max="100" value="100">
+              </div>
+
+              <button id="addToonRange">Añadir rango</button>
+            </div>
+
+            <button id="btnToonShading">Toon Shading</button>
+
+            <div id="previewTexturas"></div>
+            <button type="button" id="resetEstilos">Restablecer</button>
+          </div>
+
+
+        </div>
+    </aside>
+  </div>
+
+</body>
+</html>

@@ -46,10 +46,11 @@ export function initVertexRaycast(renderer, camera, model) {
     colors.needsUpdate = true;
 
     puntosSeleccionados.push({
-      x: point.x.toFixed(4),
-      y: point.y.toFixed(4),
-      z: point.z.toFixed(4)
+      x: Math.round(Number(point.x) * 10000) / 10000,
+      y: Math.round(Number(point.y) * 10000) / 10000,
+      z: Math.round(Number(point.z) * 10000) / 10000
     });
+
 
     console.log("🎯 Punto seleccionado:", puntosSeleccionados.at(-1));
   });

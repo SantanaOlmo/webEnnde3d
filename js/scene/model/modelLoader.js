@@ -8,6 +8,8 @@ import { centerAndFitModel } from '../utils/centerFit.js';
 import { guardarVertices } from '../interaction/vertexUtils.js';
 import { crearNubeDePuntos } from '../interaction/vertexUtils.js';
 import { escalarModelo } from '../model/scaleModel.js';
+import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
+
 
 let gltfLoader, stlLoader;
 
@@ -28,10 +30,11 @@ function initLoaders() {
 
 export function loadModel(scene, file) {
   return new Promise((resolve, reject) => {
-    console.log(`Iniciando carga del modelo: ${file.name}`);
+    // --- Acepta tanto archivos (con .name) como blobs ---
+    const name = (file && file.name) ? file.name.toLowerCase() : 'model.glb';
+    console.log(`Iniciando carga del modelo: ${name}`);
     initLoaders();
 
-    const name = file.name.toLowerCase();
     const url = URL.createObjectURL(file);
 
     const prev = scene.userData.currentModel;
@@ -66,15 +69,16 @@ export function loadModel(scene, file) {
         nube.visible = false; // Opcional: empieza oculta
       }
 
-        console.log("Modelo añadido a la escena correctamente.");
-        resolve(obj);
-      }
+      console.log("Modelo añadido a la escena correctamente.");
+      resolve(obj);
+    }
 
     function onError(err) {
       console.error('Error cargando modelo:', err);
       reject(err);
     }
 
+    // --- Detecta extensión aunque sea por nombre "falso" ---
     if (name.endsWith('.glb') || name.endsWith('.gltf')) {
       console.log("Usando GLTFLoader");
       gltfLoader.load(url, gltf => onLoad(gltf.scene), undefined, onError);
@@ -88,10 +92,11 @@ export function loadModel(scene, file) {
         onLoad(mesh);
       }, undefined, onError);
     } else {
-      reject(new Error(`Formato no soportado: ${file.name}`));
+      reject(new Error(`Formato no soportado: ${name}`));
     }
   });
 }
+
 
 
 // PARA CAMBIAR LOS DOS MODELOS AL VISOR : 
@@ -160,5 +165,24 @@ function loadModelNoRemove(scene, file, idx) {
     } else {
       reject(new Error(`Formato no soportado: ${file.name}`));
     }
+  });
+}
+// Exporta un modelo Three.js a un Blob GLB listo para guardar en IndexedDB
+export function exportGLB(model) {
+  return new Promise((resolve, reject) => {
+    const exporter = new GLTFExporter();
+    exporter.parse(
+      model,
+      glb => {
+        // glb es un ArrayBuffer listo para guardar
+        // Lo convertimos a Blob
+        const blob = new Blob([glb], { type: 'model/gltf-binary' });
+        resolve(blob);
+      },
+      error => {
+        reject(error);
+      },
+      { binary: true }
+    );
   });
 }
