@@ -137,12 +137,13 @@ h3 {
   margin-top: 16px;
   margin-bottom: 24px;
 }
+
 .ennde-logo-toolbar img {
-  width: 40px;
-  width: 80%;
+  width: 90%;
   height: auto;
   display: block;
   filter: drop-shadow(0 1px 2px #3336);
+  transition: width .2s;
 }
 
 /* === HDRI Y TARJETAS === */
@@ -405,5 +406,32 @@ input[type="range"]:hover::-webkit-slider-thumb {
   }
 }
 
+@media (max-width: 600px) {
+  .ennde-logo-toolbar img {
+    width: 28px;          /* Más pequeño aún en móvil */
+    max-width: 38px;
+    min-width: 22px;
+    margin-top: 6px;
+    margin-bottom: 8px;
+  }
+  .ennde-logo-toolbar {
+    margin-top: 8px;
+    margin-bottom: 12px;
+  }
+}
 
+@media (max-width: 600px) {
+  .ennde-logo-toolbar {
+    margin-top: 8px;
+    margin-bottom: 12px;
+  }
+}
 
+#toolbar {
+  gap: 22px;
+}
+@media (max-width: 600px) {
+  #toolbar {
+    gap: 12px;
+  }
+}
