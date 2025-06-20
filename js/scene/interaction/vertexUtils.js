@@ -22,6 +22,8 @@ export function guardarVertices(model) {
 
 export function crearNubeDePuntos(modelo) {
   let nubeCreada = false;
+  console.log('Intentando crear nube de puntos para:', modelo, 'con hijos:', modelo.children?.length);
+
 
   modelo.traverse((child) => {
     if (child.isMesh && child.geometry?.attributes?.position) {
@@ -60,9 +62,17 @@ export function crearNubeDePuntos(modelo) {
     }
   });
 
-  if (!nubeCreada) {
-    console.warn("⚠️ No se pudo generar la nube de puntos: no se encontró ninguna malla válida.");
-  }
+ if (!nubeCreada) {
+  console.warn("⚠️ No se pudo generar la nube de puntos: no se encontró ninguna malla válida.", {
+    modelo,
+    nombre: modelo.name,
+    tipo: modelo.type,
+    esGLTF: !!modelo.userData.gltfExtensions,
+    hijos: modelo.children?.map(c => ({ nombre: c.name, tipo: c.type })),
+    encontradoMesh: modelo.getObjectByProperty?.('isMesh', true)
+  });
+}
+
 }
 
 

@@ -112,10 +112,12 @@ export function aplicarToonShading(model, colores, thresholds) {
 export function aplicarMatrizTransformacion(model, matriz) {
   if (!model || !matriz) return;
 
-  model.traverse(child => {
-    if (child.isMesh) {
-      child.applyMatrix4(matriz);
-      child.updateMatrixWorld(true); // Asegura que la transformación se propaga correctamente
-    }
-  });
+  // Convierte array a Matrix4 si es necesario
+  const mat4 = Array.isArray(matriz)
+    ? new THREE.Matrix4().fromArray(matriz)
+    : matriz;
+
+  model.applyMatrix4(mat4); // <- aplicar al root!
+
+  model.updateMatrixWorld(true);
 }

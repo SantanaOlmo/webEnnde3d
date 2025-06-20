@@ -169,6 +169,22 @@ function checkShowSuperponer() {
   }
 }
 
+function logMeshes(model, nombre) {
+  let meshCount = 0;
+  model.traverse(obj => {
+    if (obj.isMesh) {
+      console.log(`🐳🐋🐟🦖🦕🐉🐿️🐈🦌 Mesh en ${nombre}:`, obj.name, obj.geometry?.type, obj.geometry?.attributes);
+      meshCount++;
+    }
+  });
+  if (meshCount === 0) {
+    console.warn(`⚠️ No se encontró ningún Mesh en ${nombre}`);
+  } else {
+    console.log(`🔢 ${meshCount} Mesh(es) encontrados en ${nombre}`);
+  }
+}
+
+
 const btnSuperponer = document.getElementById('btnSuperponerModelos');
 if (btnSuperponer) {
   btnSuperponer.addEventListener('click', async () => {
@@ -225,6 +241,9 @@ if (btnSuperponer) {
       alert('No se han encontrado ambos modelos en memoria.');
       return;
     }
+      logMeshes(model1, 'MODELO 3 ANTES DE EXPORTAR');
+      logMeshes(model2, 'MODELO 2 ANTES DE EXPORTAR');
+
 
     try {
       const blob1 = await exportGLB(model1);
@@ -236,6 +255,8 @@ if (btnSuperponer) {
       return;
     }
 
+    logMeshes(model1, 'model1 (base)');
+    logMeshes(model2, 'model2 (alineado)');
     // --- Ahora sí, redirige ---
     console.log("Redirigiendo en 15 segundos...");
     setTimeout(() => {

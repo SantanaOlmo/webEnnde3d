@@ -28,23 +28,41 @@ function initLoaders() {
   }
 }
 
-export function loadModel(scene, file) {
+
+export function loadModel(scene, fileOrUrl) {
   return new Promise((resolve, reject) => {
-    // --- Acepta tanto archivos (con .name) como blobs ---
-    const name = (file && file.name) ? file.name.toLowerCase() : 'model.glb';
+    // Si es un Blob, crea un ObjectURL; si ya es una string, úsala directamente.
+    let url;
+    let shouldRevoke = false;
+
+    if (fileOrUrl instanceof Blob) {
+      url = URL.createObjectURL(fileOrUrl);
+      shouldRevoke = true;
+    } else if (typeof fileOrUrl === "string") {
+      url = fileOrUrl;
+    } else {
+      reject(new Error("Argumento inválido para loadModel (esperado Blob o string de URL)"));
+      return;
+    }
+
+    const name = (fileOrUrl && fileOrUrl.name) ? fileOrUrl.name.toLowerCase() : 'model.glb';
     console.log(`Iniciando carga del modelo: ${name}`);
     initLoaders();
-
-    const url = URL.createObjectURL(file);
 
     const prev = scene.userData.currentModel;
     if (prev) {
       console.log("Eliminando modelo anterior...");
       scene.remove(prev);
-      URL.revokeObjectURL(prev.userData.url);
+      if (prev.userData.url) URL.revokeObjectURL(prev.userData.url);
     }
 
     function onLoad(obj) {
+      obj.traverse(child => {
+        if (child.isMesh) {
+          console.log('[loadModel] Mesh detectado:', child.name, child.geometry?.type);
+        }
+      });
+
       console.log("Modelo cargado, procesando...");
       obj.userData.url = url;
 
@@ -69,12 +87,14 @@ export function loadModel(scene, file) {
         nube.visible = false; // Opcional: empieza oculta
       }
 
+      if (shouldRevoke) URL.revokeObjectURL(url);
       console.log("Modelo añadido a la escena correctamente.");
       resolve(obj);
     }
 
     function onError(err) {
       console.error('Error cargando modelo:', err);
+      if (shouldRevoke) URL.revokeObjectURL(url);
       reject(err);
     }
 
@@ -99,6 +119,7 @@ export function loadModel(scene, file) {
         onLoad(mesh);
       }, undefined, onError);
     } else {
+      if (shouldRevoke) URL.revokeObjectURL(url);
       reject(new Error(`Formato no soportado: ${name}`));
     }
   });
@@ -124,15 +145,31 @@ export function loadModels(scene, files) {
 }
 
 // Variante interna que NO elimina el modelo anterior, solo añade
-function loadModelNoRemove(scene, file, idx) {
+// js/scene/model/modelLoader.js
+
+// Variante que NO elimina modelos anteriores, solo añade el nuevo
+export function loadModelNoRemove(scene, fileOrUrl) {
   return new Promise((resolve, reject) => {
+    let url;
+    let shouldRevoke = false;
+
+    if (fileOrUrl instanceof Blob) {
+      url = URL.createObjectURL(fileOrUrl);
+      shouldRevoke = true;
+    } else if (typeof fileOrUrl === "string") {
+      url = fileOrUrl;
+    } else {
+      reject(new Error("Argumento inválido para loadModelNoRemove (esperado Blob o string de URL)"));
+      return;
+    }
+
+    const name = (fileOrUrl && fileOrUrl.name) ? fileOrUrl.name.toLowerCase() : 'model.glb';
+    console.log(`Iniciando carga del modelo (no remove): ${name}`);
     initLoaders();
-    const name = file.name.toLowerCase();
-    const url = URL.createObjectURL(file);
 
     function onLoad(obj) {
       obj.userData.url = url;
-      obj.userData.modelId = idx; // Puedes usar esto para identificar modelo1, modelo2, etc.
+
       obj.traverse(child => {
         if (child.isMesh && child.material) {
           child.userData.originalMaterial = child.material.clone();
@@ -145,31 +182,36 @@ function loadModelNoRemove(scene, file, idx) {
       escalarModelo(obj);  
       centerAndFitModel(obj, scene);
 
-      // === Nube de puntos
+      // Nube de puntos
       const nube = crearNubeDePuntos(obj);
       if (nube) {
         scene.add(nube);
         nube.visible = false;
       }
+
+      if (shouldRevoke) URL.revokeObjectURL(url);
+      console.log("Modelo añadido a la escena correctamente (no remove).");
       resolve(obj);
     }
 
     function onError(err) {
       console.error('Error cargando modelo:', err);
+      if (shouldRevoke) URL.revokeObjectURL(url);
       reject(err);
     }
 
     if (name.endsWith('.glb') || name.endsWith('.gltf')) {
+      console.log("Usando GLTFLoader (no remove)");
       gltfLoader.load(url, gltf => onLoad(gltf.scene), undefined, onError);
     } else if (name.endsWith('.stl')) {
+      console.log("Usando STLLoader (no remove)");
       stlLoader.load(url, geometry => {
         geometry.rotateX(-Math.PI / 2);
 
-      // === CENTRAR GEOMETRÍA EN ORIGEN ===
-          geometry.computeBoundingBox();
-          const center = new THREE.Vector3();
-          geometry.boundingBox.getCenter(center).negate();
-          geometry.translate(center.x, center.y, center.z);
+        geometry.computeBoundingBox();
+        const center = new THREE.Vector3();
+        geometry.boundingBox.getCenter(center).negate();
+        geometry.translate(center.x, center.y, center.z);
 
         const material = new THREE.MeshStandardMaterial();
         const mesh = new THREE.Mesh(geometry, material);
@@ -177,10 +219,59 @@ function loadModelNoRemove(scene, file, idx) {
         onLoad(mesh);
       }, undefined, onError);
     } else {
-      reject(new Error(`Formato no soportado: ${file.name}`));
+      if (shouldRevoke) URL.revokeObjectURL(url);
+      reject(new Error(`Formato no soportado: ${name}`));
     }
   });
 }
+// Variante solo para visor final: NO escalar, NO centrar, NO modificar nada tras cargar
+export function loadModelRaw(scene, fileOrUrl) {
+  return new Promise((resolve, reject) => {
+    let url;
+    let shouldRevoke = false;
+
+    if (fileOrUrl instanceof Blob) {
+      url = URL.createObjectURL(fileOrUrl);
+      shouldRevoke = true;
+    } else if (typeof fileOrUrl === "string") {
+      url = fileOrUrl;
+    } else {
+      reject(new Error("Argumento inválido para loadModelRaw (esperado Blob o string de URL)"));
+      return;
+    }
+
+    const name = (fileOrUrl && fileOrUrl.name) ? fileOrUrl.name.toLowerCase() : 'model.glb';
+    initLoaders();
+
+    function onLoad(obj) {
+      obj.userData.url = url;
+      scene.add(obj);
+
+      if (shouldRevoke) URL.revokeObjectURL(url);
+      resolve(obj);
+    }
+
+    function onError(err) {
+      if (shouldRevoke) URL.revokeObjectURL(url);
+      reject(err);
+    }
+
+    if (name.endsWith('.glb') || name.endsWith('.gltf')) {
+      gltfLoader.load(url, gltf => onLoad(gltf.scene), undefined, onError);
+    } else if (name.endsWith('.stl')) {
+      stlLoader.load(url, geometry => {
+        const material = new THREE.MeshStandardMaterial();
+        const mesh = new THREE.Mesh(geometry, material);
+        onLoad(mesh);
+      }, undefined, onError);
+    } else {
+      if (shouldRevoke) URL.revokeObjectURL(url);
+      reject(new Error(`Formato no soportado: ${name}`));
+    }
+  });
+}
+
+
 // Exporta un modelo Three.js a un Blob GLB listo para guardar en IndexedDB
 export function exportGLB(model) {
   return new Promise((resolve, reject) => {

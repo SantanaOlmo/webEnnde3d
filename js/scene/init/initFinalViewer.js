@@ -1,7 +1,7 @@
 // js/scene/init/initFinalViewer.js
 
 import { getFileFromIndexedDB } from '../db/db-utils.js';
-import { loadModel } from '../model/modelLoader.js';
+import { loadModelRaw } from '../model/modelLoader.js';
 import { initScene } from '../core/initScene.js';
 import { addOrbitControls } from '../core/cameraControls.js';
 import { animate } from '../core/animate.js';
@@ -32,6 +32,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
+  
+
   // 2. Inicializa la escena
   const { scene, camera, renderer } = initScene(viewerId);
   registerScene(viewerId, { scene, camera, renderer });
@@ -42,29 +44,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   const controls = addOrbitControls(camera, renderer);
   cambiarHDRI(scene, 'campo.hdr');
 
-  // 4. Carga los dos modelos en la escena
-  const model1 = await loadModel(scene, file1FromDB);
-  model1.name = 'modelo_base';
-  scene.add(model1);
-  updateModel(viewerId, model1);
+const model1 = await loadModelRaw(scene, file1FromDB);
+model1.name = 'modelo_base';
 
-  const model2 = await loadModel(scene, file2FromDB);
-  model2.name = 'modelo_alineado';
-  scene.add(model2);
+const model2 = await loadModelRaw(scene, file2FromDB);
+model2.name = 'modelo_alineado';
 
-  // 5. Aplica la matriz de alineación al segundo modelo
-  // Lee la matriz guardada (asegúrate que es un array de 16 numbers)
-  const matrixArray = JSON.parse(localStorage.getItem('matrix'));
-  console.log('Leyendo matriz de localStorage:', matrixArray);
+const matrixArray = JSON.parse(localStorage.getItem('matrix'));
 
-  if (!matrixArray || !Array.isArray(matrixArray) || matrixArray.length !== 16) {
-    alert('No se ha encontrado la matriz de alineación. Vuelve a alinear los modelos en el visor doble.');
-    return;
-  }
 
-  // Aplica la matriz usando tu función
-  aplicarMatrizTransformacion(model2, matrixArray);
-  console.log('✅ Matriz de alineación aplicada al segundo modelo');
+console.log("⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️⬇️Antes de aplicar matriz");
+console.log("modelo_base:", model1.position, model1.scale);
+console.log("modelo_alineado:", model2.position, model2.scale);
+console.log("matrixArray:", matrixArray);
+
+aplicarMatrizTransformacion(model2, matrixArray);
+
+console.log("Después de aplicar matriz");
+console.log("modelo_base:", model1.position, model1.scale);
+console.log("modelo_alineado:", model2.position, model2.scale);
 
   // 6. Añade helpers visuales
   if (scene && !scene.getObjectByName('helper_ejes')) scene.add(crearEjes());
@@ -93,4 +91,59 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Inicializa raycast para selección de puntos en ambos modelos si necesitas (por ejemplo para analizar diferencias)
   initVertexRaycast(renderer, camera, model1);
   initVertexRaycast(renderer, camera, model2);
+
+  depurar();
+
+
+  // PARA DEPURARR⬇️⬇️⬇️
+function depurar(){
+console.log('🟦 MODELO 1:', model1);
+console.dir(model1, { depth: 3 });
+console.log('  - Type:', model1.type, '| Children:', model1.children.length);
+console.log('🟩 MODELO 2:', model2);
+console.dir(model2, { depth: 3 });
+console.log('  - Type:', model2.type, '| Children:', model2.children.length);
+
+model1.traverse(obj => {
+  if (obj.isMesh) {
+    console.log('Mesh en modelo1:', obj.name, obj.geometry?.type, obj.geometry?.attributes);
+  }
 });
+model2.traverse(obj => {
+  if (obj.isMesh) {
+    console.log('Mesh en modelo2:', obj.name, obj.geometry?.type, obj.geometry?.attributes);
+  }
+});
+
+console.log('Hijos de modelo1:', model1.children);
+model1.children[0] && console.log('Primer hijo modelo1:', model1.children[0]);
+model1.children[0]?.traverse(obj => {
+  if (obj.isMesh) {
+    console.log('Mesh encontrado en modelo1:', obj.name, obj.geometry?.type, obj.geometry?.attributes);
+  }
+});
+
+console.log('Hijos de modelo2:', model2.children);
+model2.children[0] && console.log('Primer hijo modelo2:', model2.children[0]);
+model2.children[0]?.traverse(obj => {
+  if (obj.isMesh) {
+    console.log('Mesh encontrado en modelo2:', obj.name, obj.geometry?.type, obj.geometry?.attributes);
+  }
+});
+model1.children[0]?.traverse(obj => {
+  if (obj.isMesh) {
+    console.log('✔️ Mesh en modelo1:', obj.name, obj.geometry?.type, obj.geometry?.attributes);
+  }
+  if (obj.isGroup) {
+    console.log('➡️ Group en modelo1:', obj.name, obj.children.length);
+  }
+  if (obj.type === 'Object3D' && !obj.isMesh && !obj.isGroup) {
+    console.log('ℹ️ Object3D en modelo1:', obj.name, obj.children.length);
+  }
+});
+
+}
+  
+
+});
+
