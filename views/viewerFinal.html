@@ -24,7 +24,6 @@
   <script type="module" src="/js/ui/loadHdriOptions.js" defer></script>    
   <script type="module" src="/js/utils/tooltips.js"></script>     
   <script type="module" src="/js/bootstrap.bundle.js"></script>
-  <script type="module" src="/js/ui/toonShadingMenu.js"></script>
 </head>
 
 <body class="bg-dark">
@@ -49,7 +48,7 @@
   </div>
 
   <!-- BOTÓN DE RETORNO A INDEX -->
-  <button id="back" onclick="window.location.href = '/index.html'">
+  <button id="back" onclick="window.location.href = 'splitViewer.html'">
     <svg fill="#000000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
   </button>
 
@@ -72,6 +71,11 @@
     <!-- SIDEBAR CON ICONOS -->
   <aside id="sidebar" class="sidebar">
       <div id="toolbar" class="d-flex flex-row flex-lg-column align-items-center justify-content-center gap-5">
+        
+        <button id="btn-goToCompare" class="btnPrincipales compare" data-bs-toggle="tooltip" title="Cambia Modelo">
+          <img class="options-sidebar" src="../assets/icons/key_tab.svg" alt="Comparar modelos">
+        </button>
+
         <button id="btn-world" class="btnPrincipales world" data-bs-toggle="tooltip" title="Personaliza la escena">
           <img class="options-sidebar world" src="../assets/icons/world.svg" alt="world">
         </button>
@@ -87,11 +91,6 @@
         <button id="btn-info" class="btnPrincipales info">
           <img class="options-sidebar info" src="../assets/icons/info.svg" alt="info">
         </button>
-
-        <button id="btn-goToCompare" class="btnPrincipales compare" data-bs-toggle="tooltip" title="Compara dos modelos 3D">
-          <img class="options-sidebar" src="../assets/icons/split_vertical.svg" alt="Comparar modelos">
-        </button>
-
 
       </div>
 
@@ -152,26 +151,7 @@
                 <div class="botonMallaInfo">Vértices</div>
               </button>
             </div>
-            <div id="toonShadingPanel" class="d-none">
-              <h3>Toon Shading</h3>
-
-              <div class="toon-color-block">
-                <label>Color base (luz):</label>
-                <input type="color" class="toon-color" value="#ffffff">
-                <input type="range" class="toon-range" min="0" max="100" value="60">
-              </div>
-
-              <div class="toon-color-block">
-                <label>Color sombra:</label>
-                <input type="color" class="toon-color" value="#000000">
-                <input type="range" class="toon-range" min="0" max="100" value="100">
-              </div>
-
-              <button id="addToonRange">Añadir rango</button>
-            </div>
-
-            <button id="btnToonShading">Toon Shading</button>
-
+            
             <div id="previewTexturas"></div>
             <button type="button" id="resetEstilos">Restablecer</button>
           </div>

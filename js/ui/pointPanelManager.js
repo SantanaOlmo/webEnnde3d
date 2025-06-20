@@ -259,9 +259,9 @@ if (btnSuperponer) {
     logMeshes(model2, 'model2 (alineado)');
     // --- Ahora sí, redirige ---
     console.log("Redirigiendo en 15 segundos...");
-    setTimeout(() => {
+    
       window.location.href = '/views/viewerFinal.html?from=splitviewer';
-    }, 15000);
+    
   });
 }
 

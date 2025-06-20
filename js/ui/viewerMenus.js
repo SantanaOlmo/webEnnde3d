@@ -54,14 +54,16 @@ document.addEventListener('DOMContentLoaded', () => {
     activePanel = panel;
   };
 
-  const hideAllPanels = () => {
-    panelWorld.classList.add('d-none');
-    panelModelo.classList.add('d-none');
-    panelInfo.classList.add('d-none');
+const hideAllPanels = () => {
+  if (panelWorld) panelWorld.classList.add('d-none');
+  if (panelModelo) panelModelo.classList.add('d-none');
+  if (panelInfo) panelInfo.classList.add('d-none');
+  if (menuPanel) {
     menuPanel.classList.remove('show');
     menuPanel.style.display = 'none';
-    activePanel = null;
-  };
+  }
+  activePanel = null;
+};
 
   btnWorld?.addEventListener('click', () => {
     activePanel === panelWorld ? hideAllPanels() : (hideAllPanels(), showPanel(panelWorld));

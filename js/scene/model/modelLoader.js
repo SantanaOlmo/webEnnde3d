@@ -124,9 +124,6 @@ export function loadModel(scene, fileOrUrl) {
     }
   });
 }
-
-
-
 // PARA CAMBIAR LOS DOS MODELOS AL VISOR : 
 // Ruta: js/scene/model/modelLoader.js
 export function loadModels(scene, files) {
