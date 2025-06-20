@@ -248,6 +248,7 @@ if (btnSuperponer) {
     try {
       const blob1 = await exportGLB(model1);
       const blob2 = await exportGLB(model2);
+
       await saveFileToIndexedDB(blob1, 'finalModel_1');
       await saveFileToIndexedDB(blob2, 'finalModel_2');
     } catch (err) {
@@ -257,10 +258,8 @@ if (btnSuperponer) {
 
     logMeshes(model1, 'model1 (base)');
     logMeshes(model2, 'model2 (alineado)');
-    // --- Ahora sí, redirige ---
-    console.log("Redirigiendo en 15 segundos...");
     
-      window.location.href = '/views/viewerFinal.html?from=splitviewer';
+    window.location.href = '/views/viewerFinal.html?from=splitviewer';
     
   });
 }
