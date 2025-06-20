@@ -186,6 +186,22 @@ header {
   text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
 }
 
+.enlace-comparativo {
+  color: #b97593;
+  font-weight: 500;
+  text-decoration: underline dotted;
+  font-size: 1em;
+  opacity: 0.82;
+  text-align: center;
+  transition: color 0.15s;
+}
+.enlace-comparativo:hover,
+.enlace-comparativo:focus {
+  color: #e08fb8;
+  opacity: 1;
+}
+
+
 /* FOOTER */
 footer {
   background: linear-gradient(to right, #171717 0%, #171717 100%);
