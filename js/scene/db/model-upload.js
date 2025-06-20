@@ -1,5 +1,4 @@
 // js/scene/db/model-upload.js
-console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
 
 // === Importa la función para guardar en IndexedDB ===
 import { saveFileToIndexedDB } from './db-utils.js';

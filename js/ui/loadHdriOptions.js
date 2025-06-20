@@ -1,5 +1,4 @@
 // js/ui/loadHdriOptions.js
-console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
 
 // === IMPORTS DE FUNCIONES DE ESCENA Y UTILIDADES ===
 import { cambiarHDRI, quitarHDRI } from '../scene/environment/hdriManager.js';
