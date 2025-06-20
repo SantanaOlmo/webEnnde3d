@@ -47,6 +47,8 @@ document.addEventListener('DOMContentLoaded', async () => {
   window.scene = scene; // <- Esto SOLO para depuración
 
   const controls = addOrbitControls(camera, renderer);
+  // --- Añade aquí el dampingFactor si quieres ajustarlo ---
+  controls.dampingFactor = 0.08; // Cambia este valor a tu gusto
 
   // 🖼️ Cambiamos el HDRI de fondo inicialmente
   cambiarHDRI(scene, 'campo.hdr');
@@ -73,6 +75,14 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // ▶️ Lanzamos la animación (¡primero!)
   animate(renderer, scene, camera, controls);
+
+  const canvas = container.querySelector('canvas');
+if (canvas) {
+  canvas.classList.add('fade-in');
+  setTimeout(() => {
+    canvas.classList.add('visible');
+  }, 50);
+}
 
   // Ahora sí: Mostrar controles de helpers tras cargar modelo Y tras arrancar la animación
   const helperPanel = document.getElementById('helperToggles');

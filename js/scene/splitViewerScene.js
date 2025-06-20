@@ -56,6 +56,12 @@ if (modeloOrigen) {
     cambiarHDRI(scene, 'campo.hdr');
 
     attachSceneToViewer(viewer1Id, scene);
+
+    // --- AÑADE EL FADE-IN ---
+    const canvas = renderer.domElement;
+    canvas.classList.add('viewer-canvas-fadein');
+    setTimeout(() => canvas.classList.add('visible'), 80);
+
     const controls = addOrbitControls(camera, renderer);
 
     // --- GUARDAR CONTROL PARA SINCRO DE CÁMARAS ---
@@ -76,7 +82,7 @@ if (modeloOrigen) {
 
     // Selección de puntos para este visor:
     const visorNum = viewer1Id === 'indexViewer1' ? 1 : 2;
-    setupPointSelection({ renderer, camera, model, visor: visorNum });
+    setupPointSelection({ renderer, camera, model, scene, visor: visorNum });
 
     animate(renderer, scene, camera, controls);
   })();
@@ -119,6 +125,11 @@ setOnFileProcessed(async (file, viewerId) => {
   cambiarHDRI(scene, 'campo.hdr');
 
   attachSceneToViewer(viewerId, scene);
+
+  const canvas2 = renderer.domElement;
+canvas2.classList.add('viewer-canvas-fadein');
+setTimeout(() => canvas2.classList.add('visible'), 80);
+
   const controls = addOrbitControls(camera, renderer);
 
   // --- GUARDAR CONTROL PARA SINCRO ---
@@ -150,7 +161,7 @@ setOnFileProcessed(async (file, viewerId) => {
   let visorNum;
   if (viewerId === 'indexViewer1' || viewerId === 'viewer1') visorNum = 1;
   else if (viewerId === 'viewer2') visorNum = 2;
-  setupPointSelection({ renderer, camera, model, visor: visorNum });
+  setupPointSelection({ renderer, camera, model, scene, visor: visorNum });
 
   animate(renderer, scene, camera, controls);
 });

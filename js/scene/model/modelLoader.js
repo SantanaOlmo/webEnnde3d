@@ -86,6 +86,13 @@ export function loadModel(scene, file) {
       console.log("Usando STLLoader");
       stlLoader.load(url, geometry => {
         geometry.rotateX(-Math.PI / 2);
+
+        // === CENTRAR GEOMETRÍA EN ORIGEN ===
+        geometry.computeBoundingBox();
+        const center = new THREE.Vector3();
+        geometry.boundingBox.getCenter(center).negate();
+        geometry.translate(center.x, center.y, center.z);
+
         const material = new THREE.MeshStandardMaterial();
         const mesh = new THREE.Mesh(geometry, material);
         mesh.userData.originalMaterial = material.clone();
@@ -157,6 +164,13 @@ function loadModelNoRemove(scene, file, idx) {
     } else if (name.endsWith('.stl')) {
       stlLoader.load(url, geometry => {
         geometry.rotateX(-Math.PI / 2);
+
+      // === CENTRAR GEOMETRÍA EN ORIGEN ===
+          geometry.computeBoundingBox();
+          const center = new THREE.Vector3();
+          geometry.boundingBox.getCenter(center).negate();
+          geometry.translate(center.x, center.y, center.z);
+
         const material = new THREE.MeshStandardMaterial();
         const mesh = new THREE.Mesh(geometry, material);
         mesh.userData.originalMaterial = material.clone();
