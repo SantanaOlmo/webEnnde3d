@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Comparacion de modelos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;700&display=swap" rel="stylesheet">
   <link rel="icon" href="../assets/img/ennde3d_icon.png" type="image/png" />
   <link rel="stylesheet" href="../styles/bootstrap.css" />
   <link rel="stylesheet" href="../styles/splitViewer.css" />
@@ -113,7 +115,17 @@
       <!-- SIDEBAR DERECHO -->
       <aside id="sidebar" class="sidebar rounded-2 overflow-hidden">
         
-        <div id="toolbar" class="text-white d-flex flex-lg-column flex-row gap-5 align-items-center justify-content-center">
+        <div id="toolbar" class="text-white d-flex flex-lg-column flex-row gap-5 align-items-center justify-content-center ">
+
+          <!-- Logo ENNDE, arriba -->
+        <div class="ennde-logo-toolbar mt-2 mb-4">
+          <img src="../assets/img/ennde3d_icon.png" alt="ENND3D" />
+        </div>
+        
+        <!-- Separador arriba (ajusta altura para dejar el logo más arriba) -->
+        <div style="height: 10px; width: 1px;"></div>
+        
+        <!-- ...iconos... -->
           <button id="btn-SwitchViewer" class="btnPrincipales">
             <img class="options-sidebar area_swap" src="../assets/icons/area_swap.svg" alt="area_swap" />
           </button>
@@ -129,15 +141,20 @@
           <button id="btn-selectPoints" class="btnPrincipales selectPoints" data-bs-toggle="tooltip" title="Vincula puntos para superponer">
             <img class="options-sidebar" src="../assets/icons/pointcloud_point.svg" alt="vincula Puntos">
           </button>
-          <button class="info btnPrincipales">
-            <img class="options-sidebar info" src="../assets/icons/info.svg" alt="info" />
-          </button>
+          <button id="btn-info" class="info btnPrincipales">
+          <img class="options-sidebar info" src="../assets/icons/info.svg" alt="info" />
+        </button>
+
         </div>
 
         <!-- PANELES DE CONFIGURACIÓN -->
         <div id="menuPanel" class="menu-panel overflow-hidden">
           <!-- Menú Mundo -->
           <div id="menu-world" class="menu-content d-none h-100 w-100">
+            <!-- <h2>Environment</h2>-->
+            <h3 class="panel-title mb-3">
+              <img src="../assets/icons/world.svg" alt="" style="width: 22px; margin-right: 7px; vertical-align: middle; opacity: 0.7;">
+              Environment </h3>
             <div id="bloqueHDRI" class="opcionesHDRI h-100 d-flex flex-row flex-lg-column">
               <div class="colorEnv tarjeta">
                 <input type="color" name="color" id="chooseColor" class="input color-picker envOption" />
@@ -147,7 +164,9 @@
 
           <!-- Menú Modelo -->
           <div id="menu-modelo" class="menu-content d-none h-100">
-            <h2>Modelo</h2>
+            <h3 class="panel-title mb-3">
+          <img src="../assets/icons/monkey.svg" alt="" style="width: 22px; margin-right: 7px; vertical-align: middle;">
+          Material </h3>
             <div class="containerModeloSettings">
               <form id="formStyles">
                 <label for="color">Color:</label>
@@ -194,6 +213,24 @@
               <button type="button" id="resetEstilos">Restablecer</button>
             </div>
           </div>
+              <div id="menu-info" class="menu-content d-none h-100">
+                <h3 class="panel-title mb-3">
+                  <img src="../assets/icons/info.svg" alt="" style="width: 22px; margin-right: 7px; vertical-align: middle;">
+                  Ayuda rápida
+                </h3>
+                <ul class="info-shortcuts">
+                  <li><span><b>1.</b> Carga ambos modelos</span></li>
+                  <li><span><b>2.</b> Activa <kbd>Puntos</kbd> en ambos (recomendado: modo <b>Malla</b>)</span></li>
+                  <li><span><b>3.</b> Vincula puntos<kbd>para superponer</kbd></span></li>
+                  <li><span><b>4.</b> Haz clic en 3 vértices clave de cada modelo</span></li>
+                  <li><span><b>5.</b> Pulsa <kbd>Sincronizar modelos</kbd></span></li>
+                </ul>
+                <div class="info-tip">
+                  <b>Consejo:</b> Utiliza <kbd>Q/E</kbd>, <kbd>Shift</kbd>, <kbd>Espacio</kbd> y rueda/arrastrar ratón para navegar cómodamente.
+                </div>
+              </div>
+
+
         </div>
       </aside>
     </div>

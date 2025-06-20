@@ -56,6 +56,12 @@ if (modeloOrigen) {
     cambiarHDRI(scene, 'campo.hdr');
 
     attachSceneToViewer(viewer1Id, scene);
+
+    // --- AÑADE EL FADE-IN ---
+    const canvas = renderer.domElement;
+    canvas.classList.add('viewer-canvas-fadein');
+    setTimeout(() => canvas.classList.add('visible'), 80);
+
     const controls = addOrbitControls(camera, renderer);
 
     // --- GUARDAR CONTROL PARA SINCRO DE CÁMARAS ---
@@ -119,6 +125,11 @@ setOnFileProcessed(async (file, viewerId) => {
   cambiarHDRI(scene, 'campo.hdr');
 
   attachSceneToViewer(viewerId, scene);
+
+  const canvas2 = renderer.domElement;
+canvas2.classList.add('viewer-canvas-fadein');
+setTimeout(() => canvas2.classList.add('visible'), 80);
+
   const controls = addOrbitControls(camera, renderer);
 
   // --- GUARDAR CONTROL PARA SINCRO ---

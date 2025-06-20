@@ -31,9 +31,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- BOTONES Y ELEMENTOS PRINCIPALES ---
   const btnWorld = document.getElementById('btn-world');
   const btnModelo = document.getElementById('btn-axes');
+  const btnInfo = document.getElementById('btn-info');
   const btnGoToCompare = document.getElementById('btn-goToCompare');
+
   const panelWorld = document.getElementById('menu-world');
   const panelModelo = document.getElementById('menu-modelo');
+  const panelInfo = document.getElementById('menu-info');
+
   const menuPanel = document.getElementById('menuPanel');
   const formModelo = document.getElementById('formStyles');
   const btnReset = document.getElementById('resetEstilos');
@@ -53,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const hideAllPanels = () => {
     panelWorld.classList.add('d-none');
     panelModelo.classList.add('d-none');
+    panelInfo.classList.add('d-none');
     menuPanel.classList.remove('show');
     menuPanel.style.display = 'none';
     activePanel = null;
@@ -64,6 +69,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
   btnModelo?.addEventListener('click', () => {
     activePanel === panelModelo ? hideAllPanels() : (hideAllPanels(), showPanel(panelModelo));
+  });
+
+  btnInfo?.addEventListener('click', () => {
+    activePanel === panelInfo ? hideAllPanels() : (hideAllPanels(), showPanel(panelInfo));
   });
 
   if (btnGoToCompare) {
@@ -169,4 +178,5 @@ document.addEventListener('DOMContentLoaded', () => {
       aplicarToonShading(model, colors, thresholds);
     });
   });
+
 });

@@ -1,4 +1,3 @@
-
 // js/scene/interaction/vertexRaycast.js
 import * as THREE from 'three';
 

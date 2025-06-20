@@ -205,6 +205,125 @@ body, html {
   color:white;
   transition: transform .8s ease-in-out;
 }
+
+#wireframeOptions {
+  width: 32px;
+  height: 32px;
+  margin-left: 10px;
+  position: relative;
+  border-radius: 7px;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#wireframeColor {
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+  border: 1.5px solid #8885;
+  position: static;
+  right: 0;
+  top: 0;
+  cursor: pointer;
+}
+
+#menu-info.menu-content {
+  padding: 20px 20px 10px 20px !important; /* Padding general */
+  box-sizing: border-box;
+}
+
+#menu-info .panel-title {
+  font-size: 1em;
+  margin-bottom: 0.7em;
+  letter-spacing: 0.01em;
+  gap: 0.55em;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+#menu-info .panel-title img {
+  width: 18px !important;
+  margin-right: 3px;
+}
+
+.info-shortcuts {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.2em 0;
+  font-family: 'Rajdhani', Arial, sans-serif;
+}
+
+.info-shortcuts li {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 0.47em;      /* Más espacio vertical entre líneas */
+  font-size: 1em;
+  color: #e5e5e5;
+  font-weight: 400;
+  flex-wrap: wrap;
+  line-height: 1.35;          /* Un poco más de altura */
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+.info-shortcuts kbd {
+  display: inline-block;
+  min-width: 17px;
+  text-align: center;
+  padding: 1px 6px;
+  margin-right: 2px;
+  margin-bottom: 1px;
+  background: #222;
+  color: #fafcff;
+  border-radius: 5px;
+  font-family: 'Rajdhani', monospace;
+  font-size: 0.97em;
+  font-weight: 700;
+  box-shadow: 0 1px 2px #1118;
+  border: 1px solid #333a;
+  letter-spacing: 0.01em;
+}
+
+.info-shortcuts span {
+  font-family: 'Rajdhani', Arial, sans-serif;
+  font-size: 0.98em;
+  color: #e5e5e5;
+  font-weight: 400;
+  line-height: 1.22;
+}
+
+.info-tip {
+  margin: 1.3em 0 0 0;
+  padding: 1em 1.1em 1em 1.1em;  /* Más espacio dentro del consejo */
+  border-radius: 12px;
+  background: #17191c;
+  color: #7ae0f8;
+  font-family: 'Rajdhani', Arial, sans-serif;
+  font-size: 0.98em;
+  border-left: 2.6px solid #3cf0fa99;
+  box-shadow: 0 2px 7px #0004;
+  max-width: 100%;
+  word-break: break-word;
+}
+
+.info-tip b {
+  color: #2ae6fc;
+  font-weight: 700;
+}
+
+.viewer-canvas-fadein {
+  opacity: 0;
+  transition: opacity 1.3s cubic-bezier(.3,.65,.5,1);
+}
+.viewer-canvas-fadein.visible {
+  opacity: 1;
+}
+
+
+
 @keyframes pulse {
   0%   { transform: scale(1); }
   50%  { transform: scale(1.05); }
