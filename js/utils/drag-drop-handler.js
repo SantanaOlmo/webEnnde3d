@@ -43,22 +43,31 @@ export function setupDragAndDrop({ dropArea, fileInput = null, onFileDrop, viewe
 
   // === OPCIONAL: Soporte para input tipo file ===
 
+  let bloqueandoInput = false;
+
   if (fileInput) {
-    dropArea.addEventListener('click', () => {
+  dropArea.addEventListener('click', (event) => {
+      event.stopPropagation(); // <- EVITA doble apertura por burbuja
+      console.log('CLICK en dropArea');
       const noCanvasCargado = !dropArea.hasChildNodes() || dropArea.querySelector('canvas') === null;
-      if (noCanvasCargado) {
+      if (noCanvasCargado && !bloqueandoInput) {
         activeViewer = viewerId;
+        bloqueandoInput = true; // <-- ¡bloqueamos aquí!
         fileInput.click();
       }
-    });
+  });
 
-    fileInput.addEventListener('change', async (event) => {
+  fileInput.addEventListener('change', async (event) => {
+      console.log('CHANGE en fileInput');
       const file = event.target.files[0];
       if (file) {
         console.log(`📁 Archivo seleccionado manualmente: ${file.name}`);
         await onFileDrop(file, activeViewer);
         activeViewer = null;
+        fileInput.value = '';
       }
-    });
-  }
+      bloqueandoInput = false; // <-- liberamos aquí
+  });
+}
+
 }
