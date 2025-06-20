@@ -76,43 +76,42 @@
     <!-- SIDEBAR CON ICONOS -->
   <aside id="sidebar" class="sidebar">
 
-      <div id="toolbar" class="d-flex flex-row flex-lg-column align-items-center justify-content-center gap-5">
+      <div id="toolbar" class="d-flex flex-row flex-lg-column align-items-center justify-content-start gap-5 ">
       
         <!-- Logo ENNDE, arriba -->
-        <div class="ennde-logo-toolbar mt-2 mb-4">
-          <img src="../assets/img/ennde3d_icon.png" alt="ENND3D" />
+        <div class="ennde-logo-toolbar btnPrincipales toolbarButton">
+          <img src="../assets/img/ennde3d_icon.png" alt="ENND3D" class="options-sidebar ennde"/>
+        </div>
+
+        <div class="ActionButtons d-flex flex-row flex-lg-column align-items-center justify-content-center gap-5">
+          <button id="btn-world" class="btnPrincipales world toolbarButton" data-bs-toggle="tooltip" title="Personaliza la escena">
+            <img class="options-sidebar world" src="../assets/icons/world.svg" alt="world">
+          </button>
+
+          <button id="btn-axes" class="btnPrincipales material toolbarButton" data-bs-toggle="tooltip" title="Personaliza el modelo">
+            <img class="options-sidebar monkey" src="../assets/icons/monkey.svg" alt="monkey">
+          </button>
+
+          <button id="btn-info" class="btnPrincipales info toolbarButton">
+            <img class="options-sidebar info" src="../assets/icons/info.svg" alt="info">
+          </button>
+
+          <button id="btn-goToCompare" class="btnPrincipales compare toolbarButton" data-bs-toggle="tooltip" title="Compara dos modelos 3D">
+            <img class="options-sidebar" src="../assets/icons/split_vertical.svg" alt="Comparar modelos">
+          </button>
         </div>
         
-        <!-- Separador arriba (ajusta altura para dejar el logo más arriba) -->
-        <div style="height: 40px; width: 1px;"></div>
-        
-        <!-- ...iconos... -->
-        <button id="btn-world" class="btnPrincipales world" data-bs-toggle="tooltip" title="Personaliza la escena">
-          <img class="options-sidebar world" src="../assets/icons/world.svg" alt="world">
-        </button>
 
-        <button id="btn-axes" class="btnPrincipales material" data-bs-toggle="tooltip" title="Personaliza el modelo">
-          <img class="options-sidebar monkey" src="../assets/icons/monkey.svg" alt="monkey">
-        </button>
-
-        <button id="btn-info" class="btnPrincipales info">
-          <img class="options-sidebar info" src="../assets/icons/info.svg" alt="info">
-        </button>
-
-        <button id="btn-goToCompare" class="btnPrincipales compare" data-bs-toggle="tooltip" title="Compara dos modelos 3D">
-          <img class="options-sidebar" src="../assets/icons/split_vertical.svg" alt="Comparar modelos">
-        </button>
-        
-        <!-- Separador abajo (ajusta altura para centrar el bloque) -->
-        <div style="height: 50px; width: 1px;"></div> </div>
+      </div>
 
       <!-- PANEL DE MENÚS (mismo comportamiento que visor doble) -->
-          <div id="menuPanel" class="menu-panel">
-      <div id="menu-world" class="menu-content d-none h-100 w-100">
-        <h3 class="panel-title mb-3">
-          <img src="../assets/icons/world.svg" alt="" style="width: 22px; margin-right: 7px; vertical-align: middle;">
-          Environment
-        </h3>
+      <div id="menuPanel" class="menu-panel">
+
+        <div id="menu-world" class="menu-content d-none h-100 w-100">
+          <h3 class="panel-title mb-3">
+            <img src="../assets/icons/world.svg" alt="" style="width: 22px; margin-right: 7px; vertical-align: middle;">
+            Environment
+          </h3>
           <div id="bloqueHDRI" class="opcionesHDRI h-100 d-flex flex-row flex-lg-column ">
             <div class="colorEnv tarjeta ">
               <input type="color" name="bgcolor" id="chooseBgColor" class="input color-picker envOption">
@@ -120,10 +119,12 @@
           </div>
 
         </div>
+
         <div id="menu-modelo" class="menu-content d-none h-100">
           <h3 class="panel-title mb-3">
           <img src="../assets/icons/monkey.svg" alt="" style="width: 22px; margin-right: 7px; vertical-align: middle;">
-          Material </h3>
+          Material 
+          </h3>
           <div class="containerModeloSettings">
             <form id="formStyles">
               <label for="color">Color:</label>
@@ -190,13 +191,16 @@
             <div id="previewTexturas"></div>
             <button type="button" id="resetEstilos">Restablecer</button>
           </div>
-               
+              
         </div>
-          <div id="menu-info" class="menu-content d-none h-100">
+
+        <div id="menu-info" class="menu-content d-none h-100">
+
           <h3 class="panel-title mb-3">
             <img src="../assets/icons/info.svg" alt="" style="width: 22px; margin-right: 7px; vertical-align: middle;">
             Ayuda rápida
           </h3>
+
           <ul class="info-shortcuts">
             <li><kbd>Q</kbd> / <kbd>E</kbd> <span>Rotar cámara izquierda/derecha</span></li>
             <li><kbd>Espacio</kbd> <span>Rotación automática</span></li>
@@ -210,6 +214,7 @@
           </div>
 
         </div>
+      </div>
 
     </aside>
   </div>
