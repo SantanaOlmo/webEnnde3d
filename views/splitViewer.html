@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="../styles/splitViewer.css" />
   <link rel="stylesheet" href="../styles/loader.css" />
   <link rel="stylesheet" href="../styles/sidebar.css" />
+  <link rel="stylesheet" href="../styles/scrollbar.css " />
   <script defer src="../js/resizer.js"></script>
   <script defer type="module" src="../js/scene/db/model-upload.js"></script>
   <script defer type="module" src="../js/scene/splitViewerScene.js"></script>
@@ -153,7 +154,7 @@
         <!-- PANELES DE CONFIGURACIÓN -->
         <div id="menuPanel" class="menu-panel">
 
-          <div id="menu-world" class="menu-content d-none h-100 w-100">
+          <div id="menu-world" class="menu-content d-none h-100 w-100 d-flex justify-content-center">
             <h3 class="panel-title mb-3">
               <img src="../assets/icons/world.svg" alt="" style="width: 22px; margin-right: 7px; vertical-align: middle;">
               Environment
@@ -166,15 +167,16 @@
 
           </div>
 
-          <div id="menu-modelo" class="menu-content d-none h-100">
+          <div id="menu-modelo" class="menu-content d-none h-100 d-flex flex-md-column overflow-scroll">
             <h3 class="panel-title mb-3">
             <img src="../assets/icons/monkey.svg" alt="" style="width: 22px; margin-right: 7px; vertical-align: middle;">
             Material 
             </h3>
-            <div class="containerModeloSettings">
-              <form id="formStyles">
+            <div class="containerModeloSettings d-flex flex-row flex-lg-column align-items-center" >
+              
+              <form id="formStyles" class="d-flex flex-row flex-lg-column ">
                 <label for="color">Color:</label>
-                <input type="color" name="color" id="chooseColor" class="input">
+                <input type="color" name="color" id="chooseColor" class="input ">
                 <label for="roughness">Roughness:</label>
                 <input type="range" name="roughness" min="0" max="1000">  
                 <label for="metalness">Metalness:</label>
@@ -187,7 +189,7 @@
                 <input type="range" id="envMapSlider" min="0" max="5" step="0.1" value="1.5">
                 
               </form>
-              <div id="mallas" class="d-flex ">
+              <div id="mallas" class="d-flex flex-row flex-lg-column">
                 <div class="MallaOption">
                   <button class="botonMalla" id="wireframe">
                     <div class="ImgFondo">
@@ -199,7 +201,6 @@
                     <input type="color" id="wireframeColor" value="#d95e7d">
                   </div>
                 </div>
-    
                 <button class="botonMalla" id="solido">
                   <div class="ImgFondo">
                     <img src="../assets/icons/mod_solidify.svg" alt="">
@@ -214,10 +215,6 @@
                   <div class="botonMallaInfo">Vértices</div>
                 </button>
               </div>
-
-
-              <button id="btnToonShading">Toon Shading</button>
-
               <div id="previewTexturas"></div>
               <button type="button" id="resetEstilos">Restablecer</button>
             </div>
