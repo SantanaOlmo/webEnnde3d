@@ -1,4 +1,6 @@
 // scene/interaction/rotationInput.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
+
 import { getModelById } from '../core/viewerRegistry.js';
 import { isSyncMode, getActiveViewer } from '../../ui/viewerSwitch.js';
 
@@ -34,7 +36,6 @@ export function initRotationInput(viewerId) {
   // Se lanza el ciclo de rotación automática
   updateRotation();
 }
-
 
 // Ahora lo mismo pero adaptado para el modo comparativo con dos visores
 

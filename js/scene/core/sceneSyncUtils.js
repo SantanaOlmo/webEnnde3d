@@ -1,4 +1,6 @@
 // Ruta: js/scene/core/sceneSyncUtils.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
+
 import { getActiveViewer, isSyncMode } from '../../ui/viewerSwitch.js';
 import {
   getSceneById,
@@ -21,7 +23,6 @@ export function applyToRelevantViewers(callback) {
       renderer: getRendererById(viewerId),
       model: getModelById(viewerId),
     };
-    /*console.log("📡 applyToRelevantViewers →", viewerId, context.scene);*/
     if (context.scene) callback(context);
   };
 

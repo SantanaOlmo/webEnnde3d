@@ -1,20 +1,18 @@
 // js/scene/core/cameraControls.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
+
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import * as THREE from 'three';
 
 export function addOrbitControls(camera, renderer) {
-  console.log("cameraControls.js → addOrbitControls() ejecutado");
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.dampingFactor = 0.07; // Suavidad del movimiento
-  console.log('OrbitControls creado', controls);
-
   return controls;
 }
 
 export function centerCameraOnPoint(camera, controls, {x, y, z}, distance = 2) {
   if (!camera || !controls) {
-    console.warn('centerCameraOnPoint: cámara o controls no definidos', {camera, controls});
     return;
   }
   const target = new THREE.Vector3(Number(x), Number(y), Number(z));

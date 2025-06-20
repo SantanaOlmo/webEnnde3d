@@ -1,4 +1,5 @@
 // js/ui/loadHdriOptions.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
 
 // === IMPORTS DE FUNCIONES DE ESCENA Y UTILIDADES ===
 import { cambiarHDRI, quitarHDRI } from '../scene/environment/hdriManager.js';
@@ -24,9 +25,7 @@ async function loadHDRIOptions() {
 
       // Evento click en miniatura HDRI: aplica el HDRI al visor relevante
       img.addEventListener('click', () => {
-        console.log("🧪 Click en HDRI:", name);
         applyToRelevantViewers(({ viewerId, scene }) => {
-          console.log("➡️ [split] Aplicando HDRI a:", viewerId, scene);
           cambiarHDRI(scene, `${name}.hdr`);
         });
       });
@@ -39,7 +38,7 @@ async function loadHDRIOptions() {
     });
 
   } catch (err) {
-    console.error('Error cargando HDRIs:', err);
+    // Error al cargar HDRIs, no mostrar por consola en entrega final
   }
 }
 

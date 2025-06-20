@@ -1,4 +1,6 @@
 // scene/core/helpers.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
+
 import * as THREE from 'three';
 import { getSceneById } from './viewerRegistry.js';
 
@@ -18,7 +20,6 @@ export function crearGrid(size = 50, divisions = 100) {
   gridHelper.position.y = -1.5;
   return gridHelper;
 }
-
 
 /* Modular: listeners para todos los bloques .helper-icons */
 export function setupAllHelperIcons() {
@@ -48,35 +49,26 @@ export function setupAllHelperIcons() {
     }
 
     btnAxesClean?.addEventListener('click', () => {
-      console.log('[HELPERS] Pulso botón eje', viewerId);
       const scene = getSceneById(viewerId);
       if (!scene) {
-        console.warn('[HELPERS] No se encontró la escena para', viewerId);
         return;
       }
       const axesHelper = scene.getObjectByName('helper_ejes');
       if (axesHelper) {
         axesHelper.visible = !axesHelper.visible;
-        console.log('[HELPERS] Estado axesHelper.visible:', axesHelper.visible);
-      } else {
-        console.warn('[HELPERS] No se encontró el eje en la escena', viewerId);
       }
     });
 
     btnGridClean?.addEventListener('click', () => {
-      console.log('[HELPERS] Pulso botón grid', viewerId);
       const scene = getSceneById(viewerId);
       if (!scene) {
-        console.warn('[HELPERS] No se encontró la escena para', viewerId);
         return;
       }
       const gridHelper = scene.getObjectByName('helper_grid');
       if (gridHelper) {
         gridHelper.visible = !gridHelper.visible;
-        console.log('[HELPERS] Estado gridHelper.visible:', gridHelper.visible);
-      } else {
-        console.warn('[HELPERS] No se encontró la grid en la escena', viewerId);
       }
     });
   });
 }
+

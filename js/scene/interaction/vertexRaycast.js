@@ -1,4 +1,6 @@
 // js/scene/interaction/vertexRaycast.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
+
 import * as THREE from 'three';
 
 const raycaster = new THREE.Raycaster();
@@ -43,14 +45,8 @@ export function initVertexRaycast(renderer, camera, model) {
 
     const colors = object.geometry.attributes.color;
     if (!colors) {
-      console.warn('❌ El objeto Points NO tiene atributo color', object);
       return;
     }
-
-    console.log("Objeto clicado:", object);
-console.log("Tiene atributo color?", !!object.geometry.attributes.color);
-console.log("Material vertexColors?", object.material.vertexColors);
-console.log("Material userData.pickSize:", object.material.userData.pickSize);
 
     colors.setXYZ(index, 1, 1, 0); // amarillo
     colors.needsUpdate = true;
@@ -60,8 +56,5 @@ console.log("Material userData.pickSize:", object.material.userData.pickSize);
       y: Math.round(Number(point.y) * 10000) / 10000,
       z: Math.round(Number(point.z) * 10000) / 10000
     });
-
-
-    console.log("🎯 Punto seleccionado:", puntosSeleccionados.at(-1));
   });
 }

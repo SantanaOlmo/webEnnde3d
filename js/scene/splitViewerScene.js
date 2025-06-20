@@ -1,39 +1,41 @@
 // Ruta: js/splitViewerScene.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
 
 const from = localStorage.getItem("from");
 if (from === 'index') {
   localStorage.removeItem("modeloOrigen");
 }
 
-import { setOnFileProcessed } from './db/model-upload.js';
+import { setOnFileProcessed, handleFile } from './db/model-upload.js';
 import { getFileFromIndexedDB } from './db/db-utils.js';
 import { loadModel } from './model/modelLoader.js';
 import { animate } from './core/animate.js';
 import { initScene } from './core/initScene.js';
 import { addOrbitControls } from './core/cameraControls.js';
-import { initViewerSwitchUI } from '../ui/viewerSwitch.js';
-import { attachSceneToViewer } from './environment/backgroundManager.js';
-import { setupDragAndDrop } from '../utils/drag-drop-handler.js';
-import { handleFile } from './db/model-upload.js';
 import { registerViewer } from './core/viewerRegistry.js';
-import { setupAllHelperIcons } from './core/helpers.js';
-import { setupPointSelection } from '../scene/interaction/pointSelectionManager.js';
-import { cambiarHDRI } from './environment/hdriManager.js';
-import { isSyncMode } from '../ui/viewerSwitch.js';  // <--- IMPORTANTE PARA LA SINCRO DE CÁMARAS
-import { initRotationInputComparativo } from '../scene/interaction/rotationInput.js';
-import { resetAutoRotate } from '../scene/interaction/rotationInput.js';
 
-// ✅ SOLO UNA VEZ, NUNCA dentro de callbacks:
+import { attachSceneToViewer } from './environment/backgroundManager.js';
+import { cambiarHDRI } from './environment/hdriManager.js';
+
+import { setupDragAndDrop } from '../utils/drag-drop-handler.js';
+
+import { initViewerSwitchUI, isSyncMode } from '../ui/viewerSwitch.js';
+
+import { setupAllHelperIcons } from './core/helpers.js';
+
+import { setupPointSelection } from '../scene/interaction/pointSelectionManager.js';
+
+import { initRotationInputComparativo, resetAutoRotate } from '../scene/interaction/rotationInput.js';
+
+
 initRotationInputComparativo();
 
 const modeloOrigen = localStorage.getItem("modeloOrigen");
 const viewer1Id = document.getElementById("indexViewer1") ? "indexViewer1" : "viewer1";
-console.log("🎯 viewer1Id detectado:", viewer1Id);
+console.log("viewer1Id detectado:", viewer1Id);
 initViewerSwitchUI(viewer1Id);
 
-// ==================
 // Carga automática en viewer1 si vienes del visor individual
-// ==================
 if (modeloOrigen) {
   const key = `uploadedModel_${modeloOrigen}`;
 
@@ -43,7 +45,7 @@ if (modeloOrigen) {
 
     const viewer1Container = document.getElementById(viewer1Id);
 
-    // Elimina solo el canvas viejo (si existe), NO el contenido HTML (helpers y +)
+    // Elimina solo el canvas viejo (si existe)
     const oldCanvas = viewer1Container.querySelector('canvas');
     if (oldCanvas) oldCanvas.remove();
 
@@ -57,21 +59,18 @@ if (modeloOrigen) {
 
     attachSceneToViewer(viewer1Id, scene);
 
-    // --- AÑADE EL FADE-IN ---
+    // Fade-in
     const canvas = renderer.domElement;
     canvas.classList.add('viewer-canvas-fadein');
     setTimeout(() => canvas.classList.add('visible'), 80);
 
     const controls = addOrbitControls(camera, renderer);
 
-    // --- GUARDAR CONTROL PARA SINCRO DE CÁMARAS ---
     window.controlsIndexViewer1 = controls;
     setupCameraSyncIfReady();
 
-    // ROTACIÓN AUTOMÁTICA: NO LLAMES initRotationInputComparativo() aquí
-
     const model = await loadModel(scene, fileFromDB);
-    console.log(`✅ Modelo cargado en ${viewer1Id}`);
+    console.log(`Modelo cargado en ${viewer1Id}`);
     registerViewer(viewer1Id, scene, camera, renderer, model);
 
     // Muestra los helpers
@@ -80,7 +79,7 @@ if (modeloOrigen) {
 
     setupAllHelperIcons();
 
-    // Selección de puntos para este visor:
+    // Selección de puntos para este visor
     const visorNum = viewer1Id === 'indexViewer1' ? 1 : 2;
     setupPointSelection({ renderer, camera, model, scene, visor: visorNum });
 
@@ -88,9 +87,7 @@ if (modeloOrigen) {
   })();
 }
 
-// ==========
 // Zonas de drop
-// ==========
 setupDragAndDrop({
   dropArea: document.querySelector('.viewer1'),
   fileInput: document.querySelector('#inputFile1'),
@@ -105,11 +102,9 @@ setupDragAndDrop({
   viewerId: 'viewer2'
 });
 
-// ==================
 // Procesado tras soltar archivo en visor 1 o 2
-// ==================
 setOnFileProcessed(async (file, viewerId) => {
-  console.log(`📥 Archivo soltado en ${viewerId}: ${file.name}`);
+  console.log(`Archivo soltado en ${viewerId}: ${file.name}`);
 
   const container = document.getElementById(viewerId);
 
@@ -127,12 +122,12 @@ setOnFileProcessed(async (file, viewerId) => {
   attachSceneToViewer(viewerId, scene);
 
   const canvas2 = renderer.domElement;
-canvas2.classList.add('viewer-canvas-fadein');
-setTimeout(() => canvas2.classList.add('visible'), 80);
+  canvas2.classList.add('viewer-canvas-fadein');
+  setTimeout(() => canvas2.classList.add('visible'), 80);
 
   const controls = addOrbitControls(camera, renderer);
 
-  // --- GUARDAR CONTROL PARA SINCRO ---
+  // Guardar control para sincro
   if (viewerId === 'indexViewer1' || viewerId === 'viewer1') {
     window.controlsIndexViewer1 = controls;
   } else if (viewerId === 'viewer2') {
@@ -141,14 +136,13 @@ setTimeout(() => canvas2.classList.add('visible'), 80);
 
   setupCameraSyncIfReady();
 
-  // ✅ SOLO resetAutoRotate aquí, NO initRotationInputComparativo
   resetAutoRotate(viewerId);
 
   const fileFromDB = await getFileFromIndexedDB(`uploadedModel_${viewerId}`);
   if (!fileFromDB) return;
 
   const model = await loadModel(scene, fileFromDB);
-  console.log(`✅ Modelo cargado en ${viewerId}`);
+  console.log(`Modelo cargado en ${viewerId}`);
   registerViewer(viewerId, scene, camera, renderer, model);
 
   // Muestra los helpers SOLO cuando hay modelo
@@ -157,7 +151,7 @@ setTimeout(() => canvas2.classList.add('visible'), 80);
 
   setupAllHelperIcons();
 
-  // Selección de puntos para el visor correspondiente:
+  // Selección de puntos para el visor correspondiente
   let visorNum;
   if (viewerId === 'indexViewer1' || viewerId === 'viewer1') visorNum = 1;
   else if (viewerId === 'viewer2') visorNum = 2;
@@ -166,9 +160,7 @@ setTimeout(() => canvas2.classList.add('visible'), 80);
   animate(renderer, scene, camera, controls);
 });
 
-// ================
-// SINCRO DE CÁMARAS ENTRE VISORES (al final del archivo)
-// ================
+// SINCRO DE CÁMARAS ENTRE VISORES
 let syncingCamera = false;
 let syncSetupDone = false;
 
@@ -191,6 +183,7 @@ function setupCameraSyncIfReady() {
       if (isSyncMode()) syncCamera(window.controlsViewer2, window.controlsIndexViewer1);
     });
     syncSetupDone = true;
-    console.log('🟢 Sincronización de cámaras activada');
+    console.log('Sincronización de cámaras activada');
   }
 }
+

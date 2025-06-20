@@ -1,4 +1,5 @@
 // js/scene/interaction/vertexToggle.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
 
 export function toggleNubeDePuntos(model) {
   let encontrado = false;
@@ -9,12 +10,6 @@ export function toggleNubeDePuntos(model) {
       encontrado = true;
     }
   });
-
-  if (encontrado) {
-    console.log("✅ Nubes de puntos alternadas correctamente");
-  } else {
-    console.warn("⚠️ No se encontraron nubes de puntos para alternar");
-  }
 }
 
 

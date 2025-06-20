@@ -1,4 +1,6 @@
 // ./js/resizer.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
+
 const contenido = document.querySelector('.contenido');
 const leftPanel = document.querySelector('.c-viewer1');
 const rightPanel = document.querySelector('.c-viewer2');
@@ -75,4 +77,3 @@ window.addEventListener('resize', () => {
     resizer.style.left = '0';
   }
 });
-

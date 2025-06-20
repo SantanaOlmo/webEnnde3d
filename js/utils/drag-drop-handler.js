@@ -1,5 +1,7 @@
 // js/utils/drag-drop-handler.js
 
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
+
 /* Inicializa una zona de arrastrar y soltar para subir modelos 3D.
  * Puede usar también un input de archivo opcional. */
 export function setupDragAndDrop({ dropArea, fileInput = null, onFileDrop, viewerId = null }) {
@@ -12,7 +14,7 @@ export function setupDragAndDrop({ dropArea, fileInput = null, onFileDrop, viewe
   // Al entrar el archivo en la zona
   dropArea.addEventListener('dragenter', ev => {
     ev.preventDefault();
-    dropArea.classList.add("drag-over"); // solo esto activa el estilo CSS correcto
+    dropArea.classList.add("drag-over");
   });
 
   // Al mantener el archivo encima
@@ -29,14 +31,11 @@ export function setupDragAndDrop({ dropArea, fileInput = null, onFileDrop, viewe
     dropArea.classList.remove("drag-over");
 
     const file = ev.dataTransfer.files[0];
-    // === FIX ROBUSTO: Fuerza viewerId correcto ===
     const realViewerId = activeViewer || viewerId || dropArea.id;
     if (!realViewerId) {
-      console.error('❌ No se puede determinar el viewerId para este drop. Comprueba el DOM y el setup.');
       return;
     }
     if (file) {
-      console.log(`📦 Archivo soltado en ${realViewerId}: ${file.name}`);
       await onFileDrop(file, realViewerId);
     }
   });
@@ -46,28 +45,24 @@ export function setupDragAndDrop({ dropArea, fileInput = null, onFileDrop, viewe
   let bloqueandoInput = false;
 
   if (fileInput) {
-  dropArea.addEventListener('click', (event) => {
-      event.stopPropagation(); // <- EVITA doble apertura por burbuja
-      console.log('CLICK en dropArea');
+    dropArea.addEventListener('click', (event) => {
+      event.stopPropagation();
       const noCanvasCargado = !dropArea.hasChildNodes() || dropArea.querySelector('canvas') === null;
       if (noCanvasCargado && !bloqueandoInput) {
         activeViewer = viewerId;
-        bloqueandoInput = true; // <-- ¡bloqueamos aquí!
+        bloqueandoInput = true;
         fileInput.click();
       }
-  });
+    });
 
-  fileInput.addEventListener('change', async (event) => {
-      console.log('CHANGE en fileInput');
+    fileInput.addEventListener('change', async (event) => {
       const file = event.target.files[0];
       if (file) {
-        console.log(`📁 Archivo seleccionado manualmente: ${file.name}`);
         await onFileDrop(file, activeViewer);
         activeViewer = null;
         fileInput.value = '';
       }
-      bloqueandoInput = false; // <-- liberamos aquí
-  });
-}
-
+      bloqueandoInput = false;
+    });
+  }
 }

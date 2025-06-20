@@ -1,4 +1,6 @@
 // js/ui/viewerSwitch.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
+
 let activeViewer = 1;
 let syncMode = false;
 
@@ -19,14 +21,12 @@ export function initViewerSwitchUI(viewer1Id = 'viewer1') {
   const button = document.getElementById('btn-SwitchViewer');
   
   function updateUI() {
-
     button.style.backgroundColor = activeViewer === 1 ? 'green' : 'blue';
 
     const targetId = activeViewer === 1 ? viewer1Id : 'viewer2';
     const target = document.getElementById(targetId);
     
     if (!target) return;
-    console.log("🔍 Aplicando estilo a:", targetId, target);
 
     target.style.boxShadow = `0 0 0 3px ${button.style.backgroundColor}`;
     target.style.transition = 'box-shadow .2s ease-in-out';
@@ -42,4 +42,3 @@ export function initViewerSwitchUI(viewer1Id = 'viewer1') {
 
   updateUI();
 }
-

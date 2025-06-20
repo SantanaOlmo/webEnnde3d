@@ -1,4 +1,6 @@
 // Ruta: js/scene/interaction/pointSelectionManager.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
+
 import * as THREE from 'three';
 // Importa centrado de cámara
 import { centerCameraOnPoint } from '../core/cameraControls.js';
@@ -121,10 +123,9 @@ export function setupPointSelection({ renderer, camera, model, scene, visor }) {
       const colorArr = POINT_COLORS[activePoint.index];
       const colors = object.geometry.attributes.color;
 
-            if (!colors) {
-        console.warn('❌ El objeto Points NO tiene atributo color', object);
+      if (!colors) {
         return;
-        }
+      }
       colors.setXYZ(index, ...colorArr);
       colors.needsUpdate = true;
       object.geometry.attributes.color.needsUpdate = true;
@@ -158,8 +159,8 @@ export function setupPointSelection({ renderer, camera, model, scene, visor }) {
       const event = new CustomEvent('puntoSeleccionado', {
         detail: {
           visor,
-          puntoIndex: activePoint.index,           // 0, 1, 2
-          color: BOX_COLORS[activePoint.index],    // color CSS
+          puntoIndex: activePoint.index,
+          color: BOX_COLORS[activePoint.index],
           labelId: `point${visor}-${activePoint.index + 1}`,
           coords: {
             x: point.x.toFixed(4),

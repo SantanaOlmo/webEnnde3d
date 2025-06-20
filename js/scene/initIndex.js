@@ -1,6 +1,4 @@
-// js/initIndex.js
-
-console.log('🚀 initIndex.js cargado');
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
 
 // Importa configuración de drag & drop y lógica de subida
 import { setupDragAndDrop } from '../utils/drag-drop-handler.js';
@@ -17,8 +15,8 @@ async function handleFileAndRedirect(file, viewerId) {
 
 // Configura zona de subida (drag and drop y file input)
 setupDragAndDrop({
-  dropArea: document.querySelector('#dropIndex1'),      // Contenedor visual de arrastre
-  fileInput: document.querySelector('#inputIndexFile1'), // Input invisible para carga manual
-  onFileDrop: handleFileAndRedirect,                    // Acción a ejecutar al soltar o subir archivo
-  viewerId: 'indexViewer1'                              // ID único del visor actual
+  dropArea: document.querySelector('#dropIndex1'),      
+  fileInput: document.querySelector('#inputIndexFile1'), 
+  onFileDrop: handleFileAndRedirect,                    
+  viewerId: 'indexViewer1'                              
 });

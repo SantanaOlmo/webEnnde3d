@@ -1,12 +1,12 @@
 // ✅ ./js/scene/environment/hdriManager.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
+
 //recibe una ruta hdri, una escena y aplica el fondo
 import * as THREE from 'three';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js';
 import { getSceneById } from '../core/viewerRegistry';
 
-
-let currentHDRI = null; // ✅ Añade esto arriba
-
+let currentHDRI = null;
 
 // Cambiar HDRI desde un archivo
 export function cambiarHDRI(scene, nombreArchivo) {
@@ -18,7 +18,6 @@ export function cambiarHDRI(scene, nombreArchivo) {
     currentHDRI = texture;
   });
 }
-
 
 // Quitar HDRI y dejar fondo blanco
 export function quitarHDRI(scene) {

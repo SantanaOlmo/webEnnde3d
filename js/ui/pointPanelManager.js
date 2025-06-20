@@ -1,11 +1,12 @@
 // Ruta: ./js/ui/pointPanelManager.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
+
 import * as THREE from 'three';
 import { puntosSeleccionados } from '../scene/interaction/pointSelectionManager.js';
-import { alignPoints } from '../scene/model/alignModel.js';   // <-- IMPORTA AQUÍ TU FUNCIÓN
+import { alignPoints } from '../scene/model/alignModel.js';
 import { getModelById } from '../scene/core/viewerRegistry.js';
 import { exportGLB } from '../scene/model/modelLoader.js';
 import { saveFileToIndexedDB } from '../scene/db/db-utils.js';
-
 
 // -- Elementos base y referencias
 const pointsBarIds = ['pointsBar1', 'pointsBar2'];
@@ -72,7 +73,6 @@ function blinkNextPoint() {
   if (label) {
     startButtonBlink(label, punto);
     pedirSeleccionModelo(selectionStep);
-    console.log(`[UI] blinkNextPoint: Visor${visor} Punto${punto} (step ${selectionStep})`);
   }
 }
 
@@ -88,10 +88,8 @@ if (selectPointsBtn) {
     if (pointsMenuVisible) {
       selectionStep = 0;
       blinkNextPoint();
-      console.log(`[UI] Menú puntos mostrado, flujo arrancado step 0`);
     } else {
       stopButtonBlink();
-      console.log(`[UI] Menú puntos oculto`);
     }
   });
 }
@@ -108,7 +106,6 @@ for (let visor = 1; visor <= 2; visor++) {
           o => o.visor === visor && o.punto === punto
         );
         blinkNextPoint();
-        console.log(`[UI] Flujo iniciado en visor${visor} punto${punto} (step ${selectionStep})`);
       }
     });
   }
@@ -160,11 +157,9 @@ function checkShowSuperponer() {
     if (todos.every(p => p !== null)) {
       btnSuperponer.classList.remove('d-none');
       btnSuperponer.style.display = 'block';
-      console.log('[UI] Botón Superponer Modelos mostrado');
     } else {
       btnSuperponer.classList.add('d-none');
       btnSuperponer.style.display = 'none';
-      console.log('[UI] Botón Superponer Modelos oculto');
     }
   }
 }
@@ -173,17 +168,10 @@ function logMeshes(model, nombre) {
   let meshCount = 0;
   model.traverse(obj => {
     if (obj.isMesh) {
-      console.log(`🐳🐋🐟🦖🦕🐉🐿️🐈🦌 Mesh en ${nombre}:`, obj.name, obj.geometry?.type, obj.geometry?.attributes);
       meshCount++;
     }
   });
-  if (meshCount === 0) {
-    console.warn(`⚠️ No se encontró ningún Mesh en ${nombre}`);
-  } else {
-    console.log(`🔢 ${meshCount} Mesh(es) encontrados en ${nombre}`);
-  }
 }
-
 
 const btnSuperponer = document.getElementById('btnSuperponerModelos');
 if (btnSuperponer) {
@@ -220,18 +208,10 @@ if (btnSuperponer) {
     puntosA = toVector3Array(puntosA);
     puntosB = toVector3Array(puntosB);
 
-    // LOG de depuración: ahora SIEMPRE serán numbers
-    console.log('Puntos A:', puntosA);
-    console.log('Puntos B:', puntosB);
-    puntosA.forEach((p, i) => {
-      console.log("DEBUG PUNTO", i, p, typeof p.x, typeof p.y, typeof p.z);
-    });
-
     // --- Calcula la matriz de alineación ---
     const matrix = alignPoints(puntosA, puntosB);
 
     // --- Guarda la matriz serializada en localStorage ---
-    console.log('Guardando matriz en localStorage:', matrix.elements);
     localStorage.setItem('matrix', JSON.stringify(matrix.elements));
 
     // --- Exporta y guarda ambos modelos antes de cambiar de pantalla ---
@@ -241,9 +221,8 @@ if (btnSuperponer) {
       alert('No se han encontrado ambos modelos en memoria.');
       return;
     }
-      logMeshes(model1, 'MODELO 3 ANTES DE EXPORTAR');
-      logMeshes(model2, 'MODELO 2 ANTES DE EXPORTAR');
-
+    logMeshes(model1, 'MODELO 3 ANTES DE EXPORTAR');
+    logMeshes(model2, 'MODELO 2 ANTES DE EXPORTAR');
 
     try {
       const blob1 = await exportGLB(model1);
@@ -258,13 +237,8 @@ if (btnSuperponer) {
     logMeshes(model1, 'model1 (base)');
     logMeshes(model2, 'model2 (alineado)');
     // --- Ahora sí, redirige ---
-    console.log("Redirigiendo en 15 segundos...");
-    
-      window.location.href = '/views/viewerFinal.html?from=splitviewer';
-    
+    window.location.href = '/views/viewerFinal.html?from=splitviewer';
   });
 }
-
-
 
 checkShowSuperponer();

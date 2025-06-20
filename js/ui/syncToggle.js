@@ -1,11 +1,12 @@
 // js/ui/syncToggle.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
+
 import { toggleSyncMode, isSyncMode } from './viewerSwitch.js';
 
 export function initSyncToggleUI() {
   const button = document.getElementById('btn-material');
 
   if (!button) {
-    console.warn("🔗 Botón de sincronización no encontrado.");
     return;
   }
 
@@ -22,7 +23,6 @@ export function initSyncToggleUI() {
 
   button.addEventListener('click', () => {
     const nuevoEstado = toggleSyncMode();
-    console.log(`🔄 SyncMode: ${nuevoEstado}`);
     updateSyncUI();
   });
 

@@ -1,4 +1,6 @@
 // js/ui/viewerMenus.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
+
 import {
   getSceneById,
   getModelById
@@ -29,8 +31,6 @@ function debounce(callback, delay) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  console.log('Buscando btn-changeModel...', document.getElementById('btn-changeModel'));
-console.log('Contenido del sidebar:', document.getElementById('sidebar')?.innerHTML);
 
   // --- BOTONES Y ELEMENTOS PRINCIPALES ---
   const btnWorld = document.getElementById('btn-world');
@@ -148,17 +148,14 @@ console.log('Contenido del sidebar:', document.getElementById('sidebar')?.innerH
   btnReset?.addEventListener('click', () => {
     if (window.model1 && window.model2 && window.activeModel) {
       if (window.linkedMode) {
-        console.log('Restablecer: Ambos modelos');
         restaurarMaterialesOriginales(window.model1);
         restaurarMaterialesOriginales(window.model2);
       } else {
-        console.log('Restablecer: Modelo activo', window.activeModel.name);
         restaurarMaterialesOriginales(window.activeModel);
       }
     } else {
       applyToRelevantViewers(({ model }) => {
         if (!model) return;
-        console.log('Restablecer: Viewer clásico');
         restaurarMaterialesOriginales(model);
       });
     }
@@ -175,7 +172,6 @@ console.log('Contenido del sidebar:', document.getElementById('sidebar')?.innerH
     }
   });
 
-
   // --- BOTONES VISUALES ---
   const btnWireframe = document.getElementById('wireframe');
   const btnSolido = document.getElementById('solido');
@@ -184,59 +180,48 @@ console.log('Contenido del sidebar:', document.getElementById('sidebar')?.innerH
   btnWireframe?.addEventListener('click', () => {
     if (window.model1 && window.model2 && window.activeModel) {
       if (window.linkedMode) {
-        console.log('Wireframe: Ambos modelos');
         cambiarMaterial(window.model1, 'wireframe', '#000000');
         cambiarMaterial(window.model2, 'wireframe', '#000000');
       } else {
-        console.log('Wireframe: Modelo activo', window.activeModel.name);
         cambiarMaterial(window.activeModel, 'wireframe', '#000000');
       }
     } else {
       applyToRelevantViewers(({ model }) => {
         if (model) {
-          console.log('Wireframe: Viewer clásico');
           cambiarMaterial(model, 'wireframe', '#000000');
         }
       });
     }
   });
 
-
   btnSolido?.addEventListener('click', () => {
     if (window.model1 && window.model2 && window.activeModel) {
       if (window.linkedMode) {
-        console.log('Sólido: Ambos modelos');
         cambiarMaterial(window.model1, 'solido');
         cambiarMaterial(window.model2, 'solido');
       } else {
-        console.log('Sólido: Modelo activo', window.activeModel.name);
         cambiarMaterial(window.activeModel, 'solido');
       }
     } else {
       applyToRelevantViewers(({ model }) => {
         if (model) {
-          console.log('Sólido: Viewer clásico');
           cambiarMaterial(model, 'solido');
         }
       });
     }
   });
 
-
   btnPuntos?.addEventListener('click', () => {
     if (window.model1 && window.model2 && window.activeModel) {
       if (window.linkedMode) {
-        console.log('Vértices: Ambos modelos');
         toggleNubeDePuntos(window.model1);
         toggleNubeDePuntos(window.model2);
       } else {
-        console.log('Vértices: Modelo activo', window.activeModel.name);
         toggleNubeDePuntos(window.activeModel);
       }
     } else {
       applyToRelevantViewers(({ model }) => {
         if (model) {
-          console.log('Vértices: Viewer clásico');
           toggleNubeDePuntos(model);
         }
       });
@@ -247,30 +232,22 @@ console.log('Contenido del sidebar:', document.getElementById('sidebar')?.innerH
   const btnChange = document.getElementById('btn-changeModel');
   const btnLinked = document.getElementById('btn-material'); // Ojo, reutilizado arriba
 
-  console.log(document.getElementById('btn-changeModel'));
+  if (btnChange) {
+    btnChange.addEventListener('click', () => {
+      if (!window.activeModel || !window.model1 || !window.model2) return;
+      window.activeModel = (window.activeModel === window.model1) ? window.model2 : window.model1;
+      updateOutlines();
+    });
+  }
 
-if (btnChange) {
-  btnChange.addEventListener('click', () => {
-    if (!window.activeModel || !window.model1 || !window.model2) return;
-    window.activeModel = (window.activeModel === window.model1) ? window.model2 : window.model1;
-    console.log(
-      '[BTN CHANGE] Modelo activo cambiado a:',
-      window.activeModel === window.model1 ? 'model1' : 'model2',
-      window.activeModel
-    );
-    updateOutlines();
-  });
-}
-
-if (btnLinked && window.updateOutlines) {
-  btnLinked.addEventListener('click', () => {
-    if (typeof window.linkedMode !== 'boolean') return;
-    window.linkedMode = !window.linkedMode;
-    btnLinked.classList.toggle('active', window.linkedMode);
-    window.updateOutlines();
-  });
-}
-
+  if (btnLinked && window.updateOutlines) {
+    btnLinked.addEventListener('click', () => {
+      if (typeof window.linkedMode !== 'boolean') return;
+      window.linkedMode = !window.linkedMode;
+      btnLinked.classList.toggle('active', window.linkedMode);
+      window.updateOutlines();
+    });
+  }
 
   // --- SYNC BOTÓN ---
   const btnSync = document.getElementById('btn-material');

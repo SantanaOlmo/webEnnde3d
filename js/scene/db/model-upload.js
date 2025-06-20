@@ -1,4 +1,5 @@
 // js/scene/db/model-upload.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
 
 // === Importa la función para guardar en IndexedDB ===
 import { saveFileToIndexedDB } from './db-utils.js';
@@ -20,20 +21,20 @@ export async function handleFile(file, viewerId = 'indexViewer1') {
   }
 
   try {
-    // 💾 Guardamos el archivo en IndexedDB con clave basada en el viewerId
+    // Guardamos el archivo en IndexedDB con clave basada en el viewerId
     await saveFileToIndexedDB(file, `uploadedModel_${viewerId}`);
 
-    // 🧠 Guardamos el nombre del archivo subido (útil si lo quieres mostrar)
+    // Guardamos el nombre del archivo subido (útil si lo quieres mostrar)
     sessionStorage.setItem(`uploadedModelName_${viewerId}`, name);
 
-    // 🔁 Si se trata del visor individual, guarda el origen para splitViewer
+    // Si se trata del visor individual, guarda el origen para splitViewer
     if (viewerId === 'indexViewer1') {
       localStorage.setItem("modeloOrigen", viewerId);
     }
 
-    // ✅ Notificamos que se ha procesado el archivo (callback opcional)
+    // Notificamos que se ha procesado el archivo (callback opcional)
     onFileProcessed(file, viewerId);
   } catch (e) {
-    console.error("❌ Error al guardar archivo:", e);
+    console.error("Error al guardar archivo:", e);
   }
 }

@@ -1,4 +1,5 @@
 // js/scene/init/initFinalViewer.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
 
 import { getFileFromIndexedDB } from '../db/db-utils.js';
 import { loadModelRaw } from '../model/modelLoader.js';
@@ -14,14 +15,10 @@ import { actualizarColorWireframe, aplicarMatrizTransformacion } from '../model/
 import { setupAllHelperIcons, crearEjes, crearGrid } from '../core/helpers.js';
 import { initOutlinePass, updateOutlines, getComposer } from '../model/outlinePass.js';
 
-
-console.log('📦 initFinalViewer.js cargado');
-
 document.addEventListener('DOMContentLoaded', async () => {
-  const viewerId = 'indexViewer1'; // El único visor en tu escena final
+  const viewerId = 'indexViewer1';
   const container = document.getElementById(viewerId);
   if (!container) {
-    console.warn(`❌ No se encontró contenedor con id "${viewerId}"`);
     return;
   }
 
@@ -42,7 +39,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 3. Añade helpers y controles
 
- const controls = addOrbitControls(camera, renderer);
+  const controls = addOrbitControls(camera, renderer);
 
   cambiarHDRI(scene, 'campo.hdr');
 
@@ -53,20 +50,15 @@ document.addEventListener('DOMContentLoaded', async () => {
   model2.name = 'modelo_alineado';
 
   const matrixArray = JSON.parse(localStorage.getItem('matrix'));
-
-  console.log('Material inicial asignado a modelo 1 y modelo 2');
-
-
   aplicarMatrizTransformacion(model2, matrixArray);
 
-// Aplica material inicial SÓLIDO aquí, justo después de cargar
+  // Aplica material inicial SÓLIDO aquí, justo después de cargar
   aplicarMaterialInicial(model1, '#cccccc');
   aplicarMaterialInicial(model2, '#555555');
-  console.log('Material inicial aplicado a modelo 1 y modelo 2');
 
   // Para seleccionar el modelo activo
-  let activeModel = model1; // Por defecto modelo 1 activo
-  let linkedMode = false;   // Por defecto off
+  let activeModel = model1;
+  let linkedMode = false;
 
   // Exponer globales para otros scripts
   window.model1 = model1;
@@ -89,15 +81,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   updateOutlines();
   animateLoop();
 
-
   // Inicia con modelo 1 contorneado
   updateOutlines();
   function animateLoop() {
-  requestAnimationFrame(animateLoop);
-  controls.update();  // esto es lo que suaviza
-  getComposer().render();
-}
-animateLoop();
+    requestAnimationFrame(animateLoop);
+    controls.update();
+    getComposer().render();
+  }
+  animateLoop();
 
   // Helpers visuales
   if (scene && !scene.getObjectByName('helper_ejes')) scene.add(crearEjes());
@@ -118,31 +109,9 @@ animateLoop();
     setupAllHelperIcons();
   }
 
-  
-
   // Otros setups
   initRotationInput(viewerId);
   initVertexRaycast(renderer, camera, model1);
   initVertexRaycast(renderer, camera, model2);
 
-  // Debug visualización (puedes quitarlo si no lo necesitas)
-function depurar() {
-  console.log('🟦 MODELO 1:', model1.name, model1.type, model1.children.length, 'meshes:', model1.children.filter(c => c.isMesh).length);
-  console.log('🟩 MODELO 2:', model2.name, model2.type, model2.children.length, 'meshes:', model2.children.filter(c => c.isMesh).length);
-
-  model1.traverse(obj => {
-    if (obj.isMesh) {
-      console.log('Mesh en modelo1:', obj.name, obj.geometry?.type);
-    }
-  });
-  model2.traverse(obj => {
-    if (obj.isMesh) {
-      console.log('Mesh en modelo2:', obj.name, obj.geometry?.type);
-    }
-  });
-}
-
-
-  depurar();
-  
 });

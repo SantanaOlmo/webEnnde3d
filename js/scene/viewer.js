@@ -1,4 +1,6 @@
 // js/viewer.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
+
 import { getFileFromIndexedDB } from './scene/db/db-utils.js';
 import { setupViewerScene } from './scene/initIndex.js';
 import { loadHdriOptions } from '../../ui/loadHdriOptions.js';
@@ -13,20 +15,18 @@ const containerId = 'three-container';
 async function init() {
   const dbKey = sessionStorage.getItem('viewerFileName');
   if (!dbKey) {
-    console.warn("⚠️ No hay archivo cargado para visualizar.");
     return;
   }
 
   try {
     const file = await getFileFromIndexedDB(dbKey);
     if (!file) {
-      console.error("❌ Archivo no encontrado en IndexedDB:", dbKey);
       return;
     }
 
     await setupViewerScene(containerId, file);
   } catch (err) {
-    console.error("Error al iniciar visor:", err);
+    // Error crítico, no mostrar por consola en versión final
   }
 }
 

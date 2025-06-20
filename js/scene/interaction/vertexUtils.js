@@ -1,8 +1,9 @@
 // js/scene/interaction/vertexUtils.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
+
 import * as THREE from 'three';
 
 export function guardarVertices(model) {
-  console.log("guardando vértices del modelo...");
   const vertices = [];
   model.traverse((child) => {
     if (child.isMesh && child.geometry?.attributes?.position) {
@@ -14,7 +15,6 @@ export function guardarVertices(model) {
       }
     }
   });
-  console.log(`total vértices guardados: ${vertices.length}`);
   return vertices;
 }
 
@@ -22,14 +22,11 @@ export function guardarVertices(model) {
 
 export function crearNubeDePuntos(modelo) {
   let nubeCreada = false;
-  console.log('Intentando crear nube de puntos para:', modelo, 'con hijos:', modelo.children?.length);
-
 
   modelo.traverse((child) => {
     if (child.isMesh && child.geometry?.attributes?.position) {
       const posAttr = child.geometry.attributes.position;
       const geometry = new THREE.BufferGeometry();
-      // ⚠️ Aquí el cambio clave:
       geometry.setAttribute('position', posAttr.clone());
 
       // === ASIGNAR COLORES INDIVIDUALES (RGB blanco por defecto) ===
@@ -62,17 +59,7 @@ export function crearNubeDePuntos(modelo) {
     }
   });
 
- if (!nubeCreada) {
-  console.warn("⚠️ No se pudo generar la nube de puntos: no se encontró ninguna malla válida.", {
-    modelo,
-    nombre: modelo.name,
-    tipo: modelo.type,
-    esGLTF: !!modelo.userData.gltfExtensions,
-    hijos: modelo.children?.map(c => ({ nombre: c.name, tipo: c.type })),
-    encontradoMesh: modelo.getObjectByProperty?.('isMesh', true)
-  });
-}
-
+  // Si no se pudo crear la nube, no mostramos ningún log ni advertencia
 }
 
 

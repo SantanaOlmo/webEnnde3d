@@ -1,6 +1,5 @@
 // js/scene/init/initSingleViewer.js
-
-// TODO: Guardar el HDR seleccionado en localStorage y aplicarlo también en el visor comparativo.
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
 
 // === Importaciones necesarias para cargar y visualizar el modelo ===
 import { getFileFromIndexedDB } from '../db/db-utils.js';
@@ -17,45 +16,37 @@ import { actualizarColorWireframe } from '../model/materials.js';
 import { setupAllHelperIcons } from '../core/helpers.js';
 import { crearEjes, crearGrid } from '../core/helpers.js'; 
 
-console.log('📦 initSingleViewer.js cargado');
-
 document.addEventListener('DOMContentLoaded', async () => {
-  // 🧭 Obtenemos el ID del visor desde la URL
+  // Obtenemos el ID del visor desde la URL
   const viewerId = new URLSearchParams(window.location.search).get('viewerId');
-  console.log('🧭 viewerId:', viewerId);
 
   const container = document.getElementById(viewerId);
   if (!container) {
-    console.warn(`❌ No se encontró contenedor con id "${viewerId}"`);
     return;
   }
 
-  // 📤 Obtenemos el archivo guardado en IndexedDB
+  // Obtenemos el archivo guardado en IndexedDB
   const key = `uploadedModel_${viewerId}`;
   const fileFromDB = await getFileFromIndexedDB(key);
-  console.log(`📦 Archivo cargado desde IndexedDB (${key}):`, fileFromDB);
 
   if (!fileFromDB) {
-    console.warn("⚠️ No se encontró archivo en IndexedDB para este visor");
     return;
   }
 
-  // ⚙️ Inicializamos la escena
+  // Inicializamos la escena
   const { scene, camera, renderer } = initScene(viewerId);
   registerScene(viewerId, { scene, camera, renderer });
   attachSceneToViewer(viewerId, scene);
-  window.scene = scene; // <- Esto SOLO para depuración
 
   const controls = addOrbitControls(camera, renderer);
-  // --- Añade aquí el dampingFactor si quieres ajustarlo ---
-  controls.dampingFactor = 0.08; // Cambia este valor a tu gusto
+  controls.dampingFactor = 0.08;
 
-  // 🖼️ Cambiamos el HDRI de fondo inicialmente
+  // Cambiamos el HDRI de fondo inicialmente
   cambiarHDRI(scene, 'campo.hdr');
 
-  // 🧱 Cargamos el modelo y lo añadimos a la escena
+  // Cargamos el modelo y lo añadimos a la escena
   const loadedModel = await loadModel(scene, fileFromDB);
-  updateModel(viewerId, loadedModel); // ✅ Este es el objeto 3D, no el archivo
+  updateModel(viewerId, loadedModel);
   initVertexRaycast(renderer, camera, loadedModel);
 
   if (scene && !scene.getObjectByName('helper_ejes')) {
@@ -65,7 +56,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     scene.add(crearGrid());
   }
 
-  // 🎨 Color de la malla
+  // Color de la malla
   const colorInput = document.getElementById('wireframeColor');
   if (colorInput) {
     colorInput.addEventListener('input', () => {
@@ -73,29 +64,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
-  // ▶️ Lanzamos la animación (¡primero!)
+  // ▶Lanzamos la animación (¡primero!)
   animate(renderer, scene, camera, controls);
 
   const canvas = container.querySelector('canvas');
-if (canvas) {
-  canvas.classList.add('fade-in');
-  setTimeout(() => {
-    canvas.classList.add('visible');
-  }, 50);
-}
+  if (canvas) {
+    canvas.classList.add('fade-in');
+    setTimeout(() => {
+      canvas.classList.add('visible');
+    }, 50);
+  }
 
-  // Ahora sí: Mostrar controles de helpers tras cargar modelo Y tras arrancar la animación
+  // Mostrar controles de helpers tras cargar modelo Y tras arrancar la animación
   const helperPanel = document.getElementById('helperToggles');
   if (helperPanel) {
     helperPanel.style.display = 'flex';
     setupAllHelperIcons();
   }
 
-  // 🧹 Limpiamos el flag temporal
+  // Limpiamos el flag temporal
   localStorage.removeItem("modeloOrigen");
 
   initRotationInput(viewerId);
-
-  // 🖱️ Puedes reactivar el drag & drop si lo deseas
   // handleDragDrop(viewerId);
 });

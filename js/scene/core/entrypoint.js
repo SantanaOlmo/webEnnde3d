@@ -1,4 +1,6 @@
 // js/core/entrypoint.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
+
 import { setupDragAndDrop } from '../scene/utils/drag-drop-handler.js';
 import { saveFileToIndexedDB } from '../scene/db/db-utils.js';
 
@@ -22,3 +24,4 @@ export function initSingleViewerDrop(dropArea, inputFile, dbKey = 'singleViewerF
     }
   });
 }
+

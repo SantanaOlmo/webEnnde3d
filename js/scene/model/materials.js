@@ -1,4 +1,6 @@
 // model/materials.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
+
 import * as THREE from 'three';
 
 // Aplica los estilos guardados (color, roughness, metalness)
@@ -19,11 +21,9 @@ export function aplicarEstilos(model, estilos) {
     if (child.isMesh) {
       child.material = nuevoMaterial;
       child.material.needsUpdate = true; // 👈 añade esto
-
     }
   });
 }
-
 
 // Restaura el material original de cada malla
 export function restaurarMaterialesOriginales(model) {
@@ -72,6 +72,7 @@ export function actualizarColorWireframe(modelo, nuevoColor) {
     }
   });
 }
+
 // Asigna un material sólido de color (y guarda el original)
 export function aplicarMaterialInicial(model, color = '#cccccc') {
   if (!model) return;
@@ -89,7 +90,6 @@ export function aplicarMaterialInicial(model, color = '#cccccc') {
     }
   });
 }
-
 
 export function aplicarToonShading(model, colores, thresholds) {
   if (!model || !colores || !thresholds) return;

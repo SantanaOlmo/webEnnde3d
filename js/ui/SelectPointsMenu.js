@@ -1,4 +1,6 @@
 // Ruta: ./js/ui/SelectPointsMenus.js
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
+
 // Alterna la visibilidad del menú de puntos en ambos visores al pulsar el botón del sidebar
 
 const pointsBarIds = ['pointsBar1', 'pointsBar2'];
@@ -58,8 +60,6 @@ export function stopButtonBlink() {
   currentBlinkBtn = null;
   currentBlinkClass = '';
 }
-
-
 
 // Llama a esto para que todos los puntos parpadeen a la vez
 //startButtonBlink(pointLabels[0], 1); // Punto 1 visor 1 (amarillo)

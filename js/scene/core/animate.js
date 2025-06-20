@@ -1,7 +1,7 @@
 // js/scene/core/animate.js
-export function animate(renderer, scene, camera, controls) {
-  console.log("animate() iniciado");
+console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
 
+export function animate(renderer, scene, camera, controls) {
   function renderLoop() {
     requestAnimationFrame(renderLoop);
 
@@ -12,4 +12,3 @@ export function animate(renderer, scene, camera, controls) {
 
   renderLoop();
 }
-
