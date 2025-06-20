@@ -7,6 +7,8 @@ export function addOrbitControls(camera, renderer) {
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.dampingFactor = 0.07; // Suavidad del movimiento
+  console.log('OrbitControls creado', controls);
+
   return controls;
 }
 

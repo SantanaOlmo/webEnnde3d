@@ -72,6 +72,24 @@ export function actualizarColorWireframe(modelo, nuevoColor) {
     }
   });
 }
+// Asigna un material sólido de color (y guarda el original)
+export function aplicarMaterialInicial(model, color = '#cccccc') {
+  if (!model) return;
+  model.traverse(child => {
+    if (child.isMesh) {
+      if (!child.userData.originalMaterial) {
+        child.userData.originalMaterial = child.material.clone();
+      }
+      child.material = new THREE.MeshStandardMaterial({
+        color: new THREE.Color(color),
+        roughness: 0.5,
+        metalness: 0.2
+      });
+      child.material.needsUpdate = true;
+    }
+  });
+}
+
 
 export function aplicarToonShading(model, colores, thresholds) {
   if (!model || !colores || !thresholds) return;
