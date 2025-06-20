@@ -1,7 +1,5 @@
 // js/utils/drag-drop-handler.js
 
-console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
-
 /* Inicializa una zona de arrastrar y soltar para subir modelos 3D.
  * Puede usar también un input de archivo opcional. */
 export function setupDragAndDrop({ dropArea, fileInput = null, onFileDrop, viewerId = null }) {

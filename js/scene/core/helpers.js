@@ -1,5 +1,4 @@
 // scene/core/helpers.js
-console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
 
 import * as THREE from 'three';
 import { getSceneById } from './viewerRegistry.js';

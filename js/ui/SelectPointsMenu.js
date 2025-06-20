@@ -1,5 +1,4 @@
 // Ruta: ./js/ui/SelectPointsMenus.js
-console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
 
 // Alterna la visibilidad del menú de puntos en ambos visores al pulsar el botón del sidebar
 
