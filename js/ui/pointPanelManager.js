@@ -7,6 +7,7 @@ import { alignPoints } from '../scene/model/alignModel.js';
 import { getModelById } from '../scene/core/viewerRegistry.js';
 import { exportGLB } from '../scene/model/modelLoader.js';
 import { saveFileToIndexedDB } from '../scene/db/db-utils.js';
+import { restaurarMaterialesOriginales } from '../scene/model/materials.js';
 
 // -- Elementos base y referencias
 const pointsBarIds = ['pointsBar1', 'pointsBar2'];
@@ -215,8 +216,9 @@ if (btnSuperponer) {
     localStorage.setItem('matrix', JSON.stringify(matrix.elements));
 
     // --- Exporta y guarda ambos modelos antes de cambiar de pantalla ---
-    const model1 = getModelById('indexViewer1');
-    const model2 = getModelById('viewer2');
+    const model1 = restaurarMaterialesOriginales(getModelById('indexViewer1'));
+    const model2 = restaurarMaterialesOriginales(getModelById('viewer2'));
+
     if (!model1 || !model2) {
       alert('No se han encontrado ambos modelos en memoria.');
       return;

@@ -34,6 +34,7 @@ export function restaurarMaterialesOriginales(model) {
       child.material = child.userData.originalMaterial;
     }
   });
+  return model;
 }
 
 // Cambia entre modo wireframe o sólido (alternativa rápida de visualización)
