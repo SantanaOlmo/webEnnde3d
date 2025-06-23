@@ -144,32 +144,41 @@
       </form>
 
       <div id="mallas" class="d-flex flex-row flex-lg-column">
-        <div class="MallaOption">
-          <button class="botonMalla" id="wireframe">
-            <div class="ImgFondo">
-              <img src="../assets/icons/mod_wireframe.svg" alt="">
-            </div>
-            <div class="botonMallaInfo">Malla</div>
-          </button>
-          <div id="wireframeOptions">
-            <input type="color" id="wireframeColor" value="#d95e7d">
-          </div>
-        </div>
-
-        <button class="botonMalla" id="solido">
-          <div class="ImgFondo">
-            <img src="../assets/icons/mod_solidify.svg" alt="">
-          </div>
-          <div class="botonMallaInfo">Sólido</div>
-        </button>
-
-        <button class="botonMalla" id="togglePuntos">
-          <div class="ImgFondo">
-            <img src="../assets/icons/vertexsel.svg" alt="">
-          </div>
-          <div class="botonMallaInfo">Vértices</div>
-        </button>
+  <div class="MallaOption">
+    <button class="botonMalla" id="wireframe">
+      <div class="ImgFondo">
+        <img src="../assets/icons/mod_wireframe.svg" alt="">
       </div>
+      <div class="botonMallaInfo">Malla</div>
+    </button>
+    <div id="wireframeOptions">
+      <input type="color" id="wireframeColor" value="#d95e7d">
+    </div>
+  </div>
+
+  <button class="botonMalla" id="solido">
+    <div class="ImgFondo">
+      <img src="../assets/icons/mod_solidify.svg" alt="">
+    </div>
+    <div class="botonMallaInfo">Sólido</div>
+  </button>
+
+  <button class="botonMalla" id="togglePuntos">
+    <div class="ImgFondo">
+      <img src="../assets/icons/vertexsel.svg" alt="">
+    </div>
+    <div class="botonMallaInfo">Vértices</div>
+  </button>
+</div>
+
+<!-- === SLIDER DE TAMAÑO DE PUNTOS (VISIBLE SOLO SI "VÉRTICES" ACTIVADO) === -->
+<div id="puntosSettings" style="display: none; flex-direction: column; align-items: center; gap: 5px; margin: 10px 0;">
+  <label for="vertexSizeSlider" style="font-size:0.97em; color:#ccc; margin-bottom:2px;">Tamaño de los puntos</label>
+  <input type="range" id="vertexSizeSlider" min="1" max="20" step="1" value="6" style="width:90px;">
+  <span id="vertexSizeValue" style="font-size:0.95em; color:#b97593;">6 px</span>
+</div>
+<!-- FIN SLIDER DE TAMAÑO DE PUNTOS -->
+
 
       <div id="toonShadingPanel" class="d-none">
         <h3>Toon Shading</h3>
