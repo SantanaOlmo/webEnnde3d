@@ -227,6 +227,37 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // --- SLIDER PARA TAMAÑO DE PUNTOS --- //
+  const puntosSettings = document.getElementById('puntosSettings');
+  const vertexSizeSlider = document.getElementById('vertexSizeSlider');
+  const vertexSizeValue = document.getElementById('vertexSizeValue');
+  // btnPuntos ya está definido arriba
+
+  // 1. Mostrar el slider SOLO al activar el modo "Vértices"
+  btnPuntos?.addEventListener('click', () => {
+    // Toggle: muestra si estaba oculto, oculta si estaba visible
+    const visible = puntosSettings.style.display === 'flex';
+    puntosSettings.style.display = visible ? 'none' : 'flex';
+  });
+
+  // 2. Cambiar tamaño de puntos en tiempo real
+  vertexSizeSlider?.addEventListener('input', (e) => {
+    const px = Number(e.target.value);
+    vertexSizeValue.textContent = px + " px";
+
+    // Recorre los modelos activos y ajusta el tamaño de los puntos
+    applyToRelevantViewers(({ model }) => {
+      if (!model) return;
+      model.traverse(child => {
+        if (child.isPoints && child.name === 'puntos_nube' && child.material) {
+          child.material.size = px / 300; // Ajusta el divisor para la escala de tu escena
+          child.material.needsUpdate = true;
+        }
+      });
+    });
+  });
+
+
   // --- CAMBIO DE MODELO ACTIVO Y LINKED (solo si existen los botones) ---
   const btnChange = document.getElementById('btn-changeModel');
   const btnLinked = document.getElementById('btn-material'); // Ojo, reutilizado arriba
