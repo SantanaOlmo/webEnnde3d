@@ -1,5 +1,4 @@
 // js/scene/init/initFinalViewer.js
-console.info('%c Proyecto desarrollado por Alberto Estepa y David Gutiérrez (DAM 2025) para ENNDE', 'color:#b97593; font-weight:bold; font-size:1.1em;');
 
 import { getFileFromIndexedDB } from '../db/db-utils.js';
 import { loadModelRaw } from '../model/modelLoader.js';
@@ -28,8 +27,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   if (!file1FromDB || !file2FromDB) {
     alert('No se han encontrado los dos modelos. Por favor, usa antes el visor doble para cargar y alinear los modelos.');
-    return;
+    return; 
   }
+
 
   // 2. Inicializa la escena
   const { scene, camera, renderer } = initScene(viewerId);

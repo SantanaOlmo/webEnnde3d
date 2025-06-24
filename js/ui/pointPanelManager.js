@@ -164,7 +164,7 @@ function checkShowSuperponer() {
   }
 }
 
-function logMeshes(model, nombre) {
+ export function logMeshes(model, nombre) {
   let meshCount = 0;
   model.traverse(obj => {
     if (obj.isMesh) {
@@ -239,6 +239,7 @@ if (btnSuperponer) {
     logMeshes(model1, 'model1 (base)');
     logMeshes(model2, 'model2 (alineado)');
     
+
     window.location.href = '/views/viewerFinal.html?from=splitviewer';
     
   });
