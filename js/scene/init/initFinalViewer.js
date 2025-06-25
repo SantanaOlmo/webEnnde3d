@@ -21,9 +21,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
+  async function depurarCargado(file1FromDB, file2FromDB) {
+  console.log('[DEPURAR] CARGANDO MODELOS DESDE INDEXEDDB...');
+  // Blob 1
+  if (file1FromDB) {
+    console.log('⬅️ [finalModel_1] type:', file1FromDB.type, '| size:', file1FromDB.size);
+    if (file1FromDB.name) console.log('⬅️ [finalModel_1] name:', file1FromDB.name);
+  }
+  // Blob 2
+  if (file2FromDB) {
+    console.log('⬅️ [finalModel_2] type:', file2FromDB.type, '| size:', file2FromDB.size);
+    if (file2FromDB.name) console.log('⬅️ [finalModel_2] name:', file2FromDB.name);
+  }
+}
+
   // 1. Cargamos ambos modelos desde IndexedDB
   const file1FromDB = await getFileFromIndexedDB('finalModel_1');
   const file2FromDB = await getFileFromIndexedDB('finalModel_2');
+
+  depurarCargado(file1FromDB, file2FromDB);
 
   if (!file1FromDB || !file2FromDB) {
     alert('No se han encontrado los dos modelos. Por favor, usa antes el visor doble para cargar y alinear los modelos.');

@@ -39,9 +39,13 @@ export function crearNubeDePuntos(modelo) {
       geometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
 
       const material = new THREE.PointsMaterial({
-        size: 0.02,
-        vertexColors: true // Activar colores por vértice
+        size: 0.02,              // Tamaño de cada punto
+        vertexColors: true,      // Permite color por vértice
+        map: createCircleTexture(), // Usa textura circular para puntos redondos
+        alphaTest: 0.5,          // Hace transparente el fondo del sprite
+        transparent: true        // Permite transparencia
       });
+
 
       // Tamaño para el raycaster
       material.userData.pickSize = 0.13;
@@ -59,6 +63,18 @@ export function crearNubeDePuntos(modelo) {
   });
 
   // Si no se pudo crear la nube, no mostramos ningún log ni advertencia
+}
+
+function createCircleTexture(size = 64) {
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = size;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, size, size);
+  ctx.beginPath();
+  ctx.arc(size/2, size/2, size/2, 0, 2 * Math.PI);
+  ctx.fillStyle = '#fff';
+  ctx.fill();
+  return new THREE.CanvasTexture(canvas);
 }
 
 

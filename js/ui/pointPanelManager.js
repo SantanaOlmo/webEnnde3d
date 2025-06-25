@@ -5,8 +5,9 @@ import { puntosSeleccionados } from '../scene/interaction/pointSelectionManager.
 import { alignPoints } from '../scene/model/alignModel.js';
 import { getModelById } from '../scene/core/viewerRegistry.js';
 import { exportGLB } from '../scene/model/modelLoader.js';
-import { saveFileToIndexedDB } from '../scene/db/db-utils.js';
+import { saveFileToIndexedDB, getFileFromIndexedDB } from '../scene/db/db-utils.js';
 import { restaurarMaterialesOriginales } from '../scene/model/materials.js';
+
 
 // -- Elementos base y referencias
 const pointsBarIds = ['pointsBar1', 'pointsBar2'];
@@ -225,12 +226,46 @@ if (btnSuperponer) {
     logMeshes(model1, 'MODELO 3 ANTES DE EXPORTAR');
     logMeshes(model2, 'MODELO 2 ANTES DE EXPORTAR');
 
+    async function depurarExportado(blob1, blob2, model1, model2) {
+      console.log('[DEPURAR] EXPORTANDO Y GUARDANDO MODELOS...');
+      // Blob 1 (base)
+      if (blob1) {
+        console.log('➡️ [blob1] type:', blob1.type, '| size:', blob1.size);
+        if (blob1.name) console.log('➡️ [blob1] name:', blob1.name);
+      }
+      // Blob 2 (alineado)
+      if (blob2) {
+        console.log('➡️ [blob2] type:', blob2.type, '| size:', blob2.size);
+        if (blob2.name) console.log('➡️ [blob2] name:', blob2.name);
+      }
+      // Modelos Three
+      if (model1) console.log('➡️ [model1] nombre:', model1.name, '| tipo:', model1.type);
+      if (model2) console.log('➡️ [model2] nombre:', model2.name, '| tipo:', model2.type);
+    }
+
     try {
       const blob1 = await exportGLB(model1);
       const blob2 = await exportGLB(model2);
 
+      depurarExportado(blob1, blob2, model1, model2);
+
       await saveFileToIndexedDB(blob1, 'finalModel_1');
       await saveFileToIndexedDB(blob2, 'finalModel_2');
+
+      // --- Espera a que los archivos estén realmente disponibles ---
+      const file1Check = await getFileFromIndexedDB('finalModel_1');
+      const file2Check = await getFileFromIndexedDB('finalModel_2');
+
+      if (
+        file1Check && file1Check.size === blob1.size &&
+        file2Check && file2Check.size === blob2.size
+      ) {
+        console.log('[OK] Archivos confirmados en IndexedDB, redirigiendo...');
+        window.location.href = '/views/viewerFinal.html?from=splitviewer';
+      } else {
+        alert('Error: los archivos no se guardaron correctamente en IndexedDB.');
+        return;
+      }
     } catch (err) {
       alert('Error al exportar y guardar los modelos: ' + err);
       return;
@@ -238,10 +273,6 @@ if (btnSuperponer) {
 
     logMeshes(model1, 'model1 (base)');
     logMeshes(model2, 'model2 (alineado)');
-    
-
-    window.location.href = '/views/viewerFinal.html?from=splitviewer';
-    
   });
 }
 
