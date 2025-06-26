@@ -53,6 +53,7 @@ export function crearNubeDePuntos(modelo) {
       const puntos = new THREE.Points(geometry, material);
       puntos.name = 'puntos_nube';
       puntos.visible = false;
+      puntos.renderOrder=1;
 
       // Añadir al mesh original
       child.add(puntos);
@@ -77,4 +78,79 @@ function createCircleTexture(size = 64) {
   return new THREE.CanvasTexture(canvas);
 }
 
+export function crearNubeDePuntosConDesplazamientoVisual(modelo, offset = 0.005) {
+  modelo.traverse((child) => {
+    if (
+      child.isMesh &&
+      child.geometry?.attributes?.position &&
+      child.geometry?.attributes?.normal
+    ) {
+      const posAttr = child.geometry.attributes.position;
+      const normAttr = child.geometry.attributes.normal;
+      const geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', posAttr.clone());
+      geometry.setAttribute('normal', normAttr.clone());
 
+      // Colores por vértice (blanco-violeta por defecto)
+      const numVertices = posAttr.count;
+      const colorArray = new Float32Array(numVertices * 3);
+      for (let i = 0; i < numVertices; i++) {
+        colorArray[i * 3 + 0] = 1.0; // R
+        colorArray[i * 3 + 1] = 0.0; // G
+        colorArray[i * 3 + 2] = 1.0; // B
+      }
+      geometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+
+      // Custom ShaderMaterial
+      const material = new THREE.ShaderMaterial({
+        uniforms: {
+          size: { value: 0.02 },
+          offset: { value: offset },
+          map: { value: createCircleTexture() }
+        },
+        vertexColors: true,
+        transparent: true,
+        alphaTest: 0.5,
+        depthTest: true,
+        uniformsNeedUpdate: true,
+        vertexShader: `
+          attribute vec3 normal;
+          uniform float size;
+          uniform float offset;
+          void main() {
+            vec3 displaced = position + normal * offset;
+            vec4 mvPosition = modelViewMatrix * vec4(displaced, 1.0);
+            gl_PointSize = size * (300.0 / -mvPosition.z);
+            gl_Position = projectionMatrix * mvPosition;
+          }
+        `,
+        fragmentShader: `
+          uniform sampler2D map;
+          varying vec3 vColor;
+          void main() {
+            vec4 color = vec4(1.0);
+            #ifdef USE_COLOR
+              color *= vec4(vColor, 1.0);
+            #endif
+            vec2 uv = gl_PointCoord;
+            float alpha = texture2D(map, uv).a;
+            if (alpha < 0.5) discard;
+            gl_FragColor = color;
+            gl_FragColor.a *= alpha;
+          }
+        `
+      });
+
+      // Tamaño para el raycaster
+      material.userData.pickSize = 0.13;
+
+      const puntos = new THREE.Points(geometry, material);
+      puntos.name = 'puntos_nube';
+      puntos.visible = false;
+      puntos.renderOrder = 1;
+
+      child.add(puntos);
+      child.userData.nubePuntos = puntos;
+    }
+  });
+}

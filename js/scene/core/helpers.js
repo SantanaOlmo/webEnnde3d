@@ -47,27 +47,27 @@ export function setupAllHelperIcons() {
       viewerId = 'indexViewer1';
     }
 
-    btnAxesClean?.addEventListener('click', () => {
-      const scene = getSceneById(viewerId);
-      if (!scene) {
-        return;
-      }
-      const axesHelper = scene.getObjectByName('helper_ejes');
-      if (axesHelper) {
-        axesHelper.visible = !axesHelper.visible;
-      }
-    });
+ btnAxesClean?.addEventListener('click', () => {
+  const scene = getSceneById(viewerId);
+  if (!scene) return;
+  const axesHelper = scene.getObjectByName('helper_ejes');
+  if (axesHelper) {
+    axesHelper.visible = !axesHelper.visible;
+    btnAxesClean.classList.toggle('active', axesHelper.visible);
+  }
+});
 
-    btnGridClean?.addEventListener('click', () => {
-      const scene = getSceneById(viewerId);
-      if (!scene) {
-        return;
-      }
-      const gridHelper = scene.getObjectByName('helper_grid');
-      if (gridHelper) {
-        gridHelper.visible = !gridHelper.visible;
-      }
-    });
+btnGridClean?.addEventListener('click', () => {
+  const scene = getSceneById(viewerId);
+  if (!scene) return;
+  const gridHelper = scene.getObjectByName('helper_grid');
+  if (gridHelper) {
+    gridHelper.visible = !gridHelper.visible;
+    btnGridClean.classList.toggle('active', gridHelper.visible);
+  }
+});
+
+
   });
 }
 

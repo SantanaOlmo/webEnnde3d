@@ -238,7 +238,23 @@ document.addEventListener('DOMContentLoaded', () => {
     // Toggle: muestra si estaba oculto, oculta si estaba visible
     const visible = puntosSettings.style.display === 'flex';
     puntosSettings.style.display = visible ? 'none' : 'flex';
+
+    // Si ahora se muestra, resetea el slider y el tamaño de los puntos
+    if (!visible) {
+      vertexSizeSlider.value = 1;
+      vertexSizeValue.textContent = "1 px";
+      applyToRelevantViewers(({ model }) => {
+        if (!model) return;
+        model.traverse(child => {
+          if (child.isPoints && child.name === 'puntos_nube' && child.material) {
+            child.material.size = 1 / 300; // Ajusta divisor según escala de tu escena
+            child.material.needsUpdate = true;
+          }
+        });
+      });
+    }
   });
+
 
   // 2. Cambiar tamaño de puntos en tiempo real
   vertexSizeSlider?.addEventListener('input', (e) => {
@@ -269,6 +285,19 @@ document.addEventListener('DOMContentLoaded', () => {
       updateOutlines();
     });
   }
+
+  document.addEventListener('keydown', (e) => {
+    if (!window.activeModel || !window.model1 || !window.model2) return;
+    if (e.key === 'ArrowLeft') {
+      window.activeModel = window.model1;
+      updateOutlines();
+    }
+    if (e.key === 'ArrowRight') {
+      window.activeModel = window.model2;
+      updateOutlines();
+    }
+  });
+
 
   if (btnLinked && window.updateOutlines) {
     btnLinked.addEventListener('click', () => {

@@ -14,27 +14,42 @@ async function loadHDRIOptions() {
     const res = await fetch('/assets/hdri/hdriList.json');
     const names = await res.json();
 
-    names.forEach(name => {
-      // Crear imagen miniatura de HDRI
-      const img = document.createElement('img');
-      img.className = 'envOption';
-      img.src = `/assets/hdri/hdr_img/${name}.png`;
-      img.alt = name;
-      img.id = name;
+names.forEach(name => {
+  // Crear imagen miniatura de HDRI
+  const img = document.createElement('img');
+  img.className = 'envOption';
+  img.src = `/assets/hdri/hdr_img/${name}.png`;
+  img.alt = name;
+  img.id = name;
 
-      // Evento click en miniatura HDRI: aplica el HDRI al visor relevante
-      img.addEventListener('click', () => {
-        applyToRelevantViewers(({ viewerId, scene }) => {
-          cambiarHDRI(scene, `${name}.hdr`);
-        });
-      });
-
-      // Añadir miniatura a la tarjeta y al bloqueHDRI
-      const div = document.createElement('div');
-      div.className = 'tarjeta';
-      div.appendChild(img);
-      bloqueHDRI.appendChild(div);
+  // Evento click en miniatura HDRI: aplica el HDRI al visor relevante
+  img.addEventListener('click', () => {
+    applyToRelevantViewers(({ viewerId, scene }) => {
+      cambiarHDRI(scene, `${name}.hdr`);
     });
+  });
+
+  // Añadir miniatura a la tarjeta y al bloqueHDRI
+  const div = document.createElement('div');
+  div.className = 'tarjeta';
+  div.appendChild(img);
+
+  // --------- ANIMACIÓN DE ESCALA ENTRADA ----------
+  div.addEventListener('mouseenter', () => {
+    div.classList.remove('animar-scale'); // Reinicia anim si ya está
+    void div.offsetWidth; // Fuerza reflow
+    div.classList.add('animar-scale');
+  });
+  div.addEventListener('mouse', () => {
+    div.classList.remove('animar-scale'); // Reinicia anim si ya está
+    void div.offsetWidth; // Fuerza reflow
+    div.classList.add('animar-scale');
+  });
+  // -----------------------------------------------
+
+  bloqueHDRI.appendChild(div);
+});
+
 
   } catch (err) {
     // Error al cargar HDRIs, no mostrar por consola en entrega final
