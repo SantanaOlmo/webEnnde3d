@@ -30,6 +30,18 @@ const coloresBase = [
 ];
 
 export function crearNubeDePuntos(modelo) {
+  // --- NUEVO: Cálculo de tamaño de modelo ---
+  const boundingBox = new THREE.Box3().setFromObject(modelo);
+  const bboxSize = boundingBox.getSize(new THREE.Vector3()).length();
+  // Ajusta el factor a tu gusto (esto es "tamaño agradable" para 1px real en la mayoría de modelos)
+  const puntoSizePorDefecto = bboxSize * 0.0025;  
+  const pickSize = puntoSizePorDefecto * 1.2;    
+  // -------------------------------------------
+
+  // Guardar el tamaño para que el slider lo use por defecto
+  // (Puedes guardar en el modelo, en window, o como prefieras)
+  modelo.userData.tamanoPuntoDefecto = puntoSizePorDefecto;
+
   let meshIndex = 0;
   modelo.traverse((child) => {
     if (child.isMesh && child.geometry?.attributes?.position) {
@@ -51,8 +63,9 @@ export function crearNubeDePuntos(modelo) {
       }
       geometry.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
 
+      // --- MODIFICADO: tamaño dinámico por defecto ---
       const material = new THREE.PointsMaterial({
-        size: 0.025,
+        size: puntoSizePorDefecto,
         vertexColors: true,
         map: createCircleTexture(),
         alphaTest: 0.5,
@@ -60,7 +73,8 @@ export function crearNubeDePuntos(modelo) {
         opacity: 1.0,
       });
 
-      material.userData.pickSize = 0.13;
+      material.userData.pickSize = pickSize; // Tamaño de la esfera de selección
+      // -----------------------------------------------
 
       const puntos = new THREE.Points(geometry, material);
       puntos.name = 'puntos_nube';
@@ -76,9 +90,6 @@ export function crearNubeDePuntos(modelo) {
     }
   });
 }
-
-
-
 
 function createCircleTexture(size = 64) {
   const canvas = document.createElement('canvas');

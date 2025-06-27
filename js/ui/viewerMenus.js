@@ -1,7 +1,5 @@
 // js/ui/viewerMenus.js
 
-
-
 import {
   aplicarEstilos,
   restaurarMaterialesOriginales,
@@ -241,25 +239,33 @@ btnPuntos?.addEventListener('click', () => {
   const visible = puntosSettings.style.display === 'flex';
   puntosSettings.style.display = visible ? 'none' : 'flex';
 
-  // Si se muestra, reset slider y tamaño puntos
+  // Si se muestra, usa el tamaño dinámico del modelo como valor base
   if (!visible) {
-    vertexSizeSlider.value = 1;
-    vertexSizeValue.textContent = "1 px";
+    let tamanoDefecto = 1; // fallback mínimo
     applyToRelevantViewers(({ model }) => {
       if (!model) return;
+      if (model.userData && model.userData.tamanoPuntoDefecto) {
+        // Lo guardamos como entero (en px) para el slider visual
+        tamanoDefecto = Math.max(1, Math.round(model.userData.tamanoPuntoDefecto * 300));
+      }
+      // Fijamos el tamaño de los puntos al abrir el panel (usa el dinámico)
       model.traverse(child => {
         if (child.isPoints && child.name === 'puntos_nube' && child.material) {
-          child.material.size = 1 / 300; // Ajusta divisor según escala
+          child.material.size = tamanoDefecto / 300;
           child.material.needsUpdate = true;
         }
       });
     });
+
+    vertexSizeSlider.value = tamanoDefecto;
+    vertexSizeValue.textContent = tamanoDefecto + " px";
 
     if (window.actualizarEscalaEsferas) {
       window.actualizarEscalaEsferas();
     }
   }
 });
+
 
 // Cambiar tamaño de puntos en tiempo real
 vertexSizeSlider?.addEventListener('input', (e) => {
@@ -280,11 +286,6 @@ vertexSizeSlider?.addEventListener('input', (e) => {
     }
   });
 });
-
-
-
-
-
 
   // --- CAMBIO DE MODELO ACTIVO Y LINKED (solo si existen los botones) ---
   const btnChange = document.getElementById('btn-changeModel');

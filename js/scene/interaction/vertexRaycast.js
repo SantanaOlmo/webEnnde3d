@@ -27,7 +27,7 @@ export function initVertexRaycast(renderer, camera, model) {
 
   // Esfera hover
   const hoverSphere = new THREE.Mesh(
-    new THREE.SphereGeometry(1, 16, 16),
+    new THREE.SphereGeometry(0.5, 16, 16),
     new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.6 })
   );
   hoverSphere.visible = false;
@@ -39,7 +39,7 @@ export function initVertexRaycast(renderer, camera, model) {
 
   function crearEsferaSeleccion(pos, puntoObj) {
     const sphere = new THREE.Mesh(
-      new THREE.SphereGeometry(1, 16, 16),
+      new THREE.SphereGeometry(0.5, 16, 16),
       new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.8 })
     );
     sphere.position.copy(pos);
@@ -118,11 +118,16 @@ export function initVertexRaycast(renderer, camera, model) {
         col.getZ(index)
       ];
       setColorPunto(object, index, ...originalColor, 'DESELECT');
-    } else {
+        } else {
       setColorPunto(object, index, 1, 1, 0, 'CLICK');
-      const sphere = crearEsferaSeleccion(point, object);
+      // Aseguramos que la esfera aparece JUSTO en el vértice
+      const posAttr = object.geometry.attributes.position;
+      const vertexPos = new THREE.Vector3().fromBufferAttribute(posAttr, index);
+      object.localToWorld(vertexPos);
+      const sphere = crearEsferaSeleccion(vertexPos, object);
       puntosSeleccionados.push({ object, index, sphere });
     }
+
 
     pointerDownPos = null;
     isDragging = false;

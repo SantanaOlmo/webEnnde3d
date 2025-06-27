@@ -6,9 +6,13 @@ import * as THREE from 'three';
 export function addOrbitControls(camera, renderer) {
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
-  controls.dampingFactor = 0.07; // Suavidad del movimiento
+  controls.dampingFactor = 0.07;
+  controls.zoomSpeed = 0.55;
+  controls.minDistance = 0.0001;
+  controls.maxDistance = 100;
   return controls;
 }
+
 
 export function centerCameraOnPoint(camera, controls, {x, y, z}, distance = 2) {
   if (!camera || !controls) {
