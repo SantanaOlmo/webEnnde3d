@@ -77,7 +77,19 @@ body, html {
   color: rgb(48, 48, 48);
   font-size: 5em;
   overflow: hidden;
-  transition: all .5s ease-in-out
+  transition: all .1s ease-in-out;
+  .plus-sign{
+    transform: scale(1) rotate(-180deg);
+    transition:transform 1s ease-in-out
+  }
+  
+}
+#viewer2:hover{
+  .plus-sign{
+    transform: scale(1.5) rotate(180deg);
+    transition: transform 1s ease-in-out;
+    cursor: pointer;
+  }
 }
 
 #inputFile {

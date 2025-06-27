@@ -48,6 +48,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const loadedModel = await loadModel(scene, fileFromDB);
   updateModel(viewerId, loadedModel);
   initVertexRaycast(renderer, camera, loadedModel);
+   // === DEPURACIÓN: expón modelo y escena en window ===
+  window._debugModel = loadedModel;
+  window._debugScene = scene;
+  window._debugRenderer = renderer;
+  window._debugCamera = camera;
+
+
 
   if (scene && !scene.getObjectByName('helper_ejes')) {
     scene.add(crearEjes());

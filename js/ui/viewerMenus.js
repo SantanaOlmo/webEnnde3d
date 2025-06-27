@@ -1,9 +1,6 @@
 // js/ui/viewerMenus.js
 
-import {
-  getSceneById,
-  getModelById
-} from '../scene/core/viewerRegistry.js';
+
 
 import {
   aplicarEstilos,
@@ -16,8 +13,9 @@ import {
 import { toggleNubeDePuntos } from '../scene/interaction/vertexToggle.js';
 import { applyToRelevantViewers } from '../scene/core/sceneSyncUtils.js';
 import { toggleSyncMode } from './viewerSwitch.js';
-import { setupAllHelperIcons } from '../scene/core/helpers.js';
 import { updateOutlines } from '../scene/model/outlinePass.js';
+import { setModoVerticesActivo } from '../scene/interaction/vertexMode.js';
+
 
 function debounce(callback, delay) {
   let timeout;
@@ -210,73 +208,87 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  btnPuntos?.addEventListener('click', () => {
-    if (window.model1 && window.model2 && window.activeModel) {
-      if (window.linkedMode) {
-        toggleNubeDePuntos(window.model1);
-        toggleNubeDePuntos(window.model2);
-      } else {
-        toggleNubeDePuntos(window.activeModel);
-      }
+  // Estado para saber si modo vértices activo
+let modoVerticesActivo = false;
+
+// Función para acceder a modoVerticesActivo (para pasar a vertexRaycast)
+function getModoVerticesActivo() {
+  return modoVerticesActivo;
+}
+
+// Toggle botón puntos y mostrar/ocultar slider
+btnPuntos?.addEventListener('click', () => {
+  const nuevoEstado = !getModoVerticesActivo();
+  setModoVerticesActivo(nuevoEstado);
+
+  // Toggle de nubes de puntos según linkedMode o activeModel
+  if (window.model1 && window.model2 && window.activeModel) {
+    if (window.linkedMode) {
+      toggleNubeDePuntos(window.model1);
+      toggleNubeDePuntos(window.model2);
     } else {
-      applyToRelevantViewers(({ model }) => {
-        if (model) {
-          toggleNubeDePuntos(model);
-        }
-      });
+      toggleNubeDePuntos(window.activeModel);
     }
-  });
+  } else {
+    applyToRelevantViewers(({ model }) => {
+      if (model) {
+        toggleNubeDePuntos(model);
+      }
+    });
+  }
 
-  // --- SLIDER PARA TAMAÑO DE PUNTOS --- //
-  const puntosSettings = document.getElementById('puntosSettings');
-  const vertexSizeSlider = document.getElementById('vertexSizeSlider');
-  const vertexSizeValue = document.getElementById('vertexSizeValue');
-  // btnPuntos ya está definido arriba
+  // Mostrar/ocultar panel settings
+  const visible = puntosSettings.style.display === 'flex';
+  puntosSettings.style.display = visible ? 'none' : 'flex';
 
-  // 1. Mostrar el slider SOLO al activar el modo "Vértices"
-  btnPuntos?.addEventListener('click', () => {
-    // Toggle: muestra si estaba oculto, oculta si estaba visible
-    const visible = puntosSettings.style.display === 'flex';
-    puntosSettings.style.display = visible ? 'none' : 'flex';
-
-    // Si ahora se muestra, resetea el slider y el tamaño de los puntos
-    if (!visible) {
-      vertexSizeSlider.value = 1;
-      vertexSizeValue.textContent = "1 px";
-      applyToRelevantViewers(({ model }) => {
-        if (!model) return;
-        model.traverse(child => {
-          if (child.isPoints && child.name === 'puntos_nube' && child.material) {
-            child.material.size = 1 / 300; // Ajusta divisor según escala de tu escena
-            child.material.needsUpdate = true;
-          }
-        });
-      });
-    }
-  });
-
-
-  // 2. Cambiar tamaño de puntos en tiempo real
-  vertexSizeSlider?.addEventListener('input', (e) => {
-    const px = Number(e.target.value);
-    vertexSizeValue.textContent = px + " px";
-
-    // Recorre los modelos activos y ajusta el tamaño de los puntos
+  // Si se muestra, reset slider y tamaño puntos
+  if (!visible) {
+    vertexSizeSlider.value = 1;
+    vertexSizeValue.textContent = "1 px";
     applyToRelevantViewers(({ model }) => {
       if (!model) return;
       model.traverse(child => {
         if (child.isPoints && child.name === 'puntos_nube' && child.material) {
-          child.material.size = px / 300; // Ajusta el divisor para la escala de tu escena
+          child.material.size = 1 / 300; // Ajusta divisor según escala
           child.material.needsUpdate = true;
         }
       });
     });
+
+    if (window.actualizarEscalaEsferas) {
+      window.actualizarEscalaEsferas();
+    }
+  }
+});
+
+// Cambiar tamaño de puntos en tiempo real
+vertexSizeSlider?.addEventListener('input', (e) => {
+  const px = Number(e.target.value);
+  vertexSizeValue.textContent = px + " px";
+
+  applyToRelevantViewers(({ model, renderer }) => {
+    if (!model) return;
+    model.traverse(child => {
+      if (child.isPoints && child.name === 'puntos_nube' && child.material) {
+        child.material.size = px / 300;
+        child.material.needsUpdate = true;
+      }
+    });
+    // Nuevo: sincroniza también el tamaño de las esferas asociadas a los puntos
+    if (renderer && renderer.domElement.onPuntosSizeChanged) {
+      renderer.domElement.onPuntosSizeChanged();
+    }
   });
+});
+
+
+
+
 
 
   // --- CAMBIO DE MODELO ACTIVO Y LINKED (solo si existen los botones) ---
   const btnChange = document.getElementById('btn-changeModel');
-  const btnLinked = document.getElementById('btn-material'); // Ojo, reutilizado arriba
+  
 
   if (btnChange) {
     btnChange.addEventListener('click', () => {
@@ -298,6 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  const btnLinked = document.getElementById('btn-material'); // Ojo, reutilizado arriba
 
   if (btnLinked && window.updateOutlines) {
     btnLinked.addEventListener('click', () => {
