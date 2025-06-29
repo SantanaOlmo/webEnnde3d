@@ -1,12 +1,7 @@
-
 const toonPanel = document.getElementById('toonShadingPanel');
-const btnToonShading = document.getElementById('btnToonShading');
 const addToonRange = document.getElementById('addToonRange');
 
-btnToonShading.addEventListener('click', () => {
-  toonPanel.classList.toggle('d-none');
-  updateToonMaterial();
-});
+// El panel se abre/cierra desde viewerMenus.js
 
 addToonRange.addEventListener('click', () => {
   const div = document.createElement('div');
@@ -20,7 +15,7 @@ addToonRange.addEventListener('click', () => {
   updateToonMaterial();
 });
 
-// Escucha cambios
+// Escucha cambios (inputs dentro del panel)
 toonPanel.addEventListener('input', () => {
   updateToonMaterial();
 });

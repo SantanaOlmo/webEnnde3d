@@ -26,6 +26,9 @@ import { setupAllHelperIcons } from './core/helpers.js';
 import { setupPointSelection } from '../scene/interaction/pointSelectionManager.js';
 
 import { initRotationInputComparativo, resetAutoRotate } from '../scene/interaction/rotationInput.js';
+import { activarSeleccionDePunto } from '../scene/interaction/vertexRaycast.js';
+
+import { getModelById, getCameraById, getRendererById, getSceneById } from './core/viewerRegistry.js';
 
 
 initRotationInputComparativo();
@@ -186,4 +189,3 @@ function setupCameraSyncIfReady() {
     console.log('Sincronización de cámaras activada');
   }
 }
-

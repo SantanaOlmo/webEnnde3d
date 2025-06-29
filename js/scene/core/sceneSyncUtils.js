@@ -33,3 +33,19 @@ export function applyToRelevantViewers(callback) {
     ids.forEach(apply);
   }
 }
+
+export function applyClippingPlaneSmart(callback) {
+  if (window.model1 && window.model2 && window.activeModel) {
+    const ids = ['indexViewer1', 'viewer2'];
+    const models = [window.model1, window.model2];
+    models.forEach((model, i) => {
+      const viewerId = ids[i];
+      callback(model, viewerId);
+    });
+  } else {
+    const model = window.activeModel || window.model;
+    const viewerId = new URLSearchParams(window.location.search).get('viewerId') || 'indexViewer1';
+    if (model) callback(model, viewerId);
+  }
+}
+

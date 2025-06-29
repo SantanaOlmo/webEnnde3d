@@ -209,38 +209,64 @@
                 
               </form>
               <div id="mallas" class="d-flex flex-row flex-lg-column">
-                <div class="MallaOption">
-                  <button class="botonMalla" id="wireframe">
-                    <div class="ImgFondo">
-                      <img src="../assets/icons/mod_wireframe.svg" alt="">
-                    </div>
-                    <div class="botonMallaInfo">Malla</div>
-                  </button>
-                  <div id="wireframeOptions" >
-                    <input type="color" id="wireframeColor" value="#d95e7d">
-                  </div>
-                </div>
-                <button class="botonMalla" id="solido">
-                  <div class="ImgFondo">
-                    <img src="../assets/icons/mod_solidify.svg" alt="">
-                  </div>
-                  <div class="botonMallaInfo">Sólido</div>
-                </button>
-    
-                <button class="botonMalla" id="togglePuntos">
-                    <div class="ImgFondo">
-                      <img src="../assets/icons/vertexsel.svg" alt="">
-                    </div>
-                    <div class="botonMallaInfo">Vértices</div>
-                  </button>
-                </div>
 
-                <!-- === SLIDER DE TAMAÑO DE PUNTOS (VISIBLE SOLO SI "VÉRTICES" ACTIVADO) === -->
-                <div id="puntosSettings" style="display: none; flex-direction: column; align-items: center; gap: 5px; margin: 10px 0;">
-                  <label for="vertexSizeSlider" style="font-size:0.97em; color:#ccc; margin-bottom:2px;">Tamaño de los puntos</label>
-                  <input type="range" id="vertexSizeSlider" min="1" max="20" step="1" value="1" style="width:90px;">
-                  <span id="vertexSizeValue" style="font-size:0.95em; color:#b97593;">1 px</span>
+              <!-- Botón Malla -->
+              <div class="MallaOption">
+                <button class="botonMalla" id="wireframe">
+                  <div class="ImgFondo">
+                    <img src="../assets/icons/mod_wireframe.svg" alt="">
+                  </div>
+                  <div class="botonMallaInfo">Malla</div>
+                </button>
+                <div id="wireframeOptions">
+                  <input type="color" id="wireframeColor" value="#d95e7d">
                 </div>
+              </div>
+
+              <!-- Botón Sólido -->
+              <button class="botonMalla" id="solido">
+                <div class="ImgFondo">
+                  <img src="../assets/icons/mod_solidify.svg" alt="">
+                </div>
+                <div class="botonMallaInfo">Sólido</div>
+              </button>
+
+              <!-- Botón Vértices -->
+              <button class="botonMalla" id="togglePuntos">
+                <div class="ImgFondo">
+                  <img src="../assets/icons/vertexsel.svg" alt="">
+                </div>
+                <div class="botonMallaInfo">Vértices</div>
+              </button>
+
+              <!-- Panel Tamaño de puntos -->
+              <div id="puntosSettings" style="display: none; flex-direction: column; align-items: center; gap: 5px; margin: 10px 0;">
+                <label for="vertexSizeSlider" style="font-size:0.97em; color:#ccc; margin-bottom:2px;">Tamaño de los puntos</label>
+                <input type="range" id="vertexSizeSlider" min="1" max="20" step="1" value="1" style="width:90px;">
+                <span id="vertexSizeValue" style="font-size:0.95em; color:#b97593;">1 px</span>
+              </div>
+
+              <!-- Botón Plano de corte -->
+              <button class="botonMalla" id="toggleClipping">
+                <div class="ImgFondo">
+                  <img src="../assets/icons/mod_explode.svg" alt="">
+                </div>
+                <div class="botonMallaInfo">Plano de corte</div>
+              </button>
+
+              <!-- Panel de opciones de plano de corte (sólo visible si activo) -->
+              <div id="clippingSettings" style="display: none; flex-direction: column; align-items: center; gap: 8px; margin: 10px 0;">
+                <div class="d-flex flex-row gap-2 mb-2">
+                  <button id="clip-x" class="clippingBtn">X</button>
+                  <button id="clip-y" class="clippingBtn">Y</button>
+                  <button id="clip-z" class="clippingBtn">Z</button>
+                </div>
+                <label for="clip-slider" style="font-size:0.97em; color:#ccc; margin-bottom:2px;">Profundidad del corte</label>
+                <input type="range" id="clip-slider" min="-1" max="1" step="0.01" value="0">
+                <span id="clip-slider-value" style="font-size:0.95em; color:#b97593;">0</span>
+              </div>
+            </div>
+            
               </div>
               <div id="previewTexturas"></div>
               <button type="button" id="resetEstilos">Restablecer</button>

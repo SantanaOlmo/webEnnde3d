@@ -9,6 +9,7 @@ import { centerAndFitModel } from '../utils/centerFit.js';
 import { guardarVertices, crearNubeDePuntos } from '../interaction/vertexUtils.js';
 import { escalarModelo } from '../model/scaleModel.js';
 import { GLTFExporter } from 'three/examples/jsm/exporters/GLTFExporter.js';
+import { getRendererById } from '../core/viewerRegistry.js';
 
 let gltfLoader, stlLoader;
 
@@ -60,7 +61,7 @@ export function loadModel(scene, fileOrUrl) {
 
       scene.add(obj);
       scene.userData.currentModel = obj;
-
+      
       guardarVertices(obj);
       escalarModelo(obj);  
       centerAndFitModel(obj, scene);

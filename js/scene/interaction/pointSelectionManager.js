@@ -136,8 +136,23 @@ export function setupPointSelection({ renderer, camera, model, scene, visor }) {
         y: point.y.toFixed(4),
         z: point.z.toFixed(4),
         vertexIndex: index,
-        object: object
+        object: object,
       };
+
+      // --- AÑADIR ESFERA VISUAL ---
+      // Calcular posición exacta del vértice
+const vertexPos = new THREE.Vector3().fromBufferAttribute(object.geometry.attributes.position, index);
+object.localToWorld(vertexPos);
+
+// Crear y añadir esfera
+const esfera = new THREE.Mesh(
+  new THREE.SphereGeometry(0.02, 16, 16),
+  new THREE.MeshBasicMaterial({ color: 0xff0000 })
+);
+esfera.position.copy(vertexPos);
+esfera.scale.setScalar(0.22); 
+esfera.name = `esfera_punto_${visor}_${activePoint.index}`;
+scene.add(esfera);
 
       // Actualiza la caja: SOLO nombre y tooltip, NO estilos ni colores aquí
       const label = document.getElementById(`point${visor}-${activePoint.index + 1}`);

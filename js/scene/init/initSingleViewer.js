@@ -47,7 +47,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Cargamos el modelo y lo añadimos a la escena
   const loadedModel = await loadModel(scene, fileFromDB);
   updateModel(viewerId, loadedModel);
+  window.activeModel = loadedModel;
+
   initVertexRaycast(renderer, camera, loadedModel);
+
    // === DEPURACIÓN: expón modelo y escena en window ===
   window._debugModel = loadedModel;
   window._debugScene = scene;

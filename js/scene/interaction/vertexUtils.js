@@ -34,7 +34,7 @@ export function crearNubeDePuntos(modelo) {
   const boundingBox = new THREE.Box3().setFromObject(modelo);
   const bboxSize = boundingBox.getSize(new THREE.Vector3()).length();
   // Ajusta el factor a tu gusto (esto es "tamaño agradable" para 1px real en la mayoría de modelos)
-  const puntoSizePorDefecto = bboxSize * 0.0025;  
+  const puntoSizePorDefecto = bboxSize * 0.002;  
   const pickSize = puntoSizePorDefecto * 1.2;    
   // -------------------------------------------
 

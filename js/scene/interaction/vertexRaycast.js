@@ -52,7 +52,7 @@ export function initVertexRaycast(renderer, camera, model) {
 
   function actualizarEscalaEsferas() {
     seleccionData.forEach(({ sphere, puntoObj }) => {
-      const tamaño = puntoObj.material.size || 0.03;
+      const tamaño = puntoObj.material.size || 0.02;
       sphere.scale.setScalar(tamaño * SCALE_FACTOR);
     });
   }
@@ -193,4 +193,37 @@ export function initVertexRaycast(renderer, camera, model) {
     seleccionSpheres,
     hoverSphere
   };
+}
+
+export function activarSeleccionDePunto({ model, camera, renderer, scene, viewerId, visor, index }) {
+  if (!model || index == null) return;
+
+  // Elimina esfera anterior si existe
+  const existingSphere = scene.getObjectByName('punto_esfera');
+  if (existingSphere) {
+    scene.remove(existingSphere);
+  }
+
+  let targetVertex = null;
+
+  model.traverse(child => {
+    if (child.isPoints && child.name === 'puntos_nube' && child.geometry) {
+      const positionAttr = child.geometry.attributes.position;
+      if (index < positionAttr.count) {
+        const vertex = new THREE.Vector3().fromBufferAttribute(positionAttr, index);
+        child.localToWorld(vertex); // 🔧 Esta línea transforma bien la posición
+        targetVertex = vertex;
+      }
+    }
+  });
+
+  if (!targetVertex) return;
+
+  const geometry = new THREE.SphereGeometry(0.02, 16, 16);
+  const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+  const sphere = new THREE.Mesh(geometry, material);
+  sphere.position.copy(targetVertex);
+  sphere.name = 'punto_esfera';
+
+  scene.add(sphere);
 }

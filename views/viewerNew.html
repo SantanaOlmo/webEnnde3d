@@ -20,7 +20,6 @@
   <link rel="stylesheet" href="/styles/viewer.css">      
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simplebar@latest/dist/simplebar.min.css">
 
-
   <!-- Scripts principales -->
   <script type="module" src="/js/loader.js" defer></script>                      
   <script type="module" src="/js/scene/init/initSingleViewer.js" defer></script> 
@@ -59,7 +58,7 @@
     <svg fill="#000000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
   </button>
 
-    <!-- CONTENEDOR PRINCIPAL DEL VISOR + SIDEBAR -->
+  <!-- CONTENEDOR PRINCIPAL DEL VISOR + SIDEBAR -->
   <div id="visorWrapper" class="d-flex flex-column flex-lg-row">
     <div id="viewerContainer" class="position-relative">
       <!-- === CAMBIO: AHORA LOS BOTONES ESTÁN DENTRO DE indexViewer1 === -->
@@ -104,13 +103,12 @@
             <img class="options-sidebar info"  src="../assets/icons/split_vertical.svg" alt="Comparar modelos">
           </button>
         </div>
-        
-
       </div>
 
       <!-- PANEL DE MENÚS (mismo comportamiento que visor doble) -->
 <div id="menuPanel" class="menu-panel">
 
+  <!-- Panel para personalización del entorno -->
   <div id="menu-world" class="menu-content d-none h-100 w-100 d-flex justify-content-center  align-items-center">
     <h3 class="panel-title mb-3">
       <img src="../assets/icons/world.svg" alt="" style="width: 22px; margin-right: 7px; vertical-align: middle;">
@@ -123,6 +121,7 @@
     </div>
   </div>
 
+  <!-- Panel de personalización de material y modos -->
   <div id="menu-modelo" class="menu-content d-none h-100 d-flex flex-md-column overflow-scroll">
     <h3 class="panel-title mb-3">
       <img src="../assets/icons/monkey.svg" alt="" style="width: 22px; margin-right: 7px; vertical-align: middle;">
@@ -130,6 +129,7 @@
     </h3>
     <div class="containerModeloSettings d-flex flex-row flex-lg-column align-items-center" >
 
+      <!-- Formulario de estilos -->
       <form id="formStyles" class="d-flex flex-row flex-lg-column ">
         <label for="color">Color:</label>
         <input type="color" name="color" id="chooseColor" class="input">
@@ -141,78 +141,103 @@
         <input type="range" id="transmissionSlider" min="0" max="1" step="0.01" value="1">
         <label for="thicknessSlider">Grosor:</label>
         <input type="range" id="thicknessSlider" min="0" max="5" step="0.1" value="0.5">
-        <label for="envMapSlider">Reflejo:</label>
-        <input type="range" id="envMapSlider" min="0" max="5" step="0.1" value="1.5">
+        
       </form>
 
+      <!-- Botones de modos: Malla, Sólido, Vértices, Plano de corte, Toon Shading -->
       <div id="mallas" class="d-flex flex-row flex-lg-column">
-  <div class="MallaOption">
-    <button class="botonMalla" id="wireframe">
-      <div class="ImgFondo">
-        <img src="../assets/icons/mod_wireframe.svg" alt="">
-      </div>
-      <div class="botonMallaInfo">Malla</div>
-    </button>
-    <div id="wireframeOptions">
-      <input type="color" id="wireframeColor" value="#d95e7d">
-    </div>
-  </div>
-
-  <button class="botonMalla" id="solido">
-    <div class="ImgFondo">
-      <img src="../assets/icons/mod_solidify.svg" alt="">
-    </div>
-    <div class="botonMallaInfo">Sólido</div>
-  </button>
-
-  <button class="botonMalla" id="togglePuntos">
-    <div class="ImgFondo">
-      <img src="../assets/icons/vertexsel.svg" alt="">
-    </div>
-    <div class="botonMallaInfo">Vértices</div>
-  </button>
-</div>
-
-<!-- === SLIDER DE TAMAÑO DE PUNTOS (VISIBLE SOLO SI "VÉRTICES" ACTIVADO) === -->
-<div id="puntosSettings" style="display: none; flex-direction: column; align-items: center; gap: 5px; margin: 10px 0;">
-  <label for="vertexSizeSlider" style="font-size:0.97em; color:#ccc; margin-bottom:2px;">Tamaño de los puntos</label>
-  <input type="range" id="vertexSizeSlider" min="0.5" max="20" step="0.5" value="4" style="width:90px;">
-  <span id="vertexSizeValue" style="font-size:0.95em; color:#b97593;">1 px</span>
-</div>
-<!-- FIN SLIDER DE TAMAÑO DE PUNTOS -->
-
-
-      <div id="toonShadingPanel" class="d-none">
-        <h3>Toon Shading</h3>
-
-        <div class="toon-color-block">
-          <label>Color base (luz):</label>
-          <input type="color" class="toon-color" value="#ffffff">
-          <input type="range" class="toon-range" min="0" max="100" value="60">
+        <!-- Botón Malla -->
+        <div class="MallaOption">
+          <button class="botonMalla" id="wireframe">
+            <div class="ImgFondo">
+              <img src="../assets/icons/mod_wireframe.svg" alt="">
+            </div>
+            <div class="botonMallaInfo">Malla</div>
+          </button>
+          <div id="wireframeOptions">
+            <input type="color" id="wireframeColor" value="#d95e7d">
+          </div>
         </div>
+        <!-- Botón Sólido -->
+        <button class="botonMalla" id="solido">
+          <div class="ImgFondo">
+            <img src="../assets/icons/mod_solidify.svg" alt="">
+          </div>
+          <div class="botonMallaInfo">Sólido</div>
+        </button>
+        <!-- Botón Vértices -->
+        <button class="botonMalla" id="togglePuntos">
+          <div class="ImgFondo">
+            <img src="../assets/icons/vertexsel.svg" alt="">
+          </div>
+          <div class="botonMallaInfo">Vértices</div>
+        </button>
+
+              <!-- Panel de configuración del tamaño de los puntos (solo si modo vértices activo) -->
+      <div id="puntosSettings" style="display: none; flex-direction: column; align-items: center; gap: 5px; margin: 10px 0;">
+        <label for="vertexSizeSlider" style="font-size:0.97em; color:#ccc; margin-bottom:2px;">Tamaño de los puntos</label>
+        <input type="range" id="vertexSizeSlider" min="0.5" max="20" step="0.5" value="4">
+        <span id="vertexSizeValue" style="font-size:0.95em; color:#b97593;">1 px</span>
+      </div>
+
+        <!-- Botón Plano de corte -->
+        <button class="botonMalla" id="toggleClipping">
+          <div class="ImgFondo">
+            <img src="../assets/icons/mod_explode.svg" alt="">
+          </div>
+          <div class="botonMallaInfo">Plano de corte</div>
+        </button>
+
+      <!-- Panel de opciones de plano de corte (solo si activo) -->
+      <div id="clippingSettings" style="display: none; flex-direction: column; align-items: center; gap: 8px; margin: 10px 0;">
+        <div class="d-flex flex-row gap-2 mb-2">
+          <button id="clip-x" class="clippingBtn">X</button>
+          <button id="clip-y" class="clippingBtn">Y</button>
+          <button id="clip-z" class="clippingBtn">Z</button>
+
+        </div>
+        <label for="clip-slider" style="font-size:0.97em; color:#ccc; margin-bottom:2px;">Profundidad del corte</label>
+        <input type="range" id="clip-slider" min="-1" max="1" step="0.01" value="0">
+        <span id="clip-slider-value" style="font-size:0.95em; color:#b97593;">0</span>
+      </div>
+
+        <!-- Botón Toon Shading -->
+        <button class="botonMalla" id="toggleToonShading">
+          <div class="ImgFondo">
+            <img src="../assets/icons/shaderfx.svg" alt="">
+          </div>
+          <div class="botonMallaInfo">Toon Shading</div>
+        </button>
+      </div>
+
+      <!-- Panel de Toon Shading (solo si activo) -->
+      <div id="toonShadingPanel">
+        <div class="toon-color-block">
+        <label>Color base (luz):</label>
+        <input type="color" class="toon-color" value="#ffffff">
+        <input type="range" class="toon-range" min="0" max="100" value="60">
+      </div>
 
         <div class="toon-color-block">
           <label>Color sombra:</label>
           <input type="color" class="toon-color" value="#000000">
           <input type="range" class="toon-range" min="0" max="100" value="100">
         </div>
-
         <button id="addToonRange">Añadir rango</button>
       </div>
 
-      <button id="btnToonShading">Toon Shading</button>
-
+      <!-- Previsualización de texturas y restablecer -->
       <div id="previewTexturas"></div>
       <button type="button" id="resetEstilos">Restablecer</button>
     </div>
   </div>
 
+  <!-- Panel de ayuda rápida -->
   <div id="menu-info" class="menu-content d-none h-100">
     <h3 class="panel-title mb-3">
       <img src="../assets/icons/info.svg" alt="" style="width: 22px; margin-right: 7px; vertical-align: middle;">
       Ayuda rápida
     </h3>
-
     <ul class="info-shortcuts">
       <li><kbd>Q</kbd> / <kbd>E</kbd> <span>Rotar cámara izquierda/derecha</span></li>
       <li><kbd>Espacio</kbd> <span>Rotación automática</span></li>
@@ -226,7 +251,6 @@
     </div>
   </div>
 </div>
-
 
     </aside>
   </div>

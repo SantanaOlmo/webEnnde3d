@@ -18,7 +18,9 @@ export function initScene(containerId) {
   const renderer = new THREE.WebGLRenderer({ antialias: true });
   renderer.setSize(container.clientWidth, container.clientHeight);
   renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.localClippingEnabled = true;
   container.appendChild(renderer.domElement);
+
 
   const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
   directionalLight.position.set(5, 10, 7.5);

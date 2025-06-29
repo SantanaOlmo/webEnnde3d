@@ -1,5 +1,7 @@
 // js/ui/viewerMenus.js
 
+import * as THREE from 'three';
+
 import {
   aplicarEstilos,
   restaurarMaterialesOriginales,
@@ -9,12 +11,15 @@ import {
 } from '../scene/model/materials.js';
 
 import { toggleNubeDePuntos } from '../scene/interaction/vertexToggle.js';
-import { applyToRelevantViewers } from '../scene/core/sceneSyncUtils.js';
+import { applyToRelevantViewers, applyClippingPlaneSmart } from '../scene/core/sceneSyncUtils.js';
 import { toggleSyncMode } from './viewerSwitch.js';
 import { updateOutlines } from '../scene/model/outlinePass.js';
 import { setModoVerticesActivo } from '../scene/interaction/vertexMode.js';
 
+// --- IMPORTACIÓN DEL CLIPPING PLANE ---
+import { applyClippingPlane, updateClippingPosition, disableClipping } from '../scene/interaction/clippingPlane.js';
 
+// ==== DEBOUNCE ====
 function debounce(callback, delay) {
   let timeout;
   return (...args) => {
@@ -24,6 +29,14 @@ function debounce(callback, delay) {
     }, delay);
   };
 }
+
+function getCorrectViewerIdFromModel(model) {
+  if (!model) return 'indexViewer1'; // fallback
+  if (window.model1 && model === window.model1) return 'indexViewer1';
+  if (window.model2 && model === window.model2) return 'viewer2';
+  return 'indexViewer1';
+}
+
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -45,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
   menuPanel.style.display = 'none';
   let activePanel = null;
 
-  // --- PANEL DE MENÚS LATERAL ---
+  // --- PANEL DE MENÚS LATERAL (Sidebar Principal) ---
   const showPanel = (panel) => {
     menuPanel.style.display = 'block';
     menuPanel.classList.add('show');
@@ -84,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // --- FORMULARIO DE ESTILOS (CON TRANSPARENCIA, GROSOR Y REFLEJO) ---
+  // --- FORMULARIO DE ESTILOS ---
   const debouncedUpdateMaterial = debounce(() => {
     const datos = Object.fromEntries(new FormData(formModelo).entries());
 
@@ -92,7 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
     datos.metalness = parseFloat(datos.metalness) / 1000;
     datos.transmission = parseFloat(formModelo.elements["transmissionSlider"].value);
     datos.thickness = parseFloat(formModelo.elements["thicknessSlider"].value);
-    datos.envMapIntensity = parseFloat(formModelo.elements["envMapSlider"].value);
 
     localStorage.setItem('estilos', JSON.stringify(datos));
 
@@ -118,7 +130,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const wireframeColorInput = document.getElementById('wireframeColor');
   wireframeColorInput?.addEventListener("input", () => {
     const color = wireframeColorInput.value;
-    // Si estamos en viewerFinal con dos modelos:
     if (window.model1 && window.model2 && window.activeModel) {
       if (window.linkedMode) {
         cambiarMaterial(window.model1, "wireframe", color);
@@ -163,16 +174,32 @@ document.addEventListener('DOMContentLoaded', () => {
       formModelo.elements["metalness"].value = 500;
       formModelo.elements["transmissionSlider"].value = 0;
       formModelo.elements["thicknessSlider"].value = 0;
-      formModelo.elements["envMapSlider"].value = 1.5;
     }
   });
 
-  // --- BOTONES VISUALES ---
+  // === CONTROL UNIFICADO DE MODOS "botón pestaña" ===
+
+  // Botones modo
   const btnWireframe = document.getElementById('wireframe');
   const btnSolido = document.getElementById('solido');
   const btnPuntos = document.getElementById('togglePuntos');
+  const btnClipping = document.getElementById('toggleClipping');
+  const btnToonShading = document.getElementById('toggleToonShading');
 
+  // Paneles desplegables de cada modo
+  const puntosSettings = document.getElementById('puntosSettings');
+  const clippingSettings = document.getElementById('clippingSettings');
+  const toonShadingPanel = document.getElementById('toonShadingPanel');
+
+  function cerrarTodosLosPanelesModo() {
+    if (puntosSettings) puntosSettings.style.display = 'none';
+    if (clippingSettings) clippingSettings.style.display = 'none';
+    if (toonShadingPanel) toonShadingPanel.style.display = 'none';
+  }
+
+  // --- BOTÓN: Wireframe ---
   btnWireframe?.addEventListener('click', () => {
+    cerrarTodosLosPanelesModo();
     if (window.model1 && window.model2 && window.activeModel) {
       if (window.linkedMode) {
         cambiarMaterial(window.model1, 'wireframe', '#000000');
@@ -182,14 +209,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } else {
       applyToRelevantViewers(({ model }) => {
-        if (model) {
-          cambiarMaterial(model, 'wireframe', '#000000');
-        }
+        if (model) cambiarMaterial(model, 'wireframe', '#000000');
       });
     }
   });
 
+  // --- BOTÓN: Sólido ---
   btnSolido?.addEventListener('click', () => {
+    cerrarTodosLosPanelesModo();
     if (window.model1 && window.model2 && window.activeModel) {
       if (window.linkedMode) {
         cambiarMaterial(window.model1, 'solido');
@@ -199,98 +226,214 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } else {
       applyToRelevantViewers(({ model }) => {
-        if (model) {
-          cambiarMaterial(model, 'solido');
-        }
+        if (model) cambiarMaterial(model, 'solido');
       });
     }
   });
 
-  // Estado para saber si modo vértices activo
-let modoVerticesActivo = false;
+  // --- BOTÓN: Vértices ---
+  let modoVerticesActivo = false;
+  btnPuntos?.addEventListener('click', () => {
+    cerrarTodosLosPanelesModo();
+    const nuevoEstado = !modoVerticesActivo;
+    modoVerticesActivo = nuevoEstado;
+    setModoVerticesActivo(nuevoEstado);
 
-// Función para acceder a modoVerticesActivo (para pasar a vertexRaycast)
-function getModoVerticesActivo() {
-  return modoVerticesActivo;
-}
-
-// Toggle botón puntos y mostrar/ocultar slider
-btnPuntos?.addEventListener('click', () => {
-  const nuevoEstado = !getModoVerticesActivo();
-  setModoVerticesActivo(nuevoEstado);
-
-  // Toggle de nubes de puntos según linkedMode o activeModel
-  if (window.model1 && window.model2 && window.activeModel) {
-    if (window.linkedMode) {
-      toggleNubeDePuntos(window.model1);
-      toggleNubeDePuntos(window.model2);
+    if (window.model1 && window.model2 && window.activeModel) {
+      if (window.linkedMode) {
+        toggleNubeDePuntos(window.model1);
+        toggleNubeDePuntos(window.model2);
+      } else {
+        toggleNubeDePuntos(window.activeModel);
+      }
     } else {
-      toggleNubeDePuntos(window.activeModel);
+      applyToRelevantViewers(({ model }) => {
+        if (model) toggleNubeDePuntos(model);
+      });
     }
-  } else {
-    applyToRelevantViewers(({ model }) => {
-      if (model) {
-        toggleNubeDePuntos(model);
-      }
-    });
-  }
 
-  // Mostrar/ocultar panel settings
-  const visible = puntosSettings.style.display === 'flex';
-  puntosSettings.style.display = visible ? 'none' : 'flex';
+    if (modoVerticesActivo && puntosSettings) {
+      puntosSettings.style.display = 'flex';
+      let tamanoDefecto = 1;
+      applyToRelevantViewers(({ model }) => {
+        if (!model) return;
+        if (model.userData && model.userData.tamanoPuntoDefecto) {
+          tamanoDefecto = Math.max(1, Math.round(model.userData.tamanoPuntoDefecto * 300));
+        }
+        model.traverse(child => {
+          if (child.isPoints && child.name === 'puntos_nube' && child.material) {
+            child.material.size = tamanoDefecto / 300;
+            child.material.needsUpdate = true;
+          }
+        });
+      });
 
-  // Si se muestra, usa el tamaño dinámico del modelo como valor base
-  if (!visible) {
-    let tamanoDefecto = 1; // fallback mínimo
-    applyToRelevantViewers(({ model }) => {
+      vertexSizeSlider.value = tamanoDefecto;
+      vertexSizeValue.textContent = tamanoDefecto + " px";
+      if (window.actualizarEscalaEsferas) window.actualizarEscalaEsferas();
+    }
+  });
+
+  // Cambiar tamaño de puntos en tiempo real
+  const vertexSizeSlider = document.getElementById('vertexSizeSlider');
+  const vertexSizeValue = document.getElementById('vertexSizeValue');
+  vertexSizeSlider?.addEventListener('input', (e) => {
+    const px = Number(e.target.value);
+    vertexSizeValue.textContent = px + " px";
+    applyToRelevantViewers(({ model, renderer }) => {
       if (!model) return;
-      if (model.userData && model.userData.tamanoPuntoDefecto) {
-        // Lo guardamos como entero (en px) para el slider visual
-        tamanoDefecto = Math.max(1, Math.round(model.userData.tamanoPuntoDefecto * 300));
-      }
-      // Fijamos el tamaño de los puntos al abrir el panel (usa el dinámico)
       model.traverse(child => {
         if (child.isPoints && child.name === 'puntos_nube' && child.material) {
-          child.material.size = tamanoDefecto / 300;
+          child.material.size = px / 300;
           child.material.needsUpdate = true;
         }
       });
+      if (renderer && renderer.domElement.onPuntosSizeChanged) {
+        renderer.domElement.onPuntosSizeChanged();
+      }
     });
+  });
 
-    vertexSizeSlider.value = tamanoDefecto;
-    vertexSizeValue.textContent = tamanoDefecto + " px";
+// --- PANEL DE CORTE (CLIPPING PLANE) ---
 
-    if (window.actualizarEscalaEsferas) {
-      window.actualizarEscalaEsferas();
+const clipX = document.getElementById('clip-x');
+const clipY = document.getElementById('clip-y');
+const clipZ = document.getElementById('clip-z');
+const clipSlider = document.getElementById('clip-slider');
+const clipSliderValue = document.getElementById('clip-slider-value');
+let activeClipAxis = null; // inicial sin eje
+
+function getActiveModelAndId() {
+  let model = null;
+  let viewerId = 'indexViewer1';
+
+  if (window.model1 && window.model2 && window.activeModel) {
+    model = window.activeModel;
+    viewerId = model === window.model2 ? 'viewer2' : 'indexViewer1';
+  } else {
+    model = window.model;
+    viewerId = new URLSearchParams(window.location.search).get('viewerId') || 'indexViewer1';
+  }
+
+  return { model, viewerId };
+}
+
+
+// Aplica plano de corte a uno o ambos modelos según el modo
+function applyClippingToRelevantViewers(axis, constant) {
+  if (window.model1 && window.model2 && window.activeModel) {
+    if (window.linkedMode) {
+      applyClippingPlane(window.model1, axis, constant, 'indexViewer1');
+      applyClippingPlane(window.model2, axis, constant, 'viewer2');
+    } else {
+      const viewerId = window.activeModel === window.model1 ? 'indexViewer1' : 'viewer2';
+      applyClippingPlane(window.activeModel, axis, constant, viewerId);
     }
+  } else {
+    const { model, viewerId } = getActiveModelAndId();
+    if (model) applyClippingPlane(model, axis, constant, viewerId);
+  }
+}
+
+// Al seleccionar un eje, configura el plano y activa el slider
+function setupClippingPlane() {
+  if (!activeClipAxis) return;
+
+  applyToRelevantViewers(({ model, viewerId }) => {
+  const box = new THREE.Box3().setFromObject(model);
+  let min = 0, max = 0;
+  switch (activeClipAxis) {
+    case 'X': min = box.min.x; max = box.max.x; break;
+    case 'Y': min = box.min.y; max = box.max.y; break;
+    case 'Z': min = box.min.z; max = box.max.z; break;
+  }
+
+    const margen = 0.01;
+    clipSlider.min = (min - margen).toFixed(2);
+    clipSlider.max = (max + margen).toFixed(2);
+    clipSlider.step = 0.01;
+    clipSlider.value = min.toFixed(2);
+    clipSlider.disabled = false;
+    clipSliderValue.textContent = clipSlider.value;
+
+    applyClippingPlane(model, activeClipAxis, parseFloat(clipSlider.value), viewerId);
+  });
+
+}
+
+// Solo mueve el plano ya activo
+// Mueve el plano sin regenerarlo
+function moveClippingPlane() {
+  const constant = parseFloat(clipSlider.value);
+  clipSliderValue.textContent = constant.toFixed(2);
+
+  const { model } = getActiveModelAndId();
+  const viewerId = getCorrectViewerIdFromModel(model);
+  updateClippingPosition(constant, viewerId);
+}
+
+
+
+// Ejes
+clipX?.addEventListener('click', () => {
+  activeClipAxis = 'X';
+  setupClippingPlane();
+  clipX.classList.add('active');
+  clipY.classList.remove('active');
+  clipZ.classList.remove('active');
+});
+clipY?.addEventListener('click', () => {
+  activeClipAxis = 'Y';
+  setupClippingPlane();
+  clipX.classList.remove('active');
+  clipY.classList.add('active');
+  clipZ.classList.remove('active');
+});
+clipZ?.addEventListener('click', () => {
+  activeClipAxis = 'Z';
+  setupClippingPlane();
+  clipX.classList.remove('active');
+  clipY.classList.remove('active');
+  clipZ.classList.add('active');
+});
+
+clipSlider?.addEventListener('input', moveClippingPlane);
+
+btnClipping?.addEventListener('click', () => {
+  cerrarTodosLosPanelesModo();
+  if (!clippingSettings) return;
+
+  const visible = clippingSettings.style.display === 'flex';
+  clippingSettings.style.display = visible ? 'none' : 'flex';
+
+  const { model } = getActiveModelAndId();
+  if (visible) {
+    disableClipping(model);
+    clipSlider.disabled = true;
+    clipSliderValue.textContent = "—";
+    activeClipAxis = null;
+    clipX.classList.remove('active');
+    clipY.classList.remove('active');
+    clipZ.classList.remove('active');
+  } else {
+    // Se espera a que el usuario pulse un eje
+    clipSlider.disabled = true;
+    clipSliderValue.textContent = "—";
   }
 });
 
 
-// Cambiar tamaño de puntos en tiempo real
-vertexSizeSlider?.addEventListener('input', (e) => {
-  const px = Number(e.target.value);
-  vertexSizeValue.textContent = px + " px";
-
-  applyToRelevantViewers(({ model, renderer }) => {
-    if (!model) return;
-    model.traverse(child => {
-      if (child.isPoints && child.name === 'puntos_nube' && child.material) {
-        child.material.size = px / 300;
-        child.material.needsUpdate = true;
-      }
-    });
-    // Nuevo: sincroniza también el tamaño de las esferas asociadas a los puntos
-    if (renderer && renderer.domElement.onPuntosSizeChanged) {
-      renderer.domElement.onPuntosSizeChanged();
+  // --- BOTÓN: Toon Shading ---
+  btnToonShading?.addEventListener('click', () => {
+    cerrarTodosLosPanelesModo();
+    if (toonShadingPanel) {
+      const visible = toonShadingPanel.style.display === 'flex';
+      toonShadingPanel.style.display = visible ? 'none' : 'flex';
     }
   });
-});
 
   // --- CAMBIO DE MODELO ACTIVO Y LINKED (solo si existen los botones) ---
   const btnChange = document.getElementById('btn-changeModel');
-  
-
   if (btnChange) {
     btnChange.addEventListener('click', () => {
       if (!window.activeModel || !window.model1 || !window.model2) return;
@@ -312,7 +455,6 @@ vertexSizeSlider?.addEventListener('input', (e) => {
   });
 
   const btnLinked = document.getElementById('btn-material'); // Ojo, reutilizado arriba
-
   if (btnLinked && window.updateOutlines) {
     btnLinked.addEventListener('click', () => {
       if (typeof window.linkedMode !== 'boolean') return;
@@ -331,7 +473,6 @@ vertexSizeSlider?.addEventListener('input', (e) => {
 
   // --- TOON SHADING: Listener del panel ---
   const toonPanel = document.getElementById('toonShadingPanel');
-
   toonPanel?.addEventListener('input', () => {
     const colorInputs = [...toonPanel.querySelectorAll('.toon-color')];
     const rangeInputs = [...toonPanel.querySelectorAll('.toon-range')];
