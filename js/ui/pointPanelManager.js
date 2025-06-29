@@ -3,10 +3,11 @@
 import * as THREE from 'three';
 import { puntosSeleccionados } from '../scene/interaction/pointSelectionManager.js';
 import { alignPoints } from '../scene/model/alignModel.js';
-import { getModelById } from '../scene/core/viewerRegistry.js';
+import { getModelById, getRendererById, getCameraById } from '../scene/core/viewerRegistry.js';
 import { exportGLB } from '../scene/model/modelLoader.js';
 import { saveFileToIndexedDB, getFileFromIndexedDB } from '../scene/db/db-utils.js';
 import { restaurarMaterialesOriginales } from '../scene/model/materials.js';
+import { initVertexRaycast } from '../scene/interaction/vertexRaycast.js';
 
 
 // -- Elementos base y referencias
@@ -87,6 +88,17 @@ if (selectPointsBtn) {
       if (bar) bar.style.display = pointsMenuVisible ? 'flex' : 'none';
     });
     if (pointsMenuVisible) {
+      // ⚠️ SOLO ahora inicializamos el hover dinámico de puntos
+      const r1 = getRendererById('indexViewer1');
+      const c1 = getCameraById('indexViewer1');
+      const m1 = getModelById('indexViewer1');
+      initVertexRaycast(r1, c1, m1);
+
+      const r2 = getRendererById('viewer2');
+      const c2 = getCameraById('viewer2');
+      const m2 = getModelById('viewer2');
+      initVertexRaycast(r2, c2, m2);
+
       selectionStep = 0;
       blinkNextPoint();
     } else {

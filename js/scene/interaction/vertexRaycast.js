@@ -20,6 +20,9 @@ export function initVertexRaycast(renderer, camera, model) {
   if (renderer.domElement.__vertexRaycastInitialized) return;
   renderer.domElement.__vertexRaycastInitialized = true;
 
+  // FONDO NEGRO EN EL CANVAS
+  renderer.setClearColor(0x000000);
+
   const puntosSeleccionados = [];
   let ultimoHover = null;
 
@@ -38,12 +41,29 @@ export function initVertexRaycast(renderer, camera, model) {
   const seleccionData = [];
 
   function crearEsferaSeleccion(pos, puntoObj) {
+    let color = 0xff0000; // Por defecto: rojo
+
+    // Colores en orden tour (verde, verde, azul, azul, amarillo, amarillo)
+    const coloresTour = [
+      0x00ff00, // Paso 0 → Punto 1 visor 1 (verde)
+      0x00ff00, // Paso 1 → Punto 1 visor 2 (verde)
+      0x0000ff, // Paso 2 → Punto 2 visor 1 (azul)
+      0x0000ff, // Paso 3 → Punto 2 visor 2 (azul)
+      0xffff00, // Paso 4 → Punto 3 visor 1 (amarillo)
+      0xffff00  // Paso 5 → Punto 3 visor 2 (amarillo)
+    ];
+
+    // Aplica color según el paso de selección (solo en modo tour)
+    if (typeof window.selectionStep === 'number' && coloresTour[window.selectionStep]) {
+      color = coloresTour[window.selectionStep];
+    }
+
     const sphere = new THREE.Mesh(
       new THREE.SphereGeometry(0.5, 16, 16),
-      new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.8 })
+      new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.8 })
     );
     sphere.position.copy(pos);
-    model.parent.add(sphere);
+    puntoObj.model?.parent?.add?.(sphere) ?? model.parent.add(sphere);
     seleccionSpheres.push(sphere);
     seleccionData.push({ sphere, puntoObj });
     sphere.scale.setScalar((puntoObj.material.size || 0.03) * SCALE_FACTOR);
@@ -92,7 +112,7 @@ export function initVertexRaycast(renderer, camera, model) {
 
     const hits = [];
     model.traverse((pt) => {
-      if (!pt.isPoints || pt.name !== 'puntos_nube' || !pt.visible) return; // Añadido pt.visible
+      if (!pt.isPoints || pt.name !== 'puntos_nube' || !pt.visible) return;
       raycaster.params.Points.threshold = pt.material.size;
       hits.push(...raycaster.intersectObject(pt, false));
     });
@@ -118,16 +138,26 @@ export function initVertexRaycast(renderer, camera, model) {
         col.getZ(index)
       ];
       setColorPunto(object, index, ...originalColor, 'DESELECT');
-        } else {
+    } else {
       setColorPunto(object, index, 1, 1, 0, 'CLICK');
       // Aseguramos que la esfera aparece JUSTO en el vértice
       const posAttr = object.geometry.attributes.position;
       const vertexPos = new THREE.Vector3().fromBufferAttribute(posAttr, index);
       object.localToWorld(vertexPos);
-      const sphere = crearEsferaSeleccion(vertexPos, object);
+      hoverSphere.visible = false;
+
+      // **NO sobrescribas index aquí**
+      const puntoObj = {
+        object,
+        model,
+        material: object.material,
+        visor: window.activePoint?.visor ?? 0,
+        index: index
+      };
+
+      const sphere = crearEsferaSeleccion(vertexPos, puntoObj);
       puntosSeleccionados.push({ object, index, sphere });
     }
-
 
     pointerDownPos = null;
     isDragging = false;
@@ -148,7 +178,7 @@ export function initVertexRaycast(renderer, camera, model) {
 
     const allHits = [];
     model.traverse((pt) => {
-      if (pt.isPoints && pt.name === 'puntos_nube' && pt.visible) { // Añadido pt.visible
+      if (pt.isPoints && pt.name === 'puntos_nube' && pt.visible) {
         raycaster.params.Points.threshold = pt.material.size;
         const hits = raycaster.intersectObject(pt, false);
         if (hits.length > 0) allHits.push(...hits);
