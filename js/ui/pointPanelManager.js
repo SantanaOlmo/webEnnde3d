@@ -9,7 +9,6 @@ import { saveFileToIndexedDB, getFileFromIndexedDB } from '../scene/db/db-utils.
 import { restaurarMaterialesOriginales } from '../scene/model/materials.js';
 import { initVertexRaycast } from '../scene/interaction/vertexRaycast.js';
 
-
 // -- Elementos base y referencias
 const pointsBarIds = ['pointsBar1', 'pointsBar2'];
 let pointsMenuVisible = false;
@@ -61,6 +60,7 @@ const selectionOrder = [
   { visor: 2, punto: 3 }
 ];
 let selectionStep = 0;
+window.selectionStep = 0; // Inicializa la global
 
 function pedirSeleccionModelo(step) {
   if (step >= selectionOrder.length) return;
@@ -100,6 +100,7 @@ if (selectPointsBtn) {
       initVertexRaycast(r2, c2, m2);
 
       selectionStep = 0;
+      window.selectionStep = 0; // Resetea la global al mostrar menú
       blinkNextPoint();
     } else {
       stopButtonBlink();
@@ -118,6 +119,7 @@ for (let visor = 1; visor <= 2; visor++) {
         selectionStep = selectionOrder.findIndex(
           o => o.visor === visor && o.punto === punto
         );
+        window.selectionStep = selectionStep; // Sincroniza también aquí
         blinkNextPoint();
       }
     });
@@ -142,6 +144,7 @@ window.addEventListener('puntoSeleccionado', (e) => {
     puntoIndex + 1 === selectionOrder[selectionStep].punto
   ) {
     selectionStep++;
+    window.selectionStep = selectionStep; // Actualiza global en cada avance
     setTimeout(() => blinkNextPoint(), 200);
   }
 });
@@ -177,7 +180,7 @@ function checkShowSuperponer() {
   }
 }
 
- export function logMeshes(model, nombre) {
+export function logMeshes(model, nombre) {
   let meshCount = 0;
   model.traverse(obj => {
     if (obj.isMesh) {
