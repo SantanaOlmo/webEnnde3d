@@ -87,6 +87,9 @@ export function crearNubeDePuntos(modelo) {
 
       child.add(puntos);
       child.userData.nubePuntos = puntos;
+      console.log('Posiciones primer mesh:', geometry.attributes.position.array.slice(0, 10));
+      console.log('Modelo:', modelo.uuid, 'Posición:', modelo.position, modelo.rotation, modelo.scale);
+
     }
   });
 }

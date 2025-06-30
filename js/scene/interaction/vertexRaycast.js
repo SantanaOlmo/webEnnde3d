@@ -126,6 +126,8 @@ export function initVertexRaycast(renderer, camera, model) {
     hits.sort((a, b) => a.distanceToRay - b.distanceToRay);
     const { object, index, point } = hits[0];
 
+    console.log(`[SELECCION] Visor: ${window.activePoint?.visor} | Index: ${index} | XYZ: (${point.x.toFixed(6)}, ${point.y.toFixed(6)}, ${point.z.toFixed(6)})`);
+
     const idx = puntosSeleccionados.findIndex(p => p.object === object && p.index === index);
     if (idx !== -1) {
       const sel = puntosSeleccionados[idx];
