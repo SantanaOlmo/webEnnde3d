@@ -40,6 +40,14 @@ export function initVertexRaycast(renderer, camera, model) {
   const seleccionSpheres = [];
   const seleccionData = [];
 
+  // Calcula la escala correcta para la esfera visual del punto
+  function calcularEscalaEsfera(puntoObj) {
+    const mesh = puntoObj.object;
+    const meshScale = mesh && mesh.isPoints ? mesh.getWorldScale(new THREE.Vector3()).x : 1;
+    // Usa el mismo factor que al crear el punto visual
+    return ((puntoObj.material.size || 0.03) * SCALE_FACTOR) / meshScale;
+  }
+
   function crearEsferaSeleccion(pos, puntoObj) {
     let color = 0xff0000; // Por defecto: rojo
 
@@ -59,34 +67,35 @@ export function initVertexRaycast(renderer, camera, model) {
     }
 
     const sphere = new THREE.Mesh(
-    new THREE.SphereGeometry(0.5, 16, 16),
-    new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.8 })
-  );
-  
-      // LOCALIZA el objeto (mesh) que tiene el vértice seleccionado
-      const mesh = puntoObj.object;
-      if (mesh && mesh.isPoints) {
-        // La posición debe ser LOCAL al mesh
-        const localPos = pos.clone();
-        mesh.worldToLocal(localPos);
-        sphere.position.copy(localPos);
-        mesh.add(sphere); // <-- Cambia aquí
-      } else {
-        // Fallback (por si acaso): al padre del modelo, pero NO recomendado
-        puntoObj.model?.parent?.add?.(sphere) ?? model.parent.add(sphere);
-        sphere.position.copy(pos);
-      }
+      new THREE.SphereGeometry(0.5, 16, 16),
+      new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.8 })
+    );
 
-      seleccionSpheres.push(sphere);
-      seleccionData.push({ sphere, puntoObj });
-      sphere.scale.setScalar((puntoObj.material.size || 0.03) * SCALE_FACTOR);
-      return sphere;
+    // LOCALIZA el objeto (mesh) que tiene el vértice seleccionado
+    const mesh = puntoObj.object;
+    if (mesh && mesh.isPoints) {
+      // La posición debe ser LOCAL al mesh
+      const localPos = pos.clone();
+      mesh.worldToLocal(localPos);
+      sphere.position.copy(localPos);
+      mesh.add(sphere); // Añade como hijo al mesh
+    } else {
+      // Fallback (por si acaso): al padre del modelo, pero NO recomendado
+      puntoObj.model?.parent?.add?.(sphere) ?? model.parent.add(sphere);
+      sphere.position.copy(pos);
     }
+
+    seleccionSpheres.push(sphere);
+    seleccionData.push({ sphere, puntoObj });
+
+    // Escalado unificado
+    sphere.scale.setScalar(calcularEscalaEsfera(puntoObj));
+    return sphere;
+  }
 
   function actualizarEscalaEsferas() {
     seleccionData.forEach(({ sphere, puntoObj }) => {
-      const tamaño = puntoObj.material.size || 0.02;
-      sphere.scale.setScalar(tamaño * SCALE_FACTOR);
+      sphere.scale.setScalar(calcularEscalaEsfera(puntoObj));
     });
   }
 
