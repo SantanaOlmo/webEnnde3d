@@ -367,10 +367,11 @@ function moveClippingPlane() {
   const constant = parseFloat(clipSlider.value);
   clipSliderValue.textContent = constant.toFixed(2);
 
-  const { model } = getActiveModelAndId();
-  const viewerId = getCorrectViewerIdFromModel(model);
-  updateClippingPosition(constant, viewerId);
+  applyToRelevantViewers(({ model, viewerId }) => {
+    if (model) updateClippingPosition(constant, viewerId);
+  });
 }
+
 
 
 
