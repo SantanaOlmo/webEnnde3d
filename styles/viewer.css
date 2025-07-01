@@ -205,7 +205,7 @@ html, body {
 .info-shortcuts {
   list-style: none;
   padding: 0;
-  margin: 0 0 1.2em 0;
+  margin-bottom: 0.7em;
   font-family: 'Rajdhani', Arial, sans-serif;
 }
 
@@ -243,20 +243,20 @@ html, body {
 
 .info-shortcuts span {
   font-family: 'Rajdhani', Arial, sans-serif;
-  font-size: 0.98em;
+  font-size: 0.94em;
   color: #e5e5e5;
   font-weight: 400;
   line-height: 1.22;
 }
 
 .info-tip {
-  margin: 1.3em 0 0 0;
-  padding: 1em 1.1em 1em 1.1em;  /* Más espacio dentro del consejo */
+  margin: 0.6em;
+  padding: 0.5em 0.1em 0.5em 1.1em;  /* Más espacio dentro del consejo */
   border-radius: 12px;
   background: #17191c;
   color: #7ae0f8;
   font-family: 'Rajdhani', Arial, sans-serif;
-  font-size: 0.98em;
+  font-size: 0.8em;
   border-left: 2.6px solid #3cf0fa99;
   box-shadow: 0 2px 7px #0004;
   max-width: 100%;

@@ -96,6 +96,7 @@ h3 {
   overflow-y: auto;
   border-radius: 16px;
   background: inherit;
+  gap: 14px;
 }
 
 /* === PANEL DE CABECERA (TÍTULOS) === */
