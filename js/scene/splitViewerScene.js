@@ -67,7 +67,7 @@ if (modeloOrigen) {
     canvas.classList.add('viewer-canvas-fadein');
     setTimeout(() => canvas.classList.add('visible'), 80);
 
-    const controls = addOrbitControls(camera, renderer);
+    const controls = addOrbitControls(camera, renderer, scene);
 
     window.controlsIndexViewer1 = controls;
     setupCameraSyncIfReady();
@@ -128,7 +128,7 @@ setOnFileProcessed(async (file, viewerId) => {
   canvas2.classList.add('viewer-canvas-fadein');
   setTimeout(() => canvas2.classList.add('visible'), 80);
 
-  const controls = addOrbitControls(camera, renderer);
+  const controls = addOrbitControls(camera, renderer, scene);
 
   // Guardar control para sincro
   if (viewerId === 'indexViewer1' || viewerId === 'viewer1') {

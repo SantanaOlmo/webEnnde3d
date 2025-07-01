@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   registerScene(viewerId, { scene, camera, renderer });
   attachSceneToViewer(viewerId, scene);
 
-  const controls = addOrbitControls(camera, renderer);
+  const controls = addOrbitControls(camera, renderer, scene);
   controls.dampingFactor = 0.08;
 
   // Cambiamos el HDRI de fondo inicialmente

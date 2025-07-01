@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // 3. Añade helpers y controles
 
-  const controls = addOrbitControls(camera, renderer);
+  const controls = addOrbitControls(camera, renderer, scene);
 
   cambiarHDRI(scene, 'campo.hdr');
 

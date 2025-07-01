@@ -163,9 +163,9 @@ export function setupPointSelection({ renderer, camera, model, scene, visor }) {
           color: BOX_COLORS[activePoint.index],
           labelId: `point${visor}-${activePoint.index + 1}`,
           coords: {
-            x: point.x.toFixed(3),
-            y: point.y.toFixed(3),
-            z: point.z.toFixed(3)
+            x: point.x.toFixed(2),
+            y: point.y.toFixed(2),
+            z: point.z.toFixed(2)
           }
         }
       });
