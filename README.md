@@ -1,48 +1,90 @@
-# web Ennde3d
+# Visor Web 3D ENNDE
 
-[drag and drop info](https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/File_drag_and_drop)
+Visor web interactivo para la visualización, comparación y análisis de modelos 3D en formatos estándar (GLB, GLTF, STL), desarrollado como proyecto de prácticas para ENNDE3D (DAM Ilerna 2024-2025).
 
-[three.js manual](https://threejs.org/manual/#en/installation)
+<!-- ![Visor 3D ENNDE - portada](./assets/readmeFiles/visor3d_ennde_portada.png) -->
 
-[crear un primer proyecto de three.js (incluye video)](https://threejs-journey.com/lessons/first-threejs-project)
+---
 
-[ejemplo visor 3d](https://sketchfab.com/3d-models?date=week&sort_by=-likeCount&cursor=bz0xJnA9Mjc%3D)ç
+## Descripción
 
-[descarga de hdri](https://polyhaven.com/)
+Esta aplicación permite cargar modelos 3D, inspeccionarlos desde el navegador y comparar dos piezas mediante alineado por puntos clave. Incluye herramientas avanzadas de visualización (entornos HDRI, plano de corte, nube de puntos, Toon Shading), personalización de materiales y modos de cámara.
 
-[loaders](https://css-loaders.com/)
+Pensado para flujos de trabajo profesionales (arte, patrimonio, ingeniería, diseño industrial...), el visor es modular, intuitivo y adaptable.
 
-[repositorio con iconos de blender](https://github.com/blender/blender/tree/main/release/datafiles/icons_svg)
+---
 
+## Características principales
 
-## POR QUÉ UTILIZAR THREE.JS
-Hemos elegido utilizar Three.js porque nos permite visualizar archivos `.glb` y `.gltf` de forma sencilla y eficiente en la web. Esta librería nos facilita trabajar con gráficos 3D sin tener que escribir código complejo directamente en WebGL (una API de bajo nivel para renderizar gráficos 2D y 3D en el navegador mediante la GPU). Además, incluye herramientas como el `GLTFLoader`, que nos permite cargar modelos 3D directamente y con buen rendimiento. Al ser ligera y compatible con todos los navegadores modernos, se integra fácilmente en cualquier proyecto web. A diferencia de motores más pesados como Unity, Three.js no requiere instalaciones externas y nos da control total sobre la escena. También cuenta con una comunidad activa y buena documentación, lo que agiliza nuestro desarrollo.
+- **Carga de modelos 3D:** arrastrar y soltar archivos `.glb`, `.gltf`, `.stl` o seleccionarlos manualmente.
+- **Visor individual y comparativo:** inspección libre o comparación alineada de dos modelos.
+- **Alineado guiado:** selección de puntos clave para alineación precisa.
+- **Herramientas de análisis:** plano de corte, nube de puntos, Toon Shading.
+- **Sincronización de visores:** movimientos/cortes aplicables simultáneamente.
+- **Personalización de entorno:** HDRI, color de fondo, ajustes de cámara.
+- **UI adaptativa:** menú lateral contextual, atajos de teclado, ayuda rápida.
+- **Gestión local de archivos pesados:** uso de IndexedDB para modelos grandes.
 
+<!-- Ejemplo de imágenes de uso -->
+<!-- ![Visor individual](./assets/readmeFiles/visor_individual.png) -->
+<!-- ![Visor individual con menú lateral](./assets/readmeFiles/visor_individual_menu.png) -->
+<!-- ![Visor comparativo con alineado](./assets/readmeFiles/visor_comparativo.png) -->
 
-## INSTALACION DE TRHEE.JS
+---
 
-1. Descargar e instalar node.js (verificar en terminal con node -v)
-2. Ir a la ruta del proyecto webennde3d en cmd y ejecutar lo siguiente
-   ```
-   npm init -y
-   npm install three
-   npm install --save-dev vite
-   ```
-3. importar three en el archivo js:
+## Instalación rápida
+
+1. **Requisitos previos**
+    - [Node.js](https://nodejs.org/) instalado.
+    - Navegador moderno (Chrome, Firefox, Edge...).
+
+2. **Instalación de dependencias**
+    ```bash
+    npm install
     ```
-    import * as THREE from 'three';
+
+3. **Arrancar el proyecto**
+    ```bash
+    npx vite
     ```
-4. Ejecutar el servidor en cmd con 
-   ```
-   npx vite
-   ```
-   aparecerá algo así: 
-   
-   ![imagen](/assets/readmeFiles/image1.png)
-
-   y habrá que clicar en el link que aparece, el cual abrirá nuestro proyecto en el navegador
+    Accede a la URL que aparece (ejemplo: `http://localhost:5173/`).
+   <!-- (./assets/readmeFiles/npxvite.png) -->
 
 
+4. **Primer uso**
+    - Ve al apartado **3D Viewer**.
+    - Arrastra tu modelo o selecciónalo manualmente.
+    - Usa los menús laterales para activar herramientas y personalizar la visualización.
+    - Cambia a modo comparativo para alinear y comparar dos modelos.
 
-   Por cuestiones de seguridad deberemos crar un servidor local para poder utilizar las funcionalidades qeu nos ofrece three.js Y para crear este servidor local deberemos utilizar una herramienta que nos permita construir ese servidor (build tool), en este caso, hemos usado `vite`.
+---
 
+## Tecnologías principales
+
+- **Three.js** – Motor de gráficos 3D para web.
+- **JavaScript (ES6), HTML5, CSS3**
+- **Vite** – Entorno de desarrollo rápido.
+- **Bootstrap** – Estilos y estructura responsive.
+- **IndexedDB** – Almacenamiento local de archivos.
+- **Git y GitHub** – Control de versiones y colaboración.
+
+---
+
+## Autores
+
+- [Alberto Estepa Gómez](https://github.com/SantanaOlmo)
+- [David Gutiérrez Ortiz](https://github.com/DavidLazaro08)
+
+Prácticas de ciclo **DAM** (Ilerna 2024-2025) en **ENNDE3D**.
+
+---
+
+## Recursos útiles
+
+- [Three.js manual](https://threejs.org/manual/)
+- [Descarga de HDRIs](https://polyhaven.com/)
+- [Ejemplos de visores 3D](https://sketchfab.com/3d-models)
+
+---
+
+> Para detalles completos del desarrollo, funcionalidades avanzadas, retos técnicos y estructura del proyecto, consulta la **memoria adjunta** | [Memoria_Visor_Web3D_ENNDE_DAM2025.pdf](./doc/Memoria_Visor_Web3D_ENNDE_DAM2025_VRS2.pdf).
