@@ -47,8 +47,7 @@ Pensado para flujos de trabajo profesionales (arte, patrimonio, ingeniería, dis
     npx vite
     ```
     Accede a la URL que aparece (ejemplo: `http://localhost:5173/`).
-   (./assets/readmeFiles/npxvite.png)
-
+    ![NP VITE](./assets/readmeFiles/npxvite.png)
 
 4. **Primer uso**
     - Ve al apartado **3D Viewer**.
