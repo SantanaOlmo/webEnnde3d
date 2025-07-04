@@ -2,7 +2,7 @@
 
 Visor web interactivo para la visualización, comparación y análisis de modelos 3D en formatos estándar (GLB, GLTF, STL), desarrollado como proyecto de prácticas para ENNDE3D (DAM Ilerna 2024-2025).
 
-<!-- ![Visor 3D ENNDE - portada](./assets/readmeFiles/visor3d_ennde_portada.png) -->
+![Visor 3D ENNDE - portada](./assets/readmeFiles/visor3d_ennde_portada.png)
 
 ---
 
@@ -25,10 +25,9 @@ Pensado para flujos de trabajo profesionales (arte, patrimonio, ingeniería, dis
 - **UI adaptativa:** menú lateral contextual, atajos de teclado, ayuda rápida.
 - **Gestión local de archivos pesados:** uso de IndexedDB para modelos grandes.
 
-<!-- Ejemplo de imágenes de uso -->
-<!-- ![Visor individual](./assets/readmeFiles/visor_individual.png) -->
-<!-- ![Visor individual con menú lateral](./assets/readmeFiles/visor_individual_menu.png) -->
-<!-- ![Visor comparativo con alineado](./assets/readmeFiles/visor_comparativo.png) -->
+![Visor individual](./assets/readmeFiles/visor_individual.png)
+![Visor individual con menú lateral](./assets/readmeFiles/visor_individual_menu.png)
+![Visor comparativo con alineado](./assets/readmeFiles/visor_comparativo.png)
 
 ---
 
@@ -48,7 +47,7 @@ Pensado para flujos de trabajo profesionales (arte, patrimonio, ingeniería, dis
     npx vite
     ```
     Accede a la URL que aparece (ejemplo: `http://localhost:5173/`).
-   <!-- (./assets/readmeFiles/npxvite.png) -->
+   (./assets/readmeFiles/npxvite.png)
 
 
 4. **Primer uso**
