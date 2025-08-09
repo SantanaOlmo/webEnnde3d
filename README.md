@@ -85,4 +85,9 @@ Prácticas de ciclo **DAM** (Ilerna 2024-2025) en **ENNDE3D**.
 
 ---
 
+## Repositorio original:
+[SantanaOlmo/webEnnde3d](https://github.com/SantanaOlmo/webEnnde3d)
+
+---
+
 > Para detalles completos del desarrollo, funcionalidades avanzadas, retos técnicos y estructura del proyecto, consulta la **memoria adjunta** | [Memoria_Visor_Web3D_ENNDE_DAM2025.pdf](./doc/Memoria_Visor_Web3D_ENNDE_DAM2025_VRS2.pdf).
